@@ -12,54 +12,54 @@
 
 @layer base {
   :root {
-    /* Core Colors */
-    --background: 240 30% 4%;
-    --background-secondary: 215 30% 7%;
+    /* Core Colors - Dark Professional Theme */
+    --background: 220 25% 6%;
+    --background-secondary: 220 25% 10%;
     --foreground: 0 0% 98%;
     
     /* Glass Effect Colors */
     --glass: 0 0% 100%;
     --glass-border: 0 0% 100%;
     
-    /* Brand Colors */
-    --primary: 190 100% 50%;
-    --primary-foreground: 240 30% 4%;
-    --primary-glow: 190 100% 50%;
+    /* Brand Colors - Classic Blue & Gold */
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 217 91% 60%;
     
-    --secondary: 260 91% 66%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 45 93% 58%;
+    --secondary-foreground: 220 25% 6%;
     
-    --accent: 160 84% 39%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 45 93% 58%;
+    --accent-foreground: 220 25% 6%;
     
     /* UI Colors */
-    --card: 215 30% 8%;
+    --card: 220 25% 10%;
     --card-foreground: 0 0% 98%;
     
-    --popover: 215 30% 8%;
+    --popover: 220 25% 10%;
     --popover-foreground: 0 0% 98%;
     
-    --muted: 215 25% 15%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 220 20% 18%;
+    --muted-foreground: 220 15% 65%;
     
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
     
-    --border: 215 25% 15%;
-    --input: 215 25% 12%;
-    --ring: 190 100% 50%;
+    --border: 220 20% 18%;
+    --input: 220 25% 14%;
+    --ring: 217 91% 60%;
     
     --radius: 1rem;
     
     /* Sidebar (keeping for compatibility) */
-    --sidebar-background: 240 30% 4%;
+    --sidebar-background: 220 25% 6%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 190 100% 50%;
-    --sidebar-primary-foreground: 240 30% 4%;
-    --sidebar-accent: 215 30% 12%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 25% 14%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 215 25% 15%;
-    --sidebar-ring: 190 100% 50%;
+    --sidebar-border: 220 20% 18%;
+    --sidebar-ring: 217 91% 60%;
   }
 }
 
@@ -129,7 +129,7 @@
 
   .text-gradient-glow {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(190 80% 70%));
+    background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(217 80% 70%));
   }
 
   /* Background Gradients */
