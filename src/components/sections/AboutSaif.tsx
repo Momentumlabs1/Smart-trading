@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Instagram, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import saifPortrait from '@/assets/saif-portrait.webp';
 
 export const AboutSaif = () => {
   return (
@@ -17,15 +18,11 @@ export const AboutSaif = () => {
             className="relative"
           >
             <div className="relative aspect-[4/5] rounded-3xl overflow-hidden glass p-2">
-              {/* Placeholder for Saif's photo */}
-              <div className="w-full h-full rounded-2xl bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-32 h-32 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
-                    <span className="font-display text-4xl font-bold text-primary">SA</span>
-                  </div>
-                  <p className="text-muted-foreground">Saif Al-Nasiri</p>
-                </div>
-              </div>
+              <img 
+                src={saifPortrait} 
+                alt="Saif Al-Nasiri - Gründer von Smart Trading" 
+                className="w-full h-full rounded-2xl object-cover object-center"
+              />
             </div>
 
             {/* Floating Stats */}

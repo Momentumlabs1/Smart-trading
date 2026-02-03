@@ -4,6 +4,7 @@ import { ArrowRight, Check, Play, Bot, Users, Calendar, Sparkles } from 'lucide-
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
+import saifDesk from '@/assets/saif-desk.webp';
 
 const features = [
   {
@@ -155,6 +156,26 @@ const Academy = () => {
                 <span className="text-sm text-muted-foreground">{item.lessons} Lektionen</span>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Saif Image Section */}
+      <section className="py-20">
+        <div className="section-container">
+          <div className="max-w-5xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="glass rounded-3xl overflow-hidden"
+            >
+              <img 
+                src={saifDesk} 
+                alt="Saif Al-Nasiri beim Trading" 
+                className="w-full h-[400px] md:h-[500px] object-cover object-center"
+              />
+            </motion.div>
           </div>
         </div>
       </section>
