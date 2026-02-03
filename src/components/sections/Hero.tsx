@@ -3,6 +3,7 @@ import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import tradingBg from '@/assets/trading-bg.webp';
 
 // Animated counter component
 const AnimatedCounter = ({ value, suffix = '' }: { value: number; suffix?: string }) => {
@@ -86,8 +87,32 @@ export const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Animated gradient background */}
-      <div className="absolute inset-0">
+      {/* Animated Trading Chart Background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <motion.div
+          className="absolute inset-0"
+          initial={{ clipPath: 'inset(0 100% 0 0)' }}
+          animate={{ clipPath: 'inset(0 0% 0 0)' }}
+          transition={{ duration: 3, ease: 'easeOut', delay: 0.5 }}
+        >
+          <div 
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url(${tradingBg})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              opacity: 0.2,
+            }}
+          />
+        </motion.div>
+        {/* Gradient overlay for smooth fade */}
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-background pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background pointer-events-none" />
+      </div>
+
+      {/* Animated gradient orbs */}
+      <div className="absolute inset-0 pointer-events-none">
         <motion.div
           className="absolute w-[1000px] h-[1000px] -top-1/4 -left-1/4 rounded-full opacity-20"
           style={{
