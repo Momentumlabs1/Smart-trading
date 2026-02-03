@@ -27,46 +27,40 @@ const AnimatedCounter = ({ value, suffix = '' }: { value: number; suffix?: strin
   );
 };
 
-// Community avatars component
-const CommunityAvatars = () => {
-  const avatars = [
-    { bg: 'bg-primary/20', letter: 'M' },
-    { bg: 'bg-secondary/30', letter: 'S' },
-    { bg: 'bg-muted', letter: 'A' },
-    { bg: 'bg-primary/30', letter: 'T' },
-    { bg: 'bg-secondary/20', letter: 'K' },
-    { bg: 'bg-muted', letter: 'L' },
+// Stats Bar component
+const StatsBar = () => {
+  const stats = [
+    { value: 847, suffix: '%', label: 'Bot Performance', prefix: '+' },
+    { value: 73, suffix: '%', label: 'Win Rate' },
+    { value: 480, suffix: '+', label: 'Community Mitglieder' },
+    { value: 12, suffix: '+', label: 'Jahre Erfahrung' },
   ];
 
   return (
-    <div className="flex items-center">
-      <div className="flex -space-x-3">
-        {avatars.map((avatar, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, scale: 0.5, x: -20 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
-            transition={{ delay: 1.2 + i * 0.1, duration: 0.4 }}
-            className={`w-10 h-10 rounded-full ${avatar.bg} border-2 border-background flex items-center justify-center text-sm font-semibold text-foreground`}
-          >
-            {avatar.letter}
-          </motion.div>
-        ))}
-      </div>
-      <motion.div
-        initial={{ opacity: 0, x: -10 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 1.8 }}
-        className="ml-4 text-left"
-      >
-        <div className="text-sm font-semibold text-primary">
-          <AnimatedCounter value={480} suffix="+" />
-        </div>
-        <div className="text-xs text-muted-foreground uppercase tracking-wider">
-          Aktive Community Mitglieder
-        </div>
-      </motion.div>
-    </div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 0.5 }}
+      className="flex flex-wrap justify-center gap-8 md:gap-12 lg:gap-16 mt-16 pt-8 border-t border-border/30"
+    >
+      {stats.map((stat, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 + i * 0.1, duration: 0.5 }}
+          className="text-center"
+        >
+          <div className="text-2xl md:text-3xl font-bold text-foreground font-mono">
+            {stat.prefix && <span className="text-primary">{stat.prefix}</span>}
+            <AnimatedCounter value={stat.value} suffix={stat.suffix} />
+          </div>
+          <div className="text-xs md:text-sm text-muted-foreground mt-1 uppercase tracking-wider">
+            {stat.label}
+          </div>
+        </motion.div>
+      ))}
+    </motion.div>
   );
 };
 
@@ -128,34 +122,20 @@ export const Hero = () => {
         }}
       />
 
-      {/* Floating elements - trading signals */}
-      <FloatingCard delay={0.8} className="absolute top-32 left-[10%] hidden lg:block">
-        <div className="glass rounded-xl px-4 py-3 flex items-center gap-3">
+      {/* Floating elements - trading signals (decorative, positioned far out) */}
+      <FloatingCard delay={0.8} className="absolute top-28 left-[5%] hidden xl:block z-0">
+        <div className="glass rounded-xl px-4 py-3 flex items-center gap-3 opacity-60">
           <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
           <span className="text-sm text-foreground font-medium">BTC/USD</span>
           <span className="text-sm text-green-500 font-mono">+2.4%</span>
         </div>
       </FloatingCard>
 
-      <FloatingCard delay={1.0} className="absolute top-48 right-[8%] hidden lg:block">
-        <div className="glass rounded-xl px-4 py-3 flex items-center gap-3">
+      <FloatingCard delay={1.0} className="absolute top-36 right-[5%] hidden xl:block z-0">
+        <div className="glass rounded-xl px-4 py-3 flex items-center gap-3 opacity-60">
           <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
           <span className="text-sm text-foreground font-medium">ETH/USD</span>
           <span className="text-sm text-green-500 font-mono">+5.1%</span>
-        </div>
-      </FloatingCard>
-
-      <FloatingCard delay={1.2} className="absolute bottom-40 left-[15%] hidden lg:block">
-        <div className="glass rounded-xl px-4 py-3">
-          <div className="text-xs text-muted-foreground mb-1">Bot Performance</div>
-          <div className="text-lg font-mono font-bold text-primary">+847%</div>
-        </div>
-      </FloatingCard>
-
-      <FloatingCard delay={1.4} className="absolute bottom-32 right-[12%] hidden lg:block">
-        <div className="glass rounded-xl px-4 py-3">
-          <div className="text-xs text-muted-foreground mb-1">Win Rate</div>
-          <div className="text-lg font-mono font-bold text-foreground">73.2%</div>
         </div>
       </FloatingCard>
 
@@ -225,7 +205,7 @@ export const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
+            className="flex flex-col sm:flex-row gap-4 justify-center"
           >
             <Link to="/quiz">
               <Button
@@ -257,15 +237,8 @@ export const Hero = () => {
             </Link>
           </motion.div>
 
-          {/* Community Avatars */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex justify-center"
-          >
-            <CommunityAvatars />
-          </motion.div>
+          {/* Stats Bar */}
+          <StatsBar />
         </div>
       </div>
 
