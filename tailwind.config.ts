@@ -27,6 +27,17 @@ export default {
           secondary: "hsl(var(--background-secondary))",
         },
         foreground: "hsl(var(--foreground))",
+        // Brand Colors - Blue & Gold
+        gold: {
+          DEFAULT: "hsl(45 93% 58%)",
+          light: "hsl(45 93% 68%)",
+          dark: "hsl(45 93% 48%)",
+        },
+        blue: {
+          DEFAULT: "hsl(217 91% 60%)",
+          light: "hsl(217 91% 70%)",
+          dark: "hsl(217 91% 50%)",
+        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
