@@ -5,6 +5,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import saifDesk from '@/assets/saif-desk.webp';
+import tradingBg from '@/assets/trading-bg.webp';
 
 const features = [
   {
@@ -41,12 +42,25 @@ const curriculum = [
 
 const Academy = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      {/* Global Trading Background */}
+      <div 
+        className="fixed inset-0 z-0 pointer-events-none"
+        style={{
+          backgroundImage: `url(${tradingBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          opacity: 0.15,
+        }}
+      />
+      <div className="fixed inset-0 z-0 pointer-events-none bg-gradient-to-b from-background via-transparent to-background" />
+      
       <Navbar />
       
       {/* Hero */}
       <section className="pt-32 pb-20 relative overflow-hidden">
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 z-0">
           <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-primary/10 blur-3xl" />
         </div>
 
