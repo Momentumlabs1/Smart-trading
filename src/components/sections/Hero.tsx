@@ -82,7 +82,8 @@ const StatsBar = () => {
 };
 export const Hero = () => {
   const [isHovered, setIsHovered] = useState(false);
-  return <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden pt-16 sm:pt-20 pb-8 sm:pb-0">
+  return (
+    <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden pt-16 sm:pt-20 pb-8 sm:pb-0">
       {/* Animated Trading Chart Background */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div className="absolute inset-0" initial={{
