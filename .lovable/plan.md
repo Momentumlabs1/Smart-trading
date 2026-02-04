@@ -1,111 +1,132 @@
 
-# Hero Section Überarbeitung
 
-## Identifizierte Probleme
+# Plan: Video-Funnel Integration & Quiz-Überarbeitung
 
-Basierend auf dem Screenshot gibt es folgende Layout-Fehler:
+## Zusammenfassung
+Die Hero-Buttons werden zum Video-Funnel geleitet und das bestehende Quiz wird visuell aufgewertet. Zusätzlich wird ein eigener Homepage-Funnel-Einstiegs-Komponente erstellt.
 
-1. **Floating Cards überlappen CTAs**: Die "Bot Performance +847%" Card überlappt mit dem "Kostenloses Erstgespräch" Button
-2. **Schlechte Positionierung**: Die FloatingCards (BTC/USD, ETH/USD, Win Rate) sind schlecht platziert und stören das visuelle Gleichgewicht
-3. **Zu viele schwebende Elemente**: 4 FloatingCards + CommunityAvatars + CTAs schaffen visuelles Chaos
-4. **Z-Index Konflikte**: Floating Cards haben keinen klaren z-index Layer
+---
 
-## Geplante Änderungen
+## 1. Neue Komponente: HomepageQuizTeaser
 
-### 1. FloatingCards Repositionierung
-- **Top Cards (BTC/USD, ETH/USD)**: Weiter nach außen verschieben (left 5%, right 5%) und höher positionieren
-- **Bottom Cards (Bot Performance, Win Rate)**: ENTFERNEN aus dem Hauptbereich - diese werden stattdessen in eine separate Stats-Zeile unter den CTAs integriert
-- Alle Cards bekommen `z-0` um unter dem Hauptcontent zu liegen
+Eine eigenständige Komponente für die Homepage, die als visuell ansprechender Einstieg in den Quiz-Funnel dient.
 
-### 2. Neue Stats-Bar unter den CTAs
-Anstatt schwebender Cards eine cleane horizontale Stats-Leiste:
+**Datei:** `src/components/sections/HomepageQuizTeaser.tsx`
 
+**Funktionen:**
+- Glassmorphism-Karte mit animiertem Hintergrund
+- Kurzer Teaser-Text: "Finde in 3 Minuten heraus, welches Programm zu dir passt"
+- Animierte Trading-Level-Vorschau (Einsteiger -> Fortgeschritten -> Profi)
+- Großer CTA-Button zum Quiz
+- Trust-Elemente: "3 Min", "Kostenlos", "Keine Anmeldung"
+
+---
+
+## 2. Hero-Buttons Anpassung
+
+**Datei:** `src/components/sections/Hero.tsx`
+
+**Änderungen:**
+- "Wie gut kannst du traden?" Button: Bleibt, führt zu `/quiz`
+- "Member Login" Button: Bleibt, führt zu `/login`
+- Der Video-Platzhalter (9:16) wird klickbar und führt ebenfalls zum Quiz (später Video-Funnel)
+
+---
+
+## 3. QuizLanding visuell überarbeiten
+
+**Datei:** `src/components/quiz/QuizLanding.tsx`
+
+**Verbesserungen:**
+- Animierte Trading-Level-Badges die durch die 4 Levels rotieren
+- Glassmorphism-Karte statt nur Text
+- 3 Trust-Badges nebeneinander (Dauer, Kostenlos, Personalisiert)
+- Subtile Chart-Pattern im Hintergrund
+- Animierte Unterstrich-Linie unter "Trading-Level"
+- Sanftere Farbverläufe
+
+---
+
+## 4. QuizQuestion visuell aufwerten
+
+**Datei:** `src/components/quiz/QuizQuestion.tsx`
+
+**Verbesserungen:**
+- Bessere Hover-States mit Gold-Akzent
+- Subtile Glassmorphism-Effekte verstärken
+- Animierte Checkmarks bei Auswahl
+- Chart-Frage: Echtes Chart-Bild statt Emoji-Platzhalter
+- Progress-Indikator mit Glow-Effekt
+
+---
+
+## 5. QuizProgress aufwerten
+
+**Datei:** `src/components/quiz/QuizProgress.tsx`
+
+**Verbesserungen:**
+- Animierte Progress-Bar mit Gold-Gradient
+- Schritt-Nummern mit subtiler Animation
+- "Frage X von Y" Text dezenter
+
+---
+
+## 6. Homepage Integration
+
+**Datei:** `src/pages/Index.tsx`
+
+Die neue `HomepageQuizTeaser`-Komponente wird als separate Sektion eingefügt (optional nach Features oder vor Pricing).
+
+---
+
+## Technische Details
+
+### HomepageQuizTeaser Struktur:
 ```text
-┌──────────────────────────────────────────────────────────────┐
-│                                                              │
-│     +847%           73.2%           480+           12+       │
-│  Bot Performance   Win Rate      Mitglieder     Jahre Exp.   │
-│                                                              │
-└──────────────────────────────────────────────────────────────┘
++---------------------------------------+
+|   Glassmorphism Card                  |
+|                                       |
+|   [Trading-Level Animation]           |
+|   Einsteiger -> Profi                 |
+|                                       |
+|   "Finde in 3 Min heraus..."          |
+|                                       |
+|   [=== Wie gut tradest du? ===]       |
+|                                       |
+|   3 Min • Kostenlos • Personalisiert  |
++---------------------------------------+
 ```
 
-### 3. Vereinfachtes Layout
-- Hero-Headline bleibt zentriert
-- CTA Buttons bleiben zentriert
-- Stats-Bar ersetzt CommunityAvatars und schwebende Performance-Cards
-- Nur 2 dezente Signal-Cards oben links/rechts (BTC, ETH) bleiben
-
-### 4. Verbesserte Abstände
-- Mehr vertikaler Abstand zwischen Headline, Subheadline, CTAs und Stats
-- `mb-16` → `mb-12` für CTAs
-- Stats-Bar mit `mt-16` für klare Trennung
-
-## Technische Implementierung
-
-### Änderungen in `Hero.tsx`:
-
-1. **Entfernen**: 
-   - FloatingCard für "Bot Performance" (Zeile 148-153)
-   - FloatingCard für "Win Rate" (Zeile 155-160)
-   - CommunityAvatars Komponente
-
-2. **Anpassen**:
-   - Top FloatingCards weiter nach außen positionieren
-   - Nur noch als dekoratives Element, nicht überlappend
-
-3. **Hinzufügen**:
-   - Neue `StatsBar` Komponente mit 4 animierten Statistiken
-   - Horizontal zentriert unter den CTAs
-
-### Neue StatsBar Komponente:
-```tsx
-const StatsBar = () => {
-  const stats = [
-    { value: 847, suffix: '%', label: 'Bot Performance', prefix: '+' },
-    { value: 73.2, suffix: '%', label: 'Win Rate', decimals: 1 },
-    { value: 480, suffix: '+', label: 'Community Mitglieder' },
-    { value: 12, suffix: '+', label: 'Jahre Erfahrung' },
-  ];
-  
-  return (
-    <div className="flex flex-wrap justify-center gap-8 md:gap-12">
-      {stats.map((stat, i) => (
-        <motion.div key={i} className="text-center">
-          <AnimatedCounter value={stat.value} ... />
-          <div className="text-xs text-muted-foreground">{stat.label}</div>
-        </motion.div>
-      ))}
-    </div>
-  );
-};
-```
-
-## Visuelles Ergebnis
-
+### QuizLanding Neues Layout:
 ```text
-     [BTC/USD +2.4%]                           [ETH/USD +5.1%]
-
-              WILLKOMMEN BEI SMART TRADING
-
-              Die erste Adresse für
-                 professionelle
-              Trader-Ausbildungen
-
-          Erlerne die Fähigkeiten zum...
-          Dein Erfolg ist unsere Mission.
-
-      [Kostenloses Erstgespräch]  [Member Login]
-
-    ─────────────────────────────────────────────
-    
-        +847%      73.2%       480+       12+
-     Bot Perf.   Win Rate   Mitglieder   Jahre
++---------------------------------------+
+|   Subtle Chart Background Pattern     |
+|                                       |
+|   [Level Badge Animation]             |
+|   Einsteiger ▸ Fortgeschritten ▸ Pro  |
+|                                       |
+|   "Welches Programm passt zu dir?"    |
+|   ~~~~~~~~~~~~~~~                     |
+|                                       |
+|   [=== Analyse starten ===]           |
+|                                       |
+|   🕐 3 Min  •  ✓ Kostenlos  •  🎯     |
++---------------------------------------+
 ```
 
-## Vorteile dieser Lösung
+### Bestehende Quiz-Logik:
+- Die 12 Fragen und Scoring-Logik in `quiz-data.ts` bleiben unverändert
+- Nur visuelle Komponenten werden aufgewertet
 
-- Kein Überlappen mehr zwischen Elementen
-- Cleanes, professionelles Layout
-- Stats sind immer sichtbar und nicht versteckt in schwebenden Cards
-- Mobile-friendly: Stats-Bar bricht sauber um
-- Behält interaktive Animationen bei (Counter, Hover-Effekte)
+---
+
+## Dateien die erstellt werden:
+1. `src/components/sections/HomepageQuizTeaser.tsx` (neu)
+
+## Dateien die bearbeitet werden:
+1. `src/components/sections/Hero.tsx` - Video-Platzhalter klickbar machen
+2. `src/components/quiz/QuizLanding.tsx` - Visuelles Upgrade
+3. `src/components/quiz/QuizQuestion.tsx` - Visuelles Upgrade
+4. `src/components/quiz/QuizProgress.tsx` - Visuelles Upgrade
+5. `src/pages/Index.tsx` - HomepageQuizTeaser optional einbinden
+
