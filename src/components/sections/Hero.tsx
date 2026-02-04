@@ -59,7 +59,7 @@ const StatsBar = () => {
   }} transition={{
     duration: 0.6,
     delay: 0.3
-  }} className="flex justify-center gap-8 sm:gap-12 md:gap-16 mt-8 sm:mt-12 pt-6 border-t border-border/30">
+  }} className="flex justify-center lg:justify-start gap-8 sm:gap-12 md:gap-16 pt-6 border-t border-border/30">
       {stats.map((stat, i) => <motion.div key={i} initial={{
       opacity: 0,
       y: 20
@@ -158,19 +158,19 @@ export const Hero = () => {
 
       {/* Main content */}
       <div className="section-container relative z-10 px-4 sm:px-6">
-        <div className="max-w-6xl mx-auto py-[20px]">
+        <div className="max-w-7xl mx-auto py-8 lg:py-16">
           
           {/* Desktop: Side by side | Mobile: Stacked */}
-          <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 lg:gap-16 items-center">
             
-            {/* Video Placeholder - Smaller on desktop */}
+            {/* Video Placeholder - Fixed size, left side on desktop */}
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="flex-shrink-0 order-1 lg:order-1"
+              className="justify-self-center lg:justify-self-start"
             >
-              <div className="relative w-[200px] sm:w-[220px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 group cursor-pointer">
+              <div className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 group cursor-pointer">
                 {/* Gradient Background */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-primary/10" />
                 
@@ -200,14 +200,14 @@ export const Hero = () => {
               </div>
             </motion.div>
 
-            {/* Text Content */}
-            <div className="flex-1 text-center lg:text-left order-2 lg:order-2 max-w-xl">
+            {/* Text Content - Right side on desktop */}
+            <div className="text-center lg:text-left">
               {/* Badge */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="inline-block mb-4 sm:mb-6"
+                className="inline-block mb-4"
               >
                 <span className="text-[10px] sm:text-xs font-semibold text-primary uppercase tracking-[0.15em] sm:tracking-[0.2em]">
                   Willkommen bei Smart Trading
@@ -219,7 +219,7 @@ export const Hero = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-[1.15] sm:leading-[1.1] mb-4 sm:mb-6"
+                className="font-display text-2xl sm:text-3xl lg:text-5xl xl:text-6xl font-bold text-foreground leading-[1.15] mb-6"
               >
                 Die erste Adresse für
                 <br />
@@ -227,7 +227,7 @@ export const Hero = () => {
                   <span className="text-gradient-primary">professionelle</span>
                   <motion.svg
                     viewBox="0 0 300 12"
-                    className="absolute -bottom-1 sm:-bottom-2 left-0 w-full"
+                    className="absolute -bottom-1 lg:-bottom-2 left-0 w-full"
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: 1 }}
                     transition={{ delay: 0.8, duration: 0.8 }}
@@ -283,21 +283,17 @@ export const Hero = () => {
                 </Link>
               </motion.div>
 
-              {/* Stats Bar - Desktop only inline */}
-              <div className="hidden lg:block mt-8">
+              {/* Stats Bar */}
+              <div className="mt-8">
                 <StatsBar />
               </div>
             </div>
-          </div>
-
-          {/* Stats Bar - Mobile only */}
-          <div className="lg:hidden mt-8">
-            <StatsBar />
           </div>
         </div>
       </div>
 
       {/* Bottom gradient */}
       <div className="absolute bottom-0 left-0 right-0 h-20 sm:h-40 bg-gradient-to-t from-background to-transparent pointer-events-none" />
-    </section>;
+    </section>
+  );
 };
