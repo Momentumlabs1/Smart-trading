@@ -161,15 +161,16 @@ export const Hero = () => {
       <div className="section-container relative z-10 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto py-8 lg:py-16">
           
-          {/* Desktop: Side by side | Mobile: Stacked */}
+          {/* Desktop: Side by side | Mobile: Stacked (text first on mobile) */}
           <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 lg:gap-16 items-center">
             
             {/* Video Placeholder - Fixed size, left side on desktop - Links to Quiz */}
+            {/* On mobile: order-2 (appears after text), on desktop: order-1 (appears first/left) */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="justify-self-center lg:justify-self-start"
+              className="justify-self-center lg:justify-self-start order-2 lg:order-1"
             >
               <Link to="/quiz">
                 <div className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 group cursor-pointer hover:border-primary/50 transition-all duration-300">
@@ -203,8 +204,8 @@ export const Hero = () => {
               </Link>
             </motion.div>
 
-            {/* Text Content - Right side on desktop */}
-            <div className="text-center lg:text-left">
+            {/* Text Content - Right side on desktop, FIRST on mobile */}
+            <div className="text-center lg:text-left order-1 lg:order-2">
               {/* Badge */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
