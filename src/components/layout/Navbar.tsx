@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, TrendingUp } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import logo from '@/assets/logo-smart-trading.webp';
 
 const navLinks = [
   { label: 'Über uns', href: '/about' },
@@ -45,16 +46,12 @@ export const Navbar = () => {
         <div className="section-container">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2 group">
-              <div className="relative">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                  <TrendingUp className="w-5 h-5 text-primary" />
-                </div>
-                <div className="absolute inset-0 rounded-xl bg-primary/20 blur-lg opacity-0 group-hover:opacity-100 transition-opacity" />
-              </div>
-              <span className="font-display font-bold text-xl text-foreground">
-                Smart<span className="text-primary">Trading</span>
-              </span>
+            <Link to="/" className="flex items-center group">
+              <img 
+                src={logo} 
+                alt="Smart Trading Logo" 
+                className="h-10 sm:h-12 w-auto"
+              />
             </Link>
 
             {/* Desktop Navigation */}
