@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useRef } from 'react';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { 
   Play, 
   Bot, 
@@ -9,8 +9,6 @@ import {
   MessageSquare,
   ChevronRight,
   Zap,
-  Target,
-  TrendingUp
 } from 'lucide-react';
 
 interface Feature {
@@ -20,7 +18,7 @@ interface Feature {
   demo?: React.ReactNode;
 }
 
-// Mini demo components
+// Mini demo components - simplified for mobile
 const VideoLessonDemo = () => (
   <div className="space-y-2">
     <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -48,31 +46,27 @@ const VideoLessonDemo = () => (
   </div>
 );
 
-const BotDemo = () => {
-  const [value, setValue] = useState(0);
-  
-  return (
-    <div className="flex items-end gap-1 h-12">
-      {[40, 45, 35, 60, 55, 70, 65, 85, 80, 95].map((height, i) => (
+const BotDemo = () => (
+  <div className="flex items-end gap-1 h-12">
+    {[40, 45, 35, 60, 55, 70, 65, 85, 80, 95].map((height, i) => (
+      <motion.div
+        key={i}
+        className="flex-1 bg-primary/20 rounded-t relative overflow-hidden"
+        style={{ height: `${height}%` }}
+        initial={{ height: 0 }}
+        animate={{ height: `${height}%` }}
+        transition={{ delay: 0.1 * i, duration: 0.4 }}
+      >
         <motion.div
-          key={i}
-          className="flex-1 bg-primary/20 rounded-t relative overflow-hidden"
-          style={{ height: `${height}%` }}
-          initial={{ height: 0 }}
-          animate={{ height: `${height}%` }}
-          transition={{ delay: 0.1 * i, duration: 0.4 }}
-        >
-          <motion.div
-            className="absolute inset-0 bg-primary"
-            initial={{ y: '100%' }}
-            animate={{ y: '0%' }}
-            transition={{ delay: 0.1 * i + 0.2, duration: 0.4 }}
-          />
-        </motion.div>
-      ))}
-    </div>
-  );
-};
+          className="absolute inset-0 bg-primary"
+          initial={{ y: '100%' }}
+          animate={{ y: '0%' }}
+          transition={{ delay: 0.1 * i + 0.2, duration: 0.4 }}
+        />
+      </motion.div>
+    ))}
+  </div>
+);
 
 const CommunityDemo = () => (
   <div className="flex items-center justify-center gap-1">
@@ -172,136 +166,158 @@ const features: Feature[] = [
   {
     icon: Play,
     title: '78+ Video Lektionen',
-    description: 'Von den Grundlagen bis zu fortgeschrittenen Strategien. Lerne in deinem Tempo.',
+    description: 'Von den Grundlagen bis zu fortgeschrittenen Strategien.',
     demo: <VideoLessonDemo />,
   },
   {
     icon: Bot,
     title: 'Trading Bot inklusive',
-    description: 'Unser KI-Bot arbeitet 24/7 für dich. 800%+ Rendite in den letzten 2 Jahren.',
+    description: 'Unser KI-Bot arbeitet 24/7 für dich.',
     demo: <BotDemo />,
   },
   {
     icon: Users,
     title: 'Elite Community',
-    description: 'Tausche dich mit 480+ gleichgesinnten Tradern aus. Gemeinsam stärker.',
+    description: 'Tausche dich mit 480+ Tradern aus.',
     demo: <CommunityDemo />,
   },
   {
     icon: Calendar,
     title: 'Wöchentliche Live-Calls',
-    description: 'Jeden Donnerstag Q&A Session mit Saif. Stelle deine Fragen direkt.',
+    description: 'Jeden Donnerstag Q&A mit Saif.',
     demo: <LiveCallDemo />,
   },
   {
     icon: LineChart,
     title: 'Trade Analyse Tool',
-    description: 'Lade deine Charts hoch. Die KI analysiert dein Setup in Sekunden.',
+    description: 'KI analysiert dein Setup in Sekunden.',
     demo: <ChartAnalysisDemo />,
   },
   {
     icon: MessageSquare,
     title: 'Telegram Bot Assistent',
-    description: '24/7 Antworten auf deine Fragen. Von Basics bis Strategie-Tipps.',
+    description: '24/7 Antworten auf deine Fragen.',
     demo: <TelegramBotDemo />,
   },
 ];
 
-export const Features = () => {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+// Feature Card with scroll-triggered animation
+const FeatureCard = ({ feature, index }: { feature: Feature; index: number }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { amount: 0.3, once: false });
+  const [showDemo, setShowDemo] = useState(false);
 
   return (
-    <section className="py-24 relative overflow-hidden">
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{
+        opacity: isInView ? 1 : 0,
+        y: isInView ? 0 : 30,
+      }}
+      transition={{ duration: 0.5, delay: index * 0.05 }}
+      onViewportEnter={() => setShowDemo(true)}
+      onViewportLeave={() => setShowDemo(false)}
+      className="relative group"
+    >
+      <motion.div
+        whileHover={{ y: -8, scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+        className="glass rounded-2xl sm:rounded-3xl p-5 sm:p-8 h-full cursor-pointer overflow-hidden"
+      >
+        {/* Glow effect */}
+        <motion.div
+          animate={{ opacity: isInView ? 0.5 : 0 }}
+          className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500"
+        />
+
+        {/* Icon */}
+        <div className="relative z-10 w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-primary/20 transition-colors">
+          <feature.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10">
+          <h3 className="font-display text-lg sm:text-xl font-semibold text-foreground mb-2 sm:mb-3 flex items-center gap-2">
+            {feature.title}
+            <ChevronRight className="w-4 h-4 text-primary opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+          </h3>
+          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-3 sm:mb-4">
+            {feature.description}
+          </p>
+
+          {/* Demo - visible on mobile when in view, on desktop on hover */}
+          <AnimatePresence>
+            {(showDemo || isInView) && feature.demo && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="pt-3 sm:pt-4 border-t border-border"
+              >
+                {feature.demo}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Corner accent */}
+        <div className="absolute top-0 right-0 w-16 sm:w-20 h-16 sm:h-20 bg-gradient-to-bl from-primary/5 to-transparent rounded-2xl sm:rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
+      </motion.div>
+    </motion.div>
+  );
+};
+
+export const Features = () => {
+  const headerRef = useRef(null);
+  const isHeaderInView = useInView(headerRef, { amount: 0.3, once: false });
+
+  return (
+    <section className="py-16 sm:py-24 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-mesh opacity-30" />
 
       <div className="section-container relative z-10">
         {/* Header */}
         <motion.div
+          ref={headerRef}
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
+          animate={{
+            opacity: isHeaderInView ? 1 : 0,
+            y: isHeaderInView ? 0 : 20,
+          }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-10 sm:mb-16"
         >
           <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-6"
+            animate={{
+              scale: isHeaderInView ? 1 : 0.9,
+              opacity: isHeaderInView ? 1 : 0,
+            }}
+            transition={{ duration: 0.4 }}
+            className="inline-flex items-center gap-2 glass rounded-full px-3 py-1.5 sm:px-4 sm:py-2 mb-4 sm:mb-6"
           >
-            <Zap className="w-4 h-4 text-primary" />
-            <span className="text-sm text-muted-foreground">Was du bekommst</span>
+            <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
+            <span className="text-xs sm:text-sm text-muted-foreground">Was du bekommst</span>
           </motion.div>
           
-          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-6">
+          <h2 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 sm:mb-6 px-2">
             Alles was du brauchst.
             <br />
             <span className="text-gradient-primary">Nichts was du nicht brauchst.</span>
           </h2>
           
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
             Wir haben alle überflüssigen Features rausgeworfen. Was bleibt, ist das Wesentliche.
           </p>
         </motion.div>
 
-        {/* Interactive Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Features Grid - 1 column on mobile, 2 on tablet, 3 on desktop */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {features.map((feature, index) => (
-            <motion.div
-              key={feature.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              className="relative group"
-            >
-              <motion.div
-                whileHover={{ y: -8, scale: 1.02 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                className="glass rounded-3xl p-8 h-full cursor-pointer overflow-hidden"
-              >
-                {/* Glow effect on hover */}
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                />
-
-                {/* Icon */}
-                <div className="relative z-10 w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
-                  <feature.icon className="w-7 h-7 text-primary" />
-                </div>
-
-                {/* Content */}
-                <div className="relative z-10">
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-3 flex items-center gap-2">
-                    {feature.title}
-                    <ChevronRight className="w-4 h-4 text-primary opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed mb-4">
-                    {feature.description}
-                  </p>
-
-                  {/* Interactive Demo */}
-                  <AnimatePresence>
-                    {hoveredIndex === index && feature.demo && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="pt-4 border-t border-border"
-                      >
-                        {feature.demo}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                {/* Corner accent */}
-                <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-primary/5 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              </motion.div>
-            </motion.div>
+            <FeatureCard key={feature.title} feature={feature} index={index} />
           ))}
         </div>
       </div>

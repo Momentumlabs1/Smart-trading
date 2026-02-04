@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, BookOpen, Target, TrendingUp, Crown, Check, ChevronRight, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,8 +12,8 @@ const stages = [
     subtitle: 'Woche 1-2',
     headline: 'Das Fundament legen',
     description: 'Du verstehst die Märkte, lernst Chartanalyse und baust ein solides Risk Management auf.',
-    skills: ['Candlestick Patterns', 'Support & Resistance', 'Risk/Reward Ratio', 'Marktstruktur'],
-    outcome: 'Du verstehst, warum 90% der Trader scheitern — und wie du es nicht tust.',
+    skills: ['Candlestick Patterns', 'Support & Resistance', 'Risk/Reward', 'Marktstruktur'],
+    outcome: 'Du verstehst, warum 90% der Trader scheitern.',
   },
   {
     id: 2,
@@ -21,9 +21,9 @@ const stages = [
     title: 'Strategie',
     subtitle: 'Woche 3-6',
     headline: 'Dein System entwickeln',
-    description: 'Du entwickelst eine klare, regelbasierte Trading-Strategie die zu deinem Lifestyle passt.',
+    description: 'Du entwickelst eine klare, regelbasierte Trading-Strategie.',
     skills: ['Entry & Exit Rules', 'Position Sizing', 'Trading Plan', 'Backtesting'],
-    outcome: 'Du hast einen klaren Plan, den du konsequent umsetzen kannst.',
+    outcome: 'Du hast einen klaren Plan zum Umsetzen.',
   },
   {
     id: 3,
@@ -31,9 +31,9 @@ const stages = [
     title: 'Praxis',
     subtitle: 'Woche 7-12',
     headline: 'Live Trading starten',
-    description: 'Du setzt alles um — erst im Demo, dann mit echtem Kapital. Unterstützt von unserem KI-Bot.',
+    description: 'Du setzt alles um — erst im Demo, dann mit echtem Kapital.',
     skills: ['Live Trading', 'Bot Integration', 'Trade Journal', 'Psychologie'],
-    outcome: 'Du machst deine ersten profitablen Trades und baust Konsistenz auf.',
+    outcome: 'Deine ersten profitablen Trades.',
   },
   {
     id: 4,
@@ -41,17 +41,104 @@ const stages = [
     title: 'Meisterschaft',
     subtitle: 'Ab Woche 13',
     headline: 'Skalieren & Optimieren',
-    description: 'Du optimierst deine Strategie, skalierst dein Kapital und baust langfristigen Wohlstand auf.',
-    skills: ['Advanced Strategies', 'Portfolio Skalierung', 'Mentorship', 'Compounding'],
-    outcome: 'Trading wird zu deinem Skill für finanzielle Freiheit.',
+    description: 'Du optimierst und skalierst für langfristigen Erfolg.',
+    skills: ['Advanced Strategies', 'Skalierung', 'Mentorship', 'Compounding'],
+    outcome: 'Trading als Skill für Freiheit.',
   },
 ];
+
+// Mobile Stage Card Component
+const MobileStageCard = ({ stage, index, isActive }: { stage: typeof stages[0]; index: number; isActive: boolean }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { amount: 0.5, once: false });
+  const Icon = stage.icon;
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{
+        opacity: isInView ? 1 : 0.3,
+        y: isInView ? 0 : 20,
+        scale: isInView ? 1 : 0.95,
+      }}
+      transition={{ duration: 0.4 }}
+      className="glass rounded-2xl p-5 relative overflow-hidden min-h-[280px]"
+    >
+      {/* Background gradient */}
+      <motion.div
+        animate={{ opacity: isInView ? 1 : 0 }}
+        className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary/5 pointer-events-none"
+      />
+
+      <div className="relative z-10">
+        {/* Header */}
+        <div className="flex items-start gap-3 mb-4">
+          <motion.div
+            animate={{ 
+              scale: isInView ? 1 : 0.8,
+              backgroundColor: isInView ? 'hsl(45 93% 58% / 0.2)' : 'hsl(0 0% 15%)',
+            }}
+            className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+          >
+            <Icon className={`w-6 h-6 ${isInView ? 'text-primary' : 'text-muted-foreground'}`} />
+          </motion.div>
+          <div>
+            <span className="text-primary font-semibold text-xs uppercase tracking-wider">
+              Phase {index + 1} — {stage.subtitle}
+            </span>
+            <h3 className="font-display text-xl font-bold text-foreground">
+              {stage.headline}
+            </h3>
+          </div>
+        </div>
+
+        {/* Description */}
+        <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+          {stage.description}
+        </p>
+
+        {/* Skills */}
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          {stage.skills.map((skill, i) => (
+            <motion.div
+              key={skill}
+              initial={{ opacity: 0, x: 10 }}
+              animate={{ 
+                opacity: isInView ? 1 : 0,
+                x: isInView ? 0 : 10,
+              }}
+              transition={{ delay: i * 0.05 }}
+              className="flex items-center gap-2 text-xs"
+            >
+              <Check className="w-3 h-3 text-primary shrink-0" />
+              <span className="text-foreground">{skill}</span>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Outcome */}
+        <motion.div
+          animate={{ opacity: isInView ? 1 : 0 }}
+          className="bg-primary/10 border border-primary/20 rounded-lg p-3"
+        >
+          <div className="flex items-center gap-2">
+            <TrendingUp className="w-4 h-4 text-primary shrink-0" />
+            <p className="text-foreground text-xs font-medium">{stage.outcome}</p>
+          </div>
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+};
 
 export const JourneySection = () => {
   const [activeStage, setActiveStage] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const sectionRef = useRef(null);
+  const isSectionInView = useInView(sectionRef, { amount: 0.2, once: false });
 
-  // Auto-advance through stages
+  // Auto-advance through stages (desktop only)
   useEffect(() => {
     if (!isAutoPlaying) return;
     
@@ -68,12 +155,12 @@ export const JourneySection = () => {
   };
 
   return (
-    <section className="py-24 md:py-32 relative overflow-hidden">
-      {/* Background Effects */}
+    <section ref={sectionRef} className="py-16 sm:py-24 md:py-32 relative overflow-hidden">
+      {/* Background Effects - simplified on mobile */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
         <motion.div
-          className="absolute top-1/4 left-0 w-[600px] h-[600px] rounded-full opacity-20"
+          className="absolute top-1/4 left-0 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] rounded-full opacity-10 sm:opacity-20 hidden sm:block"
           style={{
             background: 'radial-gradient(circle, hsl(45 93% 58% / 0.15), transparent 70%)',
           }}
@@ -85,35 +172,38 @@ export const JourneySection = () => {
         />
       </div>
 
-      <div className="section-container relative z-10">
+      <div className="section-container relative z-10 px-4 sm:px-6">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16 md:mb-20"
+          animate={{
+            opacity: isSectionInView ? 1 : 0,
+            y: isSectionInView ? 0 : 30,
+          }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-10 sm:mb-16 md:mb-20"
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-6"
+            animate={{
+              opacity: isSectionInView ? 1 : 0,
+              scale: isSectionInView ? 1 : 0.9,
+            }}
+            className="inline-flex items-center gap-2 glass rounded-full px-3 py-1.5 sm:px-4 sm:py-2 mb-4 sm:mb-6"
           >
-            <Zap className="w-4 h-4 text-primary" />
-            <span className="text-sm text-muted-foreground">12 Wochen Transformation</span>
+            <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
+            <span className="text-xs sm:text-sm text-muted-foreground">12 Wochen Transformation</span>
           </motion.div>
           
-          <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 sm:mb-6 leading-tight">
             Von <span className="text-gradient-primary">Null</span> auf
             <br />
             <span className="relative inline-block">
               profitabel
               <motion.svg
                 viewBox="0 0 200 12"
-                className="absolute -bottom-2 left-0 w-full"
+                className="absolute -bottom-1 sm:-bottom-2 left-0 w-full"
                 initial={{ pathLength: 0 }}
-                whileInView={{ pathLength: 1 }}
-                viewport={{ once: true }}
+                animate={{ pathLength: isSectionInView ? 1 : 0 }}
                 transition={{ delay: 0.5, duration: 0.8 }}
               >
                 <motion.path
@@ -123,27 +213,39 @@ export const JourneySection = () => {
                   strokeWidth="3"
                   strokeLinecap="round"
                   initial={{ pathLength: 0 }}
-                  whileInView={{ pathLength: 1 }}
-                  viewport={{ once: true }}
+                  animate={{ pathLength: isSectionInView ? 1 : 0 }}
                   transition={{ delay: 0.5, duration: 0.8 }}
                 />
               </motion.svg>
             </span>
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            Der bewährte Fahrplan, der aus kompletten Anfängern konstant profitable Trader macht.
+          <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
+            Der bewährte Fahrplan, der aus Anfängern profitable Trader macht.
           </p>
         </motion.div>
 
-        {/* Main Content - Two Column Layout */}
-        <div className="max-w-6xl mx-auto">
+        {/* Mobile Layout - Stacked Cards */}
+        <div className="lg:hidden space-y-4">
+          {stages.map((stage, index) => (
+            <MobileStageCard
+              key={stage.id}
+              stage={stage}
+              index={index}
+              isActive={index === activeStage}
+            />
+          ))}
+        </div>
+
+        {/* Desktop Layout - Two Column */}
+        <div className="hidden lg:block max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-[340px_1fr] gap-8 lg:gap-12">
-            
             {/* Left Column - Stage Selector */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              animate={{
+                opacity: isSectionInView ? 1 : 0,
+                x: isSectionInView ? 0 : -30,
+              }}
               className="space-y-3"
             >
               {stages.map((stage, index) => {
@@ -162,7 +264,6 @@ export const JourneySection = () => {
                     }`}
                     whileHover={{ x: isActive ? 0 : 4 }}
                   >
-                    {/* Active indicator line */}
                     {isActive && (
                       <motion.div
                         layoutId="activeIndicator"
@@ -170,7 +271,6 @@ export const JourneySection = () => {
                       />
                     )}
 
-                    {/* Progress bar for active stage */}
                     {isActive && isAutoPlaying && (
                       <motion.div
                         className="absolute bottom-0 left-0 h-0.5 bg-primary/40"
@@ -182,7 +282,6 @@ export const JourneySection = () => {
                     )}
 
                     <div className="flex items-center gap-4">
-                      {/* Step Number/Icon */}
                       <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-all ${
                         isActive 
                           ? 'bg-primary text-primary-foreground shadow-[0_0_20px_hsl(45_93%_58%/0.3)]' 
@@ -190,22 +289,15 @@ export const JourneySection = () => {
                             ? 'bg-primary/20 text-primary'
                             : 'bg-muted text-muted-foreground'
                       }`}>
-                        {isPast ? (
-                          <Check className="w-5 h-5" />
-                        ) : (
-                          <Icon className="w-5 h-5" />
-                        )}
+                        {isPast ? <Check className="w-5 h-5" /> : <Icon className="w-5 h-5" />}
                       </div>
 
-                      {/* Text */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className={`text-sm font-semibold transition-colors ${
-                            isActive ? 'text-primary' : 'text-muted-foreground'
-                          }`}>
-                            {stage.subtitle}
-                          </span>
-                        </div>
+                        <span className={`text-sm font-semibold transition-colors ${
+                          isActive ? 'text-primary' : 'text-muted-foreground'
+                        }`}>
+                          {stage.subtitle}
+                        </span>
                         <h3 className={`font-display text-lg font-bold truncate transition-colors ${
                           isActive ? 'text-foreground' : 'text-foreground/70'
                         }`}>
@@ -213,7 +305,6 @@ export const JourneySection = () => {
                         </h3>
                       </div>
 
-                      {/* Arrow */}
                       <ChevronRight className={`w-5 h-5 shrink-0 transition-all ${
                         isActive 
                           ? 'text-primary translate-x-0' 
@@ -235,15 +326,10 @@ export const JourneySection = () => {
                 transition={{ duration: 0.4, ease: 'easeOut' }}
                 className="glass rounded-3xl p-8 md:p-10 relative overflow-hidden"
               >
-                {/* Background gradient */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 pointer-events-none" />
-                
-                {/* Decorative circles */}
                 <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-primary/10 blur-3xl" />
-                <div className="absolute -bottom-10 -left-10 w-32 h-32 rounded-full bg-primary/5 blur-2xl" />
 
                 <div className="relative">
-                  {/* Stage Header */}
                   <div className="flex items-start gap-4 mb-6">
                     <motion.div
                       initial={{ scale: 0.8, rotate: -10 }}
@@ -266,12 +352,10 @@ export const JourneySection = () => {
                     </div>
                   </div>
 
-                  {/* Description */}
                   <p className="text-muted-foreground text-lg leading-relaxed mb-8">
                     {stages[activeStage].description}
                   </p>
 
-                  {/* Skills Grid */}
                   <div className="mb-8">
                     <span className="text-sm text-muted-foreground uppercase tracking-wider mb-4 block">
                       Was du lernst
@@ -294,7 +378,6 @@ export const JourneySection = () => {
                     </div>
                   </div>
 
-                  {/* Outcome */}
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -317,25 +400,27 @@ export const JourneySection = () => {
               </motion.div>
             </AnimatePresence>
           </div>
-
-          {/* CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mt-12 md:mt-16"
-          >
-            <Link to="/quiz">
-              <Button variant="hero" size="xl" className="group">
-                Starte deine Transformation
-                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-              </Button>
-            </Link>
-            <p className="text-sm text-muted-foreground mt-4">
-              Mache den kostenlosen Trader-Test und finde heraus, wo du startest.
-            </p>
-          </motion.div>
         </div>
+
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{
+            opacity: isSectionInView ? 1 : 0,
+            y: isSectionInView ? 0 : 20,
+          }}
+          className="text-center mt-10 sm:mt-12 md:mt-16"
+        >
+          <Link to="/quiz">
+            <Button variant="hero" size="lg" className="w-full sm:w-auto group">
+              Starte deine Transformation
+              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" />
+            </Button>
+          </Link>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-3 sm:mt-4">
+            Mache den kostenlosen Trader-Test.
+          </p>
+        </motion.div>
       </div>
     </section>
   );
