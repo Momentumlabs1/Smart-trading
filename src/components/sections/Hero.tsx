@@ -240,9 +240,10 @@ export const Hero = () => {
                 transition={{ duration: 0.6, delay: 0.1 }}
                 className="font-display text-2xl sm:text-3xl lg:text-5xl xl:text-6xl font-bold text-foreground leading-[1.15]"
               >
-                Die erste Adresse für
+                Die erste Adresse
                 <br />
                 <span className="relative inline-block">
+                  <span>für </span>
                   <span className="text-gradient-primary">professionelle</span>
                   <motion.svg
                     viewBox="0 0 300 12"
