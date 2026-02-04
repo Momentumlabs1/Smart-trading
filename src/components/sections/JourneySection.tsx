@@ -194,11 +194,10 @@ export const JourneySection = () => {
             <span className="text-xs sm:text-sm text-muted-foreground">12 Wochen Transformation</span>
           </motion.div>
           
-          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 sm:mb-6 leading-tight">
-            Von <span className="text-gradient-primary">Null</span> auf
-            <br />
+          <h2 className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 sm:mb-6 leading-tight whitespace-nowrap">
+            Von <span className="text-gradient-primary">Null</span> auf{' '}
             <span className="relative inline-block">
-              profitabel
+              <span className="text-gradient-primary">profitabel</span>
               <motion.svg
                 viewBox="0 0 200 12"
                 className="absolute -bottom-1 sm:-bottom-2 left-0 w-full"
