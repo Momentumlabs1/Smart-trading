@@ -164,41 +164,43 @@ export const Hero = () => {
           {/* Desktop: Side by side | Mobile: Stacked */}
           <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 lg:gap-16 items-center">
             
-            {/* Video Placeholder - Fixed size, left side on desktop */}
+            {/* Video Placeholder - Fixed size, left side on desktop - Links to Quiz */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="justify-self-center lg:justify-self-start"
             >
-              <div className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 group cursor-pointer">
-                {/* Gradient Background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-primary/10" />
-                
-                {/* Play Button Overlay */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                  <motion.div
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-primary/90 flex items-center justify-center shadow-lg shadow-primary/30"
-                  >
-                    <Play className="w-5 h-5 lg:w-6 lg:h-6 text-primary-foreground ml-0.5" fill="currentColor" />
-                  </motion.div>
-                  <p className="text-xs lg:text-sm font-medium text-foreground text-center px-4">
-                    Video starten
-                  </p>
-                  <span className="text-[10px] text-muted-foreground">2:30 Min</span>
+              <Link to="/quiz">
+                <div className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 group cursor-pointer hover:border-primary/50 transition-all duration-300">
+                  {/* Gradient Background */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-primary/10" />
+                  
+                  {/* Play Button Overlay */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+                    <motion.div
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-primary/90 flex items-center justify-center shadow-lg shadow-primary/30 group-hover:shadow-primary/50 transition-shadow"
+                    >
+                      <Play className="w-5 h-5 lg:w-6 lg:h-6 text-primary-foreground ml-0.5" fill="currentColor" />
+                    </motion.div>
+                    <p className="text-xs lg:text-sm font-medium text-foreground text-center px-4">
+                      Video starten
+                    </p>
+                    <span className="text-[10px] text-muted-foreground">2:30 Min</span>
+                  </div>
+
+                  {/* Corner Accents */}
+                  <div className="absolute top-2 left-2 w-4 h-4 border-l-2 border-t-2 border-primary/50 rounded-tl-lg" />
+                  <div className="absolute top-2 right-2 w-4 h-4 border-r-2 border-t-2 border-primary/50 rounded-tr-lg" />
+                  <div className="absolute bottom-2 left-2 w-4 h-4 border-l-2 border-b-2 border-primary/50 rounded-bl-lg" />
+                  <div className="absolute bottom-2 right-2 w-4 h-4 border-r-2 border-b-2 border-primary/50 rounded-br-lg" />
+
+                  {/* Hover Glow */}
+                  <motion.div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
-
-                {/* Corner Accents */}
-                <div className="absolute top-2 left-2 w-4 h-4 border-l-2 border-t-2 border-primary/50 rounded-tl-lg" />
-                <div className="absolute top-2 right-2 w-4 h-4 border-r-2 border-t-2 border-primary/50 rounded-tr-lg" />
-                <div className="absolute bottom-2 left-2 w-4 h-4 border-l-2 border-b-2 border-primary/50 rounded-bl-lg" />
-                <div className="absolute bottom-2 right-2 w-4 h-4 border-r-2 border-b-2 border-primary/50 rounded-br-lg" />
-
-                {/* Hover Glow */}
-                <motion.div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </div>
+              </Link>
             </motion.div>
 
             {/* Text Content - Right side on desktop */}

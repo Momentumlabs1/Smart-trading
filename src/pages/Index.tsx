@@ -8,6 +8,7 @@ import { Testimonials } from '@/components/sections/Testimonials';
 import { AboutSaif } from '@/components/sections/AboutSaif';
 import { Pricing } from '@/components/sections/Pricing';
 import { CTA } from '@/components/sections/CTA';
+import { HomepageQuizTeaser } from '@/components/sections/HomepageQuizTeaser';
 
 const Index = () => {
   return (
@@ -17,6 +18,7 @@ const Index = () => {
         <Hero />
         <JourneySection />
         <Features />
+        <HomepageQuizTeaser />
         <BotSection />
         <AboutSaif />
         <Testimonials />
