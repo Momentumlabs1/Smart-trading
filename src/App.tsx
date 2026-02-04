@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Quiz from "./pages/Quiz";
 import QuizResults from "./pages/QuizResults";
 import Academy from "./pages/Academy";
+import Bot from "./pages/Bot";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,7 +26,7 @@ const App = () => (
           {/* Placeholder routes - will be built out */}
           <Route path="/about" element={<Index />} />
           <Route path="/elite" element={<Index />} />
-          <Route path="/bot" element={<Index />} />
+          <Route path="/bot" element={<Bot />} />
           <Route path="/success" element={<Index />} />
           <Route path="/contact" element={<Index />} />
           <Route path="/free" element={<Index />} />
