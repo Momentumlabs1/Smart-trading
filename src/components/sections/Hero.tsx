@@ -249,7 +249,7 @@ export const Hero = () => {
                   style={{ opacity: 0.3 }}
                 />
                 <span className="relative z-10 flex items-center gap-2">
-                  Kostenloses Erstgespräch
+                  Wie gut kannst du traden?
                   <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
                 </span>
               </Button>
