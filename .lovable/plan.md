@@ -1,132 +1,163 @@
 
-
-# Plan: Video-Funnel Integration & Quiz-Überarbeitung
+# Professionelle Testimonials-Sektion mit echten Bildern und Texten
 
 ## Zusammenfassung
-Die Hero-Buttons werden zum Video-Funnel geleitet und das bestehende Quiz wird visuell aufgewertet. Zusätzlich wird ein eigener Homepage-Funnel-Einstiegs-Komponente erstellt.
+
+Die Testimonials-Sektion wird vollständig erweitert mit den 6 echten Kundenbildern und den 4 authentischen Erfahrungsberichten. Das Design wird professioneller und Apple-artig gestaltet mit einem erweiterten Carousel, zusätzlichen Mini-Testimonials und einem verbesserten Layout.
 
 ---
 
-## 1. Neue Komponente: HomepageQuizTeaser
+## Geplante Struktur
 
-Eine eigenständige Komponente für die Homepage, die als visuell ansprechender Einstieg in den Quiz-Funnel dient.
-
-**Datei:** `src/components/sections/HomepageQuizTeaser.tsx`
-
-**Funktionen:**
-- Glassmorphism-Karte mit animiertem Hintergrund
-- Kurzer Teaser-Text: "Finde in 3 Minuten heraus, welches Programm zu dir passt"
-- Animierte Trading-Level-Vorschau (Einsteiger -> Fortgeschritten -> Profi)
-- Großer CTA-Button zum Quiz
-- Trust-Elemente: "3 Min", "Kostenlos", "Keine Anmeldung"
-
----
-
-## 2. Hero-Buttons Anpassung
-
-**Datei:** `src/components/sections/Hero.tsx`
-
-**Änderungen:**
-- "Wie gut kannst du traden?" Button: Bleibt, führt zu `/quiz`
-- "Member Login" Button: Bleibt, führt zu `/login`
-- Der Video-Platzhalter (9:16) wird klickbar und führt ebenfalls zum Quiz (später Video-Funnel)
-
----
-
-## 3. QuizLanding visuell überarbeiten
-
-**Datei:** `src/components/quiz/QuizLanding.tsx`
-
-**Verbesserungen:**
-- Animierte Trading-Level-Badges die durch die 4 Levels rotieren
-- Glassmorphism-Karte statt nur Text
-- 3 Trust-Badges nebeneinander (Dauer, Kostenlos, Personalisiert)
-- Subtile Chart-Pattern im Hintergrund
-- Animierte Unterstrich-Linie unter "Trading-Level"
-- Sanftere Farbverläufe
+```text
++------------------------------------------------------------------+
+|                    ERFOLGSGESCHICHTEN                             |
+|                Das sagen unsere Trader                            |
++------------------------------------------------------------------+
+|    [480+ Trader]    [4.9★ Bewertung]    [98% Zufrieden]          |
++------------------------------------------------------------------+
+|                                                                   |
+|  +------------------------------------------------------------+  |
+|  |  [Avatar]                                                  |  |
+|  |                                                            |  |
+|  |  "Ausführlicher Erfahrungsbericht..."                      |  |
+|  |                                                            |  |
+|  |  Name                           ⭐⭐⭐⭐⭐                |  |
+|  |  Academy Schüler                                           |  |
+|  +------------------------------------------------------------+  |
+|                                                                   |
+|           [  •  •  •  •  ]  Navigation Dots                      |
++------------------------------------------------------------------+
+|                                                                   |
+|   Mini Testimonials Grid (3 weitere Kunden)                       |
+|   +------------+  +------------+  +------------+                  |
+|   | [Avatar]   |  | [Avatar]   |  | [Avatar]   |                  |
+|   | Quote...   |  | Quote...   |  | Quote...   |                  |
+|   | Name ⭐⭐⭐ |  | Name ⭐⭐⭐ |  | Name ⭐⭐⭐ |                  |
+|   +------------+  +------------+  +------------+                  |
++------------------------------------------------------------------+
+```
 
 ---
 
-## 4. QuizQuestion visuell aufwerten
+## Technische Umsetzung
 
-**Datei:** `src/components/quiz/QuizQuestion.tsx`
+### 1. Neue Assets hinzufügen
 
-**Verbesserungen:**
-- Bessere Hover-States mit Gold-Akzent
-- Subtile Glassmorphism-Effekte verstärken
-- Animierte Checkmarks bei Auswahl
-- Chart-Frage: Echtes Chart-Bild statt Emoji-Platzhalter
-- Progress-Indikator mit Glow-Effekt
+6 Testimonial-Avatare werden in `src/assets/testimonials/` gespeichert:
+- `testimonial-1.jpg` - Nachtszene mit ausgebreiteten Armen
+- `testimonial-2.jpg` - Person mit Handy/Jacket
+- `testimonial-3.jpg` - Sonnenbrille, lächelnd
+- `testimonial-4.jpg` - Fitness-Foto
+- `testimonial-5.jpg` - Zeigegeste
+- `testimonial-6.jpg` - Professionelles Headshot
+
+### 2. Datenstruktur erweitern
+
+Die Testimonials-Daten werden mit echten Texten und Bildern aktualisiert:
+
+```typescript
+const testimonials = [
+  {
+    id: 1,
+    name: 'Academy Schüler',
+    role: 'Trading Student',
+    avatar: testimonial1,
+    rating: 5,
+    text: 'Ich hatte öfters die Möglichkeit in meinem Leben das Traden zu erlernen...',
+    shortQuote: 'Mein Mentor hat ein Ziel: jedem Schüler die Möglichkeit zu geben...',
+  },
+  // ... weitere echte Testimonials
+];
+```
+
+### 3. Hauptkomponenten-Änderungen
+
+**Erweitertes Carousel:**
+- Größere Avatarbilder (echte Fotos statt Initialen)
+- Längere Texte mit "Mehr lesen" Option bei langen Testimonials
+- Verbesserte Animationen beim Wechsel
+- Gold-Akzent-Rahmen um aktiven Avatar
+
+**Neue Mini-Testimonials Grid:**
+- 3 kleinere Testimonial-Karten unter dem Hauptcarousel
+- Verkürzte Zitate mit echten Profilbildern
+- Hover-Effekte mit Glassmorphism
+
+**Verbessertes Layout:**
+- Responsives Grid für alle Bildschirmgrößen
+- Touch-freundliche Navigation auf Mobile
+- Optimierte Typografie für längere Texte
+
+### 4. Design-Verbesserungen
+
+- **Avatar-Styling:** Runde Bilder mit Gold-Border bei Hover und Schatten
+- **Karten-Layout:** Mehr Padding, bessere Lesbarkeit für längere Texte
+- **Animationen:** Subtile Fade-Ins und Parallax-Effekte
+- **Responsive:** Texte werden auf Mobile gekürzt mit "Mehr lesen" Option
 
 ---
 
-## 5. QuizProgress aufwerten
+## Matching: Bilder zu Texten
 
-**Datei:** `src/components/quiz/QuizProgress.tsx`
-
-**Verbesserungen:**
-- Animierte Progress-Bar mit Gold-Gradient
-- Schritt-Nummern mit subtiler Animation
-- "Frage X von Y" Text dezenter
+| Bild | Testimonial-Text |
+|------|------------------|
+| testimonial-1 (Nacht/Stadt) | Text 1: Langer Text über Mentorship |
+| testimonial-2 (Handy/Jacket) | Text 3: Von Null abgeholt |
+| testimonial-3 (Sonnenbrille) | Text 2: Habib - Bester Lehrer |
+| testimonial-4 (Fitness) | Text 4: 1-zu-1 Kurs übertroffen |
+| testimonial-5 (Geste) | Zusätzlicher kurzer Quote |
+| testimonial-6 (Headshot) | Zusätzlicher kurzer Quote |
 
 ---
 
-## 6. Homepage Integration
+## Dateien
 
-**Datei:** `src/pages/Index.tsx`
-
-Die neue `HomepageQuizTeaser`-Komponente wird als separate Sektion eingefügt (optional nach Features oder vor Pricing).
+| Datei | Änderung |
+|-------|----------|
+| `src/assets/testimonials/` | 6 neue Avatarbilder |
+| `src/components/sections/Testimonials.tsx` | Komplett überarbeitet |
 
 ---
 
 ## Technische Details
 
-### HomepageQuizTeaser Struktur:
-```text
-+---------------------------------------+
-|   Glassmorphism Card                  |
-|                                       |
-|   [Trading-Level Animation]           |
-|   Einsteiger -> Profi                 |
-|                                       |
-|   "Finde in 3 Min heraus..."          |
-|                                       |
-|   [=== Wie gut tradest du? ===]       |
-|                                       |
-|   3 Min • Kostenlos • Personalisiert  |
-+---------------------------------------+
+### Testimonial-Datenstruktur:
+
+```typescript
+interface Testimonial {
+  id: number;
+  name: string;
+  role: string;
+  avatar: string; // Importiertes Bild
+  rating: number;
+  text: string;
+  shortQuote?: string; // Für Grid-Ansicht
+}
 ```
 
-### QuizLanding Neues Layout:
-```text
-+---------------------------------------+
-|   Subtle Chart Background Pattern     |
-|                                       |
-|   [Level Badge Animation]             |
-|   Einsteiger ▸ Fortgeschritten ▸ Pro  |
-|                                       |
-|   "Welches Programm passt zu dir?"    |
-|   ~~~~~~~~~~~~~~~                     |
-|                                       |
-|   [=== Analyse starten ===]           |
-|                                       |
-|   🕐 3 Min  •  ✓ Kostenlos  •  🎯     |
-+---------------------------------------+
+### Avatar-Komponente:
+
+```typescript
+<motion.div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden ring-2 ring-primary/30">
+  <img 
+    src={testimonial.avatar} 
+    alt={testimonial.name}
+    className="w-full h-full object-cover"
+  />
+</motion.div>
 ```
 
-### Bestehende Quiz-Logik:
-- Die 12 Fragen und Scoring-Logik in `quiz-data.ts` bleiben unverändert
-- Nur visuelle Komponenten werden aufgewertet
+### Mini-Testimonial Grid:
 
----
-
-## Dateien die erstellt werden:
-1. `src/components/sections/HomepageQuizTeaser.tsx` (neu)
-
-## Dateien die bearbeitet werden:
-1. `src/components/sections/Hero.tsx` - Video-Platzhalter klickbar machen
-2. `src/components/quiz/QuizLanding.tsx` - Visuelles Upgrade
-3. `src/components/quiz/QuizQuestion.tsx` - Visuelles Upgrade
-4. `src/components/quiz/QuizProgress.tsx` - Visuelles Upgrade
-5. `src/pages/Index.tsx` - HomepageQuizTeaser optional einbinden
-
+```typescript
+<div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12">
+  {additionalTestimonials.map((item) => (
+    <motion.div className="glass rounded-xl p-4">
+      <img src={item.avatar} className="w-12 h-12 rounded-full" />
+      <p className="text-sm">{item.shortQuote}</p>
+      <div className="flex">⭐⭐⭐⭐⭐</div>
+    </motion.div>
+  ))}
+</div>
+```
