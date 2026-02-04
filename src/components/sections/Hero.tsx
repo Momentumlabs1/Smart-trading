@@ -161,16 +161,16 @@ export const Hero = () => {
       <div className="section-container relative z-10 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto py-8 lg:py-16">
           
-          {/* Desktop: Side by side | Mobile: Stacked (text first on mobile) */}
-          <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 lg:gap-16 items-center">
+          {/* Desktop: Side by side | Mobile: Stacked with specific order */}
+          <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6 lg:gap-16 items-center">
             
-            {/* Video Placeholder - Fixed size, left side on desktop - Links to Quiz */}
-            {/* On mobile: order-2 (appears after text), on desktop: order-1 (appears first/left) */}
+            {/* Video Placeholder - Left on desktop */}
+            {/* Mobile order: 2 (after headline, before buttons) */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="justify-self-center lg:justify-self-start order-2 lg:order-1"
+              className="justify-self-center lg:justify-self-start order-2 lg:order-1 lg:row-span-2"
             >
               <Link to="/quiz">
                 <div className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 group cursor-pointer hover:border-primary/50 transition-all duration-300">
@@ -204,7 +204,7 @@ export const Hero = () => {
               </Link>
             </motion.div>
 
-            {/* Text Content - Right side on desktop, FIRST on mobile */}
+            {/* Headline Section - FIRST on mobile, right side on desktop */}
             <div className="text-center lg:text-left order-1 lg:order-2">
               {/* Badge */}
               <motion.div
@@ -223,7 +223,7 @@ export const Hero = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="font-display text-2xl sm:text-3xl lg:text-5xl xl:text-6xl font-bold text-foreground leading-[1.15] mb-6"
+                className="font-display text-2xl sm:text-3xl lg:text-5xl xl:text-6xl font-bold text-foreground leading-[1.15]"
               >
                 Die erste Adresse für
                 <br />
@@ -251,7 +251,10 @@ export const Hero = () => {
                 <br />
                 Trader-Ausbildungen
               </motion.h1>
+            </div>
 
+            {/* CTA Buttons + Stats - AFTER video on mobile, part of right column on desktop */}
+            <div className="text-center lg:text-left order-3 lg:order-3 lg:col-start-2">
               {/* CTA Buttons */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
