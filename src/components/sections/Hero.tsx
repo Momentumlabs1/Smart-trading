@@ -34,10 +34,8 @@ const StatsBar = () => {
   const isInView = useInView(ref, { amount: 0.3, once: false });
   
   const stats = [
-    { value: 847, suffix: '%', label: 'Bot Performance', prefix: '+' },
+    { value: 14, suffix: '%', label: 'Bot Rendite', prefix: '+' },
     { value: 73, suffix: '%', label: 'Win Rate' },
-    { value: 480, suffix: '+', label: 'Mitglieder' },
-    { value: 12, suffix: '+', label: 'Jahre Erfahrung' },
   ];
 
   return (
@@ -49,7 +47,7 @@ const StatsBar = () => {
         y: isInView ? 0 : 20 
       }}
       transition={{ duration: 0.6, delay: 0.3 }}
-      className="grid grid-cols-2 sm:flex sm:flex-wrap sm:justify-center gap-4 sm:gap-8 md:gap-12 lg:gap-16 mt-10 sm:mt-16 pt-6 sm:pt-8 border-t border-border/30"
+      className="flex justify-center gap-8 sm:gap-12 md:gap-16 mt-8 sm:mt-12 pt-6 border-t border-border/30"
     >
       {stats.map((stat, i) => (
         <motion.div
