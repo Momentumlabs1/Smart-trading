@@ -95,17 +95,32 @@ export const Hero = () => {
         ease: 'easeOut',
         delay: 0.5
       }}>
-          <div className="absolute inset-0" style={{
-          backgroundImage: `url(${tradingBg})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          opacity: 0.5
-        }} />
+          <motion.div 
+            className="absolute inset-0" 
+            style={{
+              backgroundImage: `url(${tradingBg})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center right',
+              backgroundRepeat: 'no-repeat',
+            }}
+            initial={{ opacity: 0, scale: 1.02 }}
+            animate={{ 
+              opacity: [0.4, 0.5, 0.45, 0.5, 0.4],
+              scale: [1.02, 1.03, 1.02, 1.025, 1.02],
+              x: [0, 2, -1, 1, 0],
+              y: [0, -1, 1, -0.5, 0]
+            }}
+            transition={{
+              opacity: { duration: 8, repeat: Infinity, ease: 'easeInOut' },
+              scale: { duration: 12, repeat: Infinity, ease: 'easeInOut' },
+              x: { duration: 10, repeat: Infinity, ease: 'easeInOut' },
+              y: { duration: 14, repeat: Infinity, ease: 'easeInOut' }
+            }}
+          />
         </motion.div>
-        {/* Gradient overlay for smooth fade */}
-        <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/30 to-background/95 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-background/80 pointer-events-none" />
+        {/* Gradient overlay for smooth fade - adjusted for mobile */}
+        <div className="absolute inset-0 bg-gradient-to-r from-background/98 via-background/40 to-background/98 sm:from-background/95 sm:via-background/30 sm:to-background/95 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-background/90 sm:via-background/20 sm:to-background/80 pointer-events-none" />
       </div>
 
       {/* Animated gradient orbs - hidden on mobile for performance */}
