@@ -102,13 +102,16 @@ export const Hero = () => {
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
-              opacity: 0.2,
+              // Make the chart texture visible but still subtle/clean
+              opacity: 0.32,
+              filter: 'contrast(1.15) saturate(1.1) brightness(1.05)',
+              mixBlendMode: 'screen',
             }}
           />
         </motion.div>
         {/* Gradient overlay for smooth fade */}
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-background pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/20 to-background/90 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/10 to-background/95 pointer-events-none" />
       </div>
 
       {/* Animated gradient orbs */}
