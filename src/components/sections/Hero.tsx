@@ -102,10 +102,7 @@ export const Hero = () => {
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
-              // Make the chart texture visible but still subtle/clean
-              opacity: 0.32,
-              filter: 'contrast(1.15) saturate(1.1) brightness(1.05)',
-              mixBlendMode: 'screen',
+              opacity: 0.5,
             }}
           />
         </motion.div>
