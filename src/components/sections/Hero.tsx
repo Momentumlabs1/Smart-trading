@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { motion, useMotionValue, useTransform, animate, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -28,35 +28,45 @@ const AnimatedCounter = ({ value, suffix = '' }: { value: number; suffix?: strin
   );
 };
 
-// Stats Bar component
+// Stats Bar component - responsive
 const StatsBar = () => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { amount: 0.3, once: false });
+  
   const stats = [
     { value: 847, suffix: '%', label: 'Bot Performance', prefix: '+' },
     { value: 73, suffix: '%', label: 'Win Rate' },
-    { value: 480, suffix: '+', label: 'Community Mitglieder' },
+    { value: 480, suffix: '+', label: 'Mitglieder' },
     { value: 12, suffix: '+', label: 'Jahre Erfahrung' },
   ];
 
   return (
     <motion.div
+      ref={ref}
       initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.5 }}
-      className="flex flex-wrap justify-center gap-8 md:gap-12 lg:gap-16 mt-16 pt-8 border-t border-border/30"
+      animate={{ 
+        opacity: isInView ? 1 : 0, 
+        y: isInView ? 0 : 20 
+      }}
+      transition={{ duration: 0.6, delay: 0.3 }}
+      className="grid grid-cols-2 sm:flex sm:flex-wrap sm:justify-center gap-4 sm:gap-8 md:gap-12 lg:gap-16 mt-10 sm:mt-16 pt-6 sm:pt-8 border-t border-border/30"
     >
       {stats.map((stat, i) => (
         <motion.div
           key={i}
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 + i * 0.1, duration: 0.5 }}
+          animate={{ 
+            opacity: isInView ? 1 : 0, 
+            y: isInView ? 0 : 20 
+          }}
+          transition={{ delay: 0.4 + i * 0.1, duration: 0.5 }}
           className="text-center"
         >
-          <div className="text-2xl md:text-3xl font-bold text-foreground font-mono">
+          <div className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground font-mono">
             {stat.prefix && <span className="text-primary">{stat.prefix}</span>}
             <AnimatedCounter value={stat.value} suffix={stat.suffix} />
           </div>
-          <div className="text-xs md:text-sm text-muted-foreground mt-1 uppercase tracking-wider">
+          <div className="text-[10px] sm:text-xs md:text-sm text-muted-foreground mt-1 uppercase tracking-wider">
             {stat.label}
           </div>
         </motion.div>
@@ -65,28 +75,11 @@ const StatsBar = () => {
   );
 };
 
-// Floating trading card
-const FloatingCard = ({ delay, className, children }: { delay: number; className: string; children: React.ReactNode }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay, duration: 0.6 }}
-    className={className}
-  >
-    <motion.div
-      animate={{ y: [0, -8, 0] }}
-      transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay }}
-    >
-      {children}
-    </motion.div>
-  </motion.div>
-);
-
 export const Hero = () => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+    <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden pt-16 sm:pt-20 pb-8 sm:pb-0">
       {/* Animated Trading Chart Background */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
@@ -107,14 +100,14 @@ export const Hero = () => {
           />
         </motion.div>
         {/* Gradient overlay for smooth fade */}
-        <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/20 to-background/90 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/10 to-background/95 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/30 to-background/95 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-background/80 pointer-events-none" />
       </div>
 
-      {/* Animated gradient orbs */}
-      <div className="absolute inset-0 pointer-events-none">
+      {/* Animated gradient orbs - hidden on mobile for performance */}
+      <div className="absolute inset-0 pointer-events-none hidden sm:block">
         <motion.div
-          className="absolute w-[1000px] h-[1000px] -top-1/4 -left-1/4 rounded-full opacity-20"
+          className="absolute w-[600px] md:w-[1000px] h-[600px] md:h-[1000px] -top-1/4 -left-1/4 rounded-full opacity-20"
           style={{
             background: 'radial-gradient(circle, hsl(45 93% 58% / 0.15), transparent 60%)',
           }}
@@ -124,67 +117,59 @@ export const Hero = () => {
           }}
           transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
         />
-        <motion.div
-          className="absolute w-[800px] h-[800px] -bottom-1/4 -right-1/4 rounded-full opacity-10"
-          style={{
-            background: 'radial-gradient(circle, hsl(0 0% 100% / 0.1), transparent 60%)',
-          }}
-          animate={{
-            scale: [1.1, 1, 1.1],
-            rotate: [0, -10, 0],
-          }}
-          transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut' }}
-        />
       </div>
 
-      {/* Grid pattern */}
+      {/* Grid pattern - lighter on mobile */}
       <div 
-        className="absolute inset-0 opacity-[0.03]"
+        className="absolute inset-0 opacity-[0.02] sm:opacity-[0.03]"
         style={{
           backgroundImage: `linear-gradient(hsl(var(--foreground)) 1px, transparent 1px),
                            linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px)`,
-          backgroundSize: '80px 80px',
+          backgroundSize: '40px 40px sm:80px 80px',
         }}
       />
 
-      {/* Floating elements - trading signals (decorative, positioned far out) */}
-      <FloatingCard delay={0.8} className="absolute top-28 left-[5%] hidden xl:block z-0">
-        <div className="glass rounded-xl px-4 py-3 flex items-center gap-3 opacity-60">
-          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-          <span className="text-sm text-foreground font-medium">BTC/USD</span>
-          <span className="text-sm text-green-500 font-mono">+2.4%</span>
-        </div>
-      </FloatingCard>
-
-      <FloatingCard delay={1.0} className="absolute top-36 right-[5%] hidden xl:block z-0">
-        <div className="glass rounded-xl px-4 py-3 flex items-center gap-3 opacity-60">
-          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-          <span className="text-sm text-foreground font-medium">ETH/USD</span>
-          <span className="text-sm text-green-500 font-mono">+5.1%</span>
-        </div>
-      </FloatingCard>
+      {/* Floating elements - hidden on mobile */}
+      <div className="absolute top-28 left-[5%] hidden xl:block z-0">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.6 }}
+        >
+          <motion.div
+            animate={{ y: [0, -8, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <div className="glass rounded-xl px-4 py-3 flex items-center gap-3 opacity-60">
+              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+              <span className="text-sm text-foreground font-medium">BTC/USD</span>
+              <span className="text-sm text-green-500 font-mono">+2.4%</span>
+            </div>
+          </motion.div>
+        </motion.div>
+      </div>
 
       {/* Main content */}
-      <div className="section-container relative z-10">
+      <div className="section-container relative z-10 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto text-center">
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-block mb-8"
+            className="inline-block mb-4 sm:mb-8"
           >
-            <span className="text-xs font-semibold text-primary uppercase tracking-[0.2em]">
+            <span className="text-[10px] sm:text-xs font-semibold text-primary uppercase tracking-[0.15em] sm:tracking-[0.2em]">
               Willkommen bei Smart Trading
             </span>
           </motion.div>
 
-          {/* Headline */}
+          {/* Headline - responsive sizing */}
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground leading-[1.1] mb-6"
+            className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground leading-[1.15] sm:leading-[1.1] mb-4 sm:mb-6"
           >
             Die erste Adresse für
             <br />
@@ -192,7 +177,7 @@ export const Hero = () => {
               <span className="text-gradient-primary">professionelle</span>
               <motion.svg
                 viewBox="0 0 300 12"
-                className="absolute -bottom-2 left-0 w-full"
+                className="absolute -bottom-1 sm:-bottom-2 left-0 w-full"
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
                 transition={{ delay: 0.8, duration: 0.8 }}
@@ -218,25 +203,25 @@ export const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
+            className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-6 sm:mb-10 leading-relaxed px-2"
           >
             Erlerne die Fähigkeiten zum Profi-Trader und erreiche zeitliche und finanzielle Freiheit.
-            <br />
+            <br className="hidden sm:block" />
             <span className="text-foreground font-medium">Dein Erfolg ist unsere Mission.</span>
           </motion.p>
 
-          {/* CTA Buttons */}
+          {/* CTA Buttons - stacked on mobile */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4 sm:px-0"
           >
-            <Link to="/quiz">
+            <Link to="/quiz" className="w-full sm:w-auto">
               <Button
                 variant="hero"
-                size="xl"
-                className="group relative overflow-hidden"
+                size="lg"
+                className="w-full sm:w-auto group relative overflow-hidden text-sm sm:text-base"
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
               >
@@ -248,15 +233,15 @@ export const Hero = () => {
                   transition={{ duration: 0.6 }}
                   style={{ opacity: 0.3 }}
                 />
-                <span className="relative z-10 flex items-center gap-2">
+                <span className="relative z-10 flex items-center justify-center gap-2">
                   Wie gut kannst du traden?
-                  <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" />
                 </span>
               </Button>
             </Link>
-            <Link to="/login">
-              <Button variant="heroOutline" size="xl" className="group">
-                <Play className="w-4 h-4 mr-2" />
+            <Link to="/login" className="w-full sm:w-auto">
+              <Button variant="heroOutline" size="lg" className="w-full sm:w-auto group text-sm sm:text-base">
+                <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2" />
                 Member Login
               </Button>
             </Link>
@@ -268,7 +253,7 @@ export const Hero = () => {
       </div>
 
       {/* Bottom gradient */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-20 sm:h-40 bg-gradient-to-t from-background to-transparent pointer-events-none" />
     </section>
   );
 };

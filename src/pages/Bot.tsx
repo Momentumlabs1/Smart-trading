@@ -104,32 +104,41 @@ const StatCard = ({
   prefix?: string;
   trend?: 'up' | 'down';
   description?: string;
-}) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    className="glass rounded-2xl p-6"
-  >
-    <div className="flex items-start justify-between mb-4">
-      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-        <Icon className="w-6 h-6 text-primary" />
-      </div>
-      {trend && (
-        <div className={`flex items-center gap-1 text-sm ${trend === 'up' ? 'text-green-500' : 'text-red-500'}`}>
-          {trend === 'up' ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
+}) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { amount: 0.3, once: false });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{
+        opacity: isInView ? 1 : 0,
+        y: isInView ? 0 : 20,
+      }}
+      transition={{ duration: 0.4 }}
+      className="glass rounded-xl sm:rounded-2xl p-4 sm:p-6"
+    >
+      <div className="flex items-start justify-between mb-3 sm:mb-4">
+        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-primary/10 flex items-center justify-center">
+          <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
         </div>
+        {trend && (
+          <div className={`flex items-center gap-1 text-xs sm:text-sm ${trend === 'up' ? 'text-green-500' : 'text-red-500'}`}>
+            {trend === 'up' ? <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4" /> : <TrendingDown className="w-3 h-3 sm:w-4 sm:h-4" />}
+          </div>
+        )}
+      </div>
+      <div className="text-xs sm:text-sm text-muted-foreground mb-1">{label}</div>
+      <div className="text-2xl sm:text-3xl font-bold text-foreground mb-1">
+        <AnimatedCounter value={value} prefix={prefix} suffix={suffix} decimals={suffix === '%' ? 1 : 0} />
+      </div>
+      {description && (
+        <p className="text-[10px] sm:text-xs text-muted-foreground">{description}</p>
       )}
-    </div>
-    <div className="text-sm text-muted-foreground mb-1">{label}</div>
-    <div className="text-3xl font-bold text-foreground mb-1">
-      <AnimatedCounter value={value} prefix={prefix} suffix={suffix} decimals={suffix === '%' ? 1 : 0} />
-    </div>
-    {description && (
-      <p className="text-xs text-muted-foreground">{description}</p>
-    )}
-  </motion.div>
-);
+    </motion.div>
+  );
+};
 
 // Chart Card Component  
 const ChartCard = ({ 
@@ -150,26 +159,34 @@ const ChartCard = ({
   yAxisDomain?: [number, number];
   valuePrefix?: string;
   valueSuffix?: string;
-}) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    className="glass rounded-2xl p-6"
-  >
-    <div className="flex items-center justify-between mb-4">
-      <div>
-        <h3 className="font-display text-lg font-semibold text-foreground">{title}</h3>
-        {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
-      </div>
-      <div className="text-right">
-        <div className="font-mono text-xl font-bold text-primary">
-          {valuePrefix}{data[data.length - 1][dataKey]}{valueSuffix}
+}) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { amount: 0.3, once: false });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{
+        opacity: isInView ? 1 : 0,
+        y: isInView ? 0 : 20,
+      }}
+      transition={{ duration: 0.4 }}
+      className="glass rounded-xl sm:rounded-2xl p-4 sm:p-6"
+    >
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0 mb-3 sm:mb-4">
+        <div>
+          <h3 className="font-display text-base sm:text-lg font-semibold text-foreground">{title}</h3>
+          {subtitle && <p className="text-xs sm:text-sm text-muted-foreground">{subtitle}</p>}
         </div>
-        <div className="text-xs text-muted-foreground">Aktuell</div>
+        <div className="text-left sm:text-right">
+          <div className="font-mono text-lg sm:text-xl font-bold text-primary">
+            {valuePrefix}{data[data.length - 1][dataKey]}{valueSuffix}
+          </div>
+          <div className="text-[10px] sm:text-xs text-muted-foreground">Aktuell</div>
+        </div>
       </div>
-    </div>
-    <div className="h-48">
+      <div className="h-36 sm:h-48">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data}>
           <defs>
@@ -210,8 +227,9 @@ const ChartCard = ({
         </AreaChart>
       </ResponsiveContainer>
     </div>
-  </motion.div>
-);
+    </motion.div>
+  );
+};
 
 const BotPage = () => {
   const [timeframe, setTimeframe] = useState<'week' | 'month' | '3months'>('3months');
