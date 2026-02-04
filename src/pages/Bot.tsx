@@ -4,12 +4,15 @@ import { Link } from 'react-router-dom';
 import { 
   ArrowRight, TrendingUp, TrendingDown, Shield, Clock, Bot, 
   MessageSquare, Camera, Bell, CheckCircle2, Zap, LineChart,
-  DollarSign, Percent, Activity
+  DollarSign, Percent, Activity, Play, Star, Users, Award
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import saifTrading from '@/assets/saif-trading.webp';
+import saifDesk from '@/assets/saif-desk.webp';
+import saifPhone from '@/assets/saif-phone.webp';
 
 // Real performance data based on the provided stats (3 months: Nov 17 - Feb 4)
 const yieldData = [
@@ -231,9 +234,92 @@ const ChartCard = ({
   );
 };
 
-const BotPage = () => {
-  const [timeframe, setTimeframe] = useState<'week' | 'month' | '3months'>('3months');
+// Video Placeholder Component
+const VideoPlaceholder = () => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="relative w-full aspect-video rounded-2xl sm:rounded-3xl overflow-hidden glass"
+    >
+      {/* Background Image */}
+      <img 
+        src={saifTrading} 
+        alt="Saif erklärt den Trading Bot" 
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+      
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-background/20" />
+      
+      {/* Play Button */}
+      <motion.div 
+        className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer group"
+        whileHover={{ scale: 1.02 }}
+      >
+        <motion.div 
+          className="w-16 h-16 sm:w-20 sm:h-20 rounded-full glass flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors"
+          animate={{ scale: [1, 1.05, 1] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <Play className="w-6 h-6 sm:w-8 sm:h-8 text-primary fill-primary ml-1" />
+        </motion.div>
+        <span className="text-sm sm:text-base text-foreground font-medium">Video starten</span>
+        <span className="text-xs text-muted-foreground mt-1">Bot-Demo ansehen</span>
+      </motion.div>
+      
+      {/* Corner badges */}
+      <div className="absolute top-4 left-4 glass rounded-full px-3 py-1.5 flex items-center gap-2">
+        <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+        <span className="text-xs text-foreground">Live Demo</span>
+      </div>
+      
+      <div className="absolute top-4 right-4 glass rounded-full px-3 py-1.5">
+        <span className="text-xs text-muted-foreground">12:34</span>
+      </div>
+    </motion.div>
+  );
+};
 
+// Testimonial Component
+const BotTestimonial = ({ 
+  name, 
+  role, 
+  quote, 
+  profit 
+}: { 
+  name: string; 
+  role: string; 
+  quote: string;
+  profit: string;
+}) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    className="glass rounded-2xl p-6"
+  >
+    <div className="flex items-center gap-1 mb-3">
+      {[...Array(5)].map((_, i) => (
+        <Star key={i} className="w-4 h-4 text-primary fill-primary" />
+      ))}
+    </div>
+    <p className="text-muted-foreground mb-4 italic">"{quote}"</p>
+    <div className="flex items-center justify-between">
+      <div>
+        <div className="font-semibold text-foreground">{name}</div>
+        <div className="text-xs text-muted-foreground">{role}</div>
+      </div>
+      <div className="text-right">
+        <div className="font-mono text-lg font-bold text-green-500">{profit}</div>
+        <div className="text-xs text-muted-foreground">mit dem Bot</div>
+      </div>
+    </div>
+  </motion.div>
+);
+
+const BotPage = () => {
   const features = [
     {
       icon: MessageSquare,
@@ -267,6 +353,27 @@ const BotPage = () => {
     },
   ];
 
+  const testimonials = [
+    {
+      name: 'Michael S.',
+      role: 'Daytrader seit 2 Jahren',
+      quote: 'Der Bot hat meine Trading-Routine komplett verändert. Endlich verpasse ich keine Setups mehr.',
+      profit: '+€2.340',
+    },
+    {
+      name: 'Laura K.',
+      role: 'Berufstätige Traderin',
+      quote: 'Perfekt für Berufstätige. Der Bot überwacht alles, während ich arbeite.',
+      profit: '+€1.890',
+    },
+    {
+      name: 'Thomas B.',
+      role: 'Swing Trader',
+      quote: 'Die Telegram-Integration ist genial. Bekomme Alerts direkt aufs Handy.',
+      profit: '+€3.120',
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -286,7 +393,7 @@ const BotPage = () => {
           </div>
 
           <div className="section-container relative z-10">
-            <div className="max-w-4xl mx-auto text-center">
+            <div className="max-w-4xl mx-auto text-center mb-12">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -331,8 +438,107 @@ const BotPage = () => {
                   </Button>
                 </Link>
                 <Button variant="heroOutline" size="xl">
+                  <Play className="w-5 h-5" />
                   Demo anschauen
                 </Button>
+              </motion.div>
+            </div>
+
+            {/* Video Placeholder - Full Width */}
+            <VideoPlaceholder />
+          </div>
+        </section>
+
+        {/* Saif Introduction Section */}
+        <section className="py-16 md:py-24 relative overflow-hidden">
+          <div className="section-container">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Image */}
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="relative"
+              >
+                <div className="relative aspect-[4/5] rounded-3xl overflow-hidden glass p-2">
+                  <img 
+                    src={saifDesk} 
+                    alt="Saif am Trading Desk" 
+                    className="w-full h-full object-cover rounded-2xl"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent rounded-2xl" />
+                </div>
+                
+                {/* Floating Stats */}
+                <motion.div
+                  className="absolute -bottom-4 -right-4 glass rounded-2xl p-4"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                      <Award className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <div className="font-mono text-xl font-bold text-primary">800%+</div>
+                      <div className="text-xs text-muted-foreground">Bot Rendite gesamt</div>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+
+              {/* Content */}
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+              >
+                <span className="inline-block text-xs font-semibold text-primary uppercase tracking-[0.2em] mb-4">
+                  Entwickelt von Saif
+                </span>
+                
+                <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-6">
+                  "Dieser Bot ist das Ergebnis von
+                  <span className="text-gradient-primary"> 3 Jahren Entwicklung."</span>
+                </h2>
+                
+                <div className="space-y-4 text-muted-foreground mb-8">
+                  <p>
+                    Ich habe unzählige Strategien getestet, tausende Stunden in Backtesting investiert 
+                    und den Bot immer weiter optimiert — bis er konstant profitabel wurde.
+                  </p>
+                  <p>
+                    Das Ergebnis: Ein KI-System, das die Märkte 24/7 analysiert und dir die 
+                    besten Setups direkt aufs Handy schickt.
+                  </p>
+                </div>
+
+                {/* Key Benefits */}
+                <div className="grid grid-cols-2 gap-4 mb-8">
+                  {[
+                    { icon: TrendingUp, value: '+14.2%', label: 'Letzte 3 Monate' },
+                    { icon: Shield, value: '-10%', label: 'Max Drawdown' },
+                    { icon: Clock, value: '24/7', label: 'Aktiv' },
+                    { icon: Users, value: '200+', label: 'Nutzer' },
+                  ].map((item) => (
+                    <div key={item.label} className="glass rounded-xl p-3 flex items-center gap-3">
+                      <item.icon className="w-5 h-5 text-primary shrink-0" />
+                      <div>
+                        <div className="font-mono font-bold text-foreground">{item.value}</div>
+                        <div className="text-xs text-muted-foreground">{item.label}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-4 pt-6 border-t border-border">
+                  <div>
+                    <div className="font-display font-bold text-lg text-foreground">Saif Al-Nasiri</div>
+                    <div className="text-sm text-muted-foreground">Bot-Entwickler & Head Trader</div>
+                  </div>
+                </div>
               </motion.div>
             </div>
           </div>
@@ -488,6 +694,107 @@ const BotPage = () => {
           </div>
         </section>
 
+        {/* How It Works with Saif Image */}
+        <section className="py-16 md:py-24 relative">
+          <div className="section-container">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Content */}
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+              >
+                <span className="inline-block text-xs font-semibold text-primary uppercase tracking-[0.2em] mb-4">
+                  So funktioniert's
+                </span>
+                
+                <h2 className="font-display text-3xl sm:text-4xl font-bold text-foreground mb-8">
+                  In 3 Schritten zum
+                  <span className="text-gradient-primary"> automatisierten Trading</span>
+                </h2>
+
+                <div className="space-y-6">
+                  {[
+                    {
+                      step: '01',
+                      title: 'Bot aktivieren',
+                      description: 'Verbinde den Bot mit deinem Telegram und konfiguriere deine Präferenzen.',
+                    },
+                    {
+                      step: '02',
+                      title: 'Signale empfangen',
+                      description: 'Der Bot analysiert die Märkte 24/7 und sendet dir profitable Setups.',
+                    },
+                    {
+                      step: '03',
+                      title: 'Trades ausführen',
+                      description: 'Entscheide selbst, welche Trades du nimmst — volle Kontrolle behältst du.',
+                    },
+                  ].map((item, index) => (
+                    <motion.div
+                      key={item.step}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 }}
+                      className="flex gap-4"
+                    >
+                      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                        <span className="font-mono text-sm font-bold text-primary">{item.step}</span>
+                      </div>
+                      <div>
+                        <h3 className="font-display text-lg font-semibold text-foreground mb-1">
+                          {item.title}
+                        </h3>
+                        <p className="text-muted-foreground text-sm">
+                          {item.description}
+                        </p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Image */}
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="relative"
+              >
+                <div className="relative aspect-square rounded-3xl overflow-hidden glass p-2">
+                  <img 
+                    src={saifPhone} 
+                    alt="Saif zeigt den Bot auf dem Smartphone" 
+                    className="w-full h-full object-cover rounded-2xl"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent rounded-2xl" />
+                </div>
+                
+                {/* Telegram Badge */}
+                <motion.div
+                  className="absolute -top-4 -left-4 glass rounded-2xl p-4"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-[#0088cc]/20 flex items-center justify-center">
+                      <MessageSquare className="w-5 h-5 text-[#0088cc]" />
+                    </div>
+                    <div>
+                      <div className="font-semibold text-foreground">Telegram</div>
+                      <div className="text-xs text-muted-foreground">Direkte Signale</div>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
         {/* Features Section */}
         <section className="py-16 md:py-24">
           <div className="section-container">
@@ -525,6 +832,35 @@ const BotPage = () => {
                     {feature.description}
                   </p>
                 </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Testimonials Section */}
+        <section className="py-16 md:py-24 relative overflow-hidden">
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full bg-primary/5 blur-3xl -translate-x-1/2 translate-y-1/2" />
+          </div>
+          
+          <div className="section-container relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-12"
+            >
+              <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-2">
+                Was unsere Bot-Nutzer sagen
+              </h2>
+              <p className="text-muted-foreground">
+                Echte Ergebnisse von echten Tradern
+              </p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {testimonials.map((testimonial, index) => (
+                <BotTestimonial key={index} {...testimonial} />
               ))}
             </div>
           </div>
