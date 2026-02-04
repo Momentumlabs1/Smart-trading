@@ -208,12 +208,51 @@ export const Hero = () => {
             <span className="text-foreground font-medium">Dein Erfolg ist unsere Mission.</span>
           </motion.p>
 
-          {/* CTA Buttons - stacked on mobile */}
+          {/* Video Funnel Entry - Vertical Video Placeholder */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4 sm:px-0"
+            className="flex justify-center px-4 sm:px-0"
+          >
+            <div className="relative w-full max-w-[280px] sm:max-w-[320px] aspect-[9/16] rounded-2xl sm:rounded-3xl overflow-hidden glass border border-border/50 group cursor-pointer">
+              {/* Gradient Background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-primary/10" />
+              
+              {/* Play Button Overlay */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
+                <motion.div
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-primary/90 flex items-center justify-center shadow-lg shadow-primary/30"
+                >
+                  <Play className="w-7 h-7 sm:w-8 sm:h-8 text-primary-foreground ml-1" fill="currentColor" />
+                </motion.div>
+                <p className="text-sm sm:text-base font-medium text-foreground text-center px-6">
+                  Starte den Video-Funnel
+                </p>
+                <span className="text-xs text-muted-foreground">2:30 Min</span>
+              </div>
+
+              {/* Corner Accents */}
+              <div className="absolute top-3 left-3 w-6 h-6 border-l-2 border-t-2 border-primary/50 rounded-tl-lg" />
+              <div className="absolute top-3 right-3 w-6 h-6 border-r-2 border-t-2 border-primary/50 rounded-tr-lg" />
+              <div className="absolute bottom-3 left-3 w-6 h-6 border-l-2 border-b-2 border-primary/50 rounded-bl-lg" />
+              <div className="absolute bottom-3 right-3 w-6 h-6 border-r-2 border-b-2 border-primary/50 rounded-br-lg" />
+
+              {/* Hover Glow */}
+              <motion.div
+                className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              />
+            </div>
+          </motion.div>
+
+          {/* CTA Buttons - stacked on mobile */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4 sm:px-0 mt-6"
           >
             <Link to="/quiz" className="w-full sm:w-auto">
               <Button
