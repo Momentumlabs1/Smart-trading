@@ -1,14 +1,14 @@
- import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import { Play } from 'lucide-react';
-import { Dialog, DialogOverlay, DialogPortal } from '@/components/ui/dialog';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 
 export const VideoFunnel = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <>
+    <LayoutGroup>
+      <>
       {/* Kleiner Platzhalter im Hero */}
       <motion.div
          initial={{ opacity: 0, scale: 0.95 }}
@@ -16,10 +16,12 @@ export const VideoFunnel = () => {
          transition={{ duration: 0.6, delay: 0.2 }}
          className="justify-self-center lg:justify-self-start order-2 lg:order-1 lg:row-span-2"
       >
-        <div 
-           onClick={() => setIsOpen(true)}
-           className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 group cursor-pointer hover:border-primary/50 transition-all duration-300"
-         >
+        <motion.div 
+          layoutId="video-funnel"
+          transition={{ layout: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } }}
+          onClick={() => setIsOpen(true)}
+          className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 group cursor-pointer hover:border-primary/50 transition-all duration-300"
+        >
           {/* Mini-Iframe Preview */}
           <iframe
             src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
@@ -62,58 +64,58 @@ export const VideoFunnel = () => {
 
           {/* Hover Glow */}
           <motion.div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-         </div>
+         </motion.div>
        </motion.div>
 
       {/* Fullscreen Modal with Zoom Animation */}
       <AnimatePresence>
         {isOpen && (
-          <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogPortal forceMount>
-              <DialogOverlay asChild forceMount>
+          <DialogPrimitive.Root open={isOpen} onOpenChange={setIsOpen}>
+            <DialogPrimitive.Portal forceMount>
+              <DialogPrimitive.Overlay asChild forceMount>
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
                   className="fixed inset-0 z-50 bg-black/80"
                 />
-              </DialogOverlay>
+              </DialogPrimitive.Overlay>
+
+              {/* Fullscreen centering wrapper */}
               <DialogPrimitive.Content asChild forceMount>
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.5 }}
-                  transition={{ 
-                    duration: 0.5,
-                    ease: [0.16, 1, 0.3, 1]
-                  }}
-                  className="fixed inset-0 z-50 m-auto w-[95vw] max-w-[95vw] h-[90vh] max-h-[90vh] border border-border/50 bg-background rounded-xl overflow-hidden shadow-2xl"
-                  style={{
-                    position: 'fixed',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                  }}
+                  className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
                 >
-                  <iframe
-                    src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
-                    className="w-full h-full"
-                    allow="camera; microphone; autoplay"
-                    title="Smart Trading Video Funnel"
-                  />
-                  <DialogPrimitive.Close className="absolute right-4 top-4 rounded-full w-12 h-12 bg-background/90 backdrop-blur-md flex items-center justify-center hover:bg-background transition-all focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 z-10 border border-border/50 shadow-lg">
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                    <span className="sr-only">Close</span>
-                  </DialogPrimitive.Close>
+                  <motion.div
+                    layoutId="video-funnel"
+                    transition={{ layout: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } }}
+                    className="relative w-[95vw] max-w-[1100px] h-[90vh] max-h-[90vh] border border-border/50 bg-background rounded-2xl overflow-hidden shadow-2xl"
+                  >
+                    <iframe
+                      src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
+                      className="w-full h-full"
+                      allow="camera; microphone; autoplay"
+                      title="Smart Trading Video Funnel"
+                    />
+                    <DialogPrimitive.Close className="absolute right-4 top-4 rounded-full w-12 h-12 bg-background/90 backdrop-blur-md flex items-center justify-center hover:bg-background transition-all focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 z-10 border border-border/50 shadow-lg">
+                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                      <span className="sr-only">Close</span>
+                    </DialogPrimitive.Close>
+                  </motion.div>
                 </motion.div>
               </DialogPrimitive.Content>
-            </DialogPortal>
-          </Dialog>
+            </DialogPrimitive.Portal>
+          </DialogPrimitive.Root>
         )}
       </AnimatePresence>
-    </>
+      </>
+    </LayoutGroup>
   );
 };
