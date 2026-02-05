@@ -45,9 +45,36 @@ export const VideoFunnel = () => {
   }, []);
 
   const handleClick = () => {
-    // Try to open the funnel widget
-    if (window.openFunnel) {
+    // Methode 1: Standard openFunnel Funktion
+    if (typeof window.openFunnel === 'function') {
       window.openFunnel();
+      return;
+    }
+    
+    // Methode 2: Widget-Button finden und klicken
+    // Der Embed erstellt einen Button unten rechts - wir simulieren dessen Klick
+    const widgetRoot = document.getElementById('funnel-widget-root');
+    if (widgetRoot) {
+      const button = widgetRoot.querySelector('button') || widgetRoot;
+      if (button instanceof HTMLElement) {
+        button.click();
+        return;
+      }
+    }
+    
+    // Methode 3: Alle fixed position Elemente am unteren Rand durchsuchen
+    const allElements = document.querySelectorAll('*');
+    for (const el of allElements) {
+      const style = window.getComputedStyle(el);
+      if (
+        style.position === 'fixed' && 
+        parseInt(style.bottom) < 100 &&
+        parseInt(style.right) < 100 &&
+        el instanceof HTMLElement
+      ) {
+        el.click();
+        return;
+      }
     }
   };
 
