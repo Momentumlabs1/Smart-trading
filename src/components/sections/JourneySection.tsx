@@ -60,10 +60,12 @@ const MobileSlideshow = ({
 }) => {
   const currentStage = stages[activeStage];
   const Icon = currentStage.icon;
+  
   const handleDotClick = (index: number) => {
     setActiveStage(index);
     setIsAutoPlaying(false);
   };
+  
   const handleSwipe = (direction: number) => {
     const newIndex = activeStage + direction;
     if (newIndex >= 0 && newIndex < stages.length) {
@@ -71,111 +73,84 @@ const MobileSlideshow = ({
       setIsAutoPlaying(false);
     }
   };
-  return <div className="relative">
-      {/* Progress Bar */}
-      <div className="flex gap-1.5 mb-6">
-        {stages.map((_, index) => <button key={index} onClick={() => handleDotClick(index)} className="flex-1 h-1 rounded-full overflow-hidden bg-muted/50 relative" aria-label={`Go to phase ${index + 1}`}>
-            {index < activeStage && <div className="absolute inset-0 bg-primary" />}
-            {index === activeStage && isAutoPlaying && <motion.div className="absolute inset-0 bg-primary origin-left" initial={{
-          scaleX: 0
-        }} animate={{
-          scaleX: 1
-        }} transition={{
-          duration: 5,
-          ease: 'linear'
-        }} key={`progress-${activeStage}`} />}
-            {index === activeStage && !isAutoPlaying && <div className="absolute inset-0 bg-primary" />}
-          </button>)}
-      </div>
 
-      {/* Phase Indicator */}
-      <div className="flex items-center justify-between mb-4">
-        <span className="text-primary font-semibold text-xs uppercase tracking-wider">
-          Phase {activeStage + 1} von {stages.length}
-        </span>
-        <span className="text-muted-foreground text-xs">
-          {currentStage.subtitle}
-        </span>
-      </div>
-
-      {/* Slide Content */}
+  return (
+    <div className="relative">
+      {/* Slide Content - clean card */}
       <AnimatePresence mode="wait">
-        <motion.div key={activeStage} initial={{
-        opacity: 0,
-        x: 50
-      }} animate={{
-        opacity: 1,
-        x: 0
-      }} exit={{
-        opacity: 0,
-        x: -50
-      }} transition={{
-        duration: 0.3
-      }} drag="x" dragConstraints={{
-        left: 0,
-        right: 0
-      }} dragElastic={0.2} onDragEnd={(_, info) => {
-        if (info.offset.x < -50) handleSwipe(1);
-        if (info.offset.x > 50) handleSwipe(-1);
-      }} className="glass rounded-2xl p-5 relative overflow-hidden min-h-[320px] touch-pan-y">
-          {/* Background gradient */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary/5 pointer-events-none" />
-
-          <div className="relative z-10">
-            {/* Header */}
-            <div className="flex items-start gap-3 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
-                <Icon className="w-6 h-6 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-display text-xl font-bold text-foreground">
-                  {currentStage.headline}
-                </h3>
-              </div>
+        <motion.div 
+          key={activeStage} 
+          initial={{ opacity: 0, x: 30 }} 
+          animate={{ opacity: 1, x: 0 }} 
+          exit={{ opacity: 0, x: -30 }} 
+          transition={{ duration: 0.25 }} 
+          drag="x" 
+          dragConstraints={{ left: 0, right: 0 }} 
+          dragElastic={0.15} 
+          onDragEnd={(_, info) => {
+            if (info.offset.x < -50) handleSwipe(1);
+            if (info.offset.x > 50) handleSwipe(-1);
+          }} 
+          className="glass rounded-2xl p-6 relative overflow-hidden touch-pan-y"
+        >
+          {/* Header with icon and title */}
+          <div className="flex items-center gap-4 mb-5">
+            <div className="w-14 h-14 rounded-xl bg-primary/15 flex items-center justify-center shrink-0">
+              <Icon className="w-7 h-7 text-primary" />
             </div>
-
-            {/* Description */}
-            <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-              {currentStage.description}
-            </p>
-
-            {/* Skills */}
-            <div className="grid grid-cols-2 gap-2 mb-4">
-              {currentStage.skills.map((skill, i) => <motion.div key={skill} initial={{
-              opacity: 0,
-              x: 10
-            }} animate={{
-              opacity: 1,
-              x: 0
-            }} transition={{
-              delay: i * 0.05
-            }} className="flex items-center gap-2 text-xs">
-                  <Check className="w-3 h-3 text-primary shrink-0" />
-                  <span className="text-foreground">{skill}</span>
-                </motion.div>)}
+            <div>
+              <span className="text-primary text-xs font-semibold uppercase tracking-wider">
+                {currentStage.subtitle}
+              </span>
+              <h3 className="font-display text-xl font-bold text-foreground leading-tight">
+                {currentStage.headline}
+              </h3>
             </div>
+          </div>
 
-            {/* Outcome */}
-            <div className="bg-primary/10 border border-primary/20 rounded-lg p-3">
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-primary shrink-0" />
-                <p className="text-foreground text-xs font-medium">{currentStage.outcome}</p>
-              </div>
-            </div>
+          {/* Description */}
+          <p className="text-muted-foreground text-sm leading-relaxed mb-5">
+            {currentStage.description}
+          </p>
+
+          {/* Skills - simplified inline list */}
+          <div className="flex flex-wrap gap-2 mb-5">
+            {currentStage.skills.map((skill) => (
+              <span 
+                key={skill} 
+                className="inline-flex items-center gap-1.5 text-xs bg-muted/50 text-foreground/80 px-2.5 py-1.5 rounded-lg"
+              >
+                <Check className="w-3 h-3 text-primary" />
+                {skill}
+              </span>
+            ))}
+          </div>
+
+          {/* Outcome - compact */}
+          <div className="flex items-center gap-2 text-sm text-primary/90">
+            <TrendingUp className="w-4 h-4" />
+            <span className="font-medium">{currentStage.outcome}</span>
           </div>
         </motion.div>
       </AnimatePresence>
 
-      {/* Navigation Dots (alternative) */}
-      <div className="flex justify-center gap-2 mt-4">
-        {stages.map((_, index) => <button key={index} onClick={() => handleDotClick(index)} className={`h-2 rounded-full transition-all duration-300 ${index === activeStage ? 'w-6 bg-primary' : 'w-2 bg-muted hover:bg-muted-foreground/50'}`} aria-label={`Go to phase ${index + 1}`} />)}
+      {/* Navigation Dots */}
+      <div className="flex justify-center gap-2 mt-5">
+        {stages.map((_, index) => (
+          <button 
+            key={index} 
+            onClick={() => handleDotClick(index)} 
+            className={`h-2 rounded-full transition-all duration-300 ${
+              index === activeStage 
+                ? 'w-6 bg-primary' 
+                : 'w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50'
+            }`} 
+            aria-label={`Go to phase ${index + 1}`} 
+          />
+        ))}
       </div>
-
-      {/* Swipe hint */}
-      <p className="text-center text-xs text-muted-foreground mt-3">
-        Wische zum Blättern
-      </p>
-    </div>;
+    </div>
+  );
 };
 export const JourneySection = () => {
   const [activeStage, setActiveStage] = useState(0);
