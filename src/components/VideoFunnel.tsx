@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Play } from 'lucide-react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 
@@ -7,7 +7,6 @@ export const VideoFunnel = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <LayoutGroup>
       <>
       {/* Kleiner Platzhalter im Hero */}
       <motion.div
@@ -16,9 +15,7 @@ export const VideoFunnel = () => {
          transition={{ duration: 0.6, delay: 0.2 }}
          className="justify-self-center lg:justify-self-start order-2 lg:order-1 lg:row-span-2"
       >
-        <motion.div 
-          layoutId="video-funnel"
-          transition={{ layout: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } }}
+        <motion.div
           onClick={() => setIsOpen(true)}
           className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 group cursor-pointer hover:border-primary/50 transition-all duration-300"
         >
@@ -77,7 +74,7 @@ export const VideoFunnel = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                   className="fixed inset-0 z-50 bg-black/80"
                 />
               </DialogPrimitive.Overlay>
@@ -86,16 +83,12 @@ export const VideoFunnel = () => {
               <DialogPrimitive.Content asChild forceMount>
                 <motion.div
                   className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                  initial={{ opacity: 0, scale: 0.85 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <motion.div
-                    layoutId="video-funnel"
-                    transition={{ layout: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } }}
-                    className="relative w-[95vw] max-w-[1100px] h-[90vh] max-h-[90vh] border border-border/50 bg-background rounded-2xl overflow-hidden shadow-2xl"
-                  >
+                  <div className="relative w-[95vw] max-w-[1100px] h-[90vh] max-h-[90vh] border border-border/50 bg-background rounded-2xl overflow-hidden shadow-2xl">
                     <iframe
                       src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
                       className="w-full h-full"
@@ -108,7 +101,7 @@ export const VideoFunnel = () => {
                       </svg>
                       <span className="sr-only">Close</span>
                     </DialogPrimitive.Close>
-                  </motion.div>
+                  </div>
                 </motion.div>
               </DialogPrimitive.Content>
             </DialogPrimitive.Portal>
@@ -116,6 +109,5 @@ export const VideoFunnel = () => {
         )}
       </AnimatePresence>
       </>
-    </LayoutGroup>
   );
 };
