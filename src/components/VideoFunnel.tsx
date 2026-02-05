@@ -1,7 +1,7 @@
  import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play } from 'lucide-react';
-import { Dialog, DialogContent, DialogOverlay, DialogPortal } from '@/components/ui/dialog';
+import { Dialog, DialogOverlay, DialogPortal } from '@/components/ui/dialog';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 
 export const VideoFunnel = () => {
@@ -75,22 +75,26 @@ export const VideoFunnel = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
                   className="fixed inset-0 z-50 bg-black/80"
                 />
               </DialogOverlay>
               <DialogPrimitive.Content asChild forceMount>
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.3, y: 100 }}
+                  initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.3, y: 100 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
                   transition={{ 
-                    type: "spring", 
-                    damping: 25, 
-                    stiffness: 300,
-                    duration: 0.4 
+                    duration: 0.5,
+                    ease: [0.16, 1, 0.3, 1]
                   }}
-                  className="fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%] max-w-[95vw] w-[95vw] h-[90vh] border border-border/50 bg-background rounded-lg overflow-hidden shadow-2xl"
+                  className="fixed inset-0 z-50 m-auto w-[95vw] max-w-[95vw] h-[90vh] max-h-[90vh] border border-border/50 bg-background rounded-xl overflow-hidden shadow-2xl"
+                  style={{
+                    position: 'fixed',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                  }}
                 >
                   <iframe
                     src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
@@ -98,7 +102,7 @@ export const VideoFunnel = () => {
                     allow="camera; microphone; autoplay"
                     title="Smart Trading Video Funnel"
                   />
-                  <DialogPrimitive.Close className="absolute right-4 top-4 rounded-full w-10 h-10 bg-background/80 backdrop-blur-sm flex items-center justify-center opacity-70 hover:opacity-100 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 z-10">
+                  <DialogPrimitive.Close className="absolute right-4 top-4 rounded-full w-12 h-12 bg-background/90 backdrop-blur-md flex items-center justify-center hover:bg-background transition-all focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 z-10 border border-border/50 shadow-lg">
                     <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
