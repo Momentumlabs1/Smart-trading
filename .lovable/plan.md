@@ -1,90 +1,79 @@
 
+# Video-Funnel mit Fullscreen-Modal
 
-# Fix: Video-Funnel Click-Handler reparieren
+## Konzept
 
-## Problem identifiziert
+Das Widget bleibt klein und elegant im Hero-Bereich. Beim Klick öffnet sich ein großes Modal (ähnlich wie YouTube Fullscreen), das den gesamten Bildschirm einnimmt und das interaktive Video zeigt.
 
-Der Video-Funnel funktioniert - das Widget unten rechts öffnet das Video korrekt. Aber der Klick auf den Platzhalter im Hero ruft `window.openFunnel()` auf, was **nicht existiert**.
-
-Das Embed-Script registriert seine Funktion wahrscheinlich unter einem anderen Namen oder als Teil eines Objekts.
-
----
-
-## Lösung
-
-### Strategie 1: Widget-Button programmatisch klicken
-
-Da der blaue Button unten rechts funktioniert, können wir dessen Click-Event auslösen:
-
-```typescript
-const handleClick = () => {
-  // Finde den Widget-Button und klicke ihn
-  const widgetButton = document.querySelector('[data-funnel-widget]') 
-    || document.querySelector('.funnel-widget-button')
-    || document.querySelector('div[style*="position: fixed"][style*="bottom"]');
-  
-  if (widgetButton instanceof HTMLElement) {
-    widgetButton.click();
-  }
-};
-```
-
-### Strategie 2: Iframe direkt öffnen (Fallback)
-
-Falls das Widget als iframe eingebettet wird:
-
-```typescript
-const handleClick = () => {
-  // Versuche verschiedene mögliche API-Methoden
-  if (typeof window.openFunnel === 'function') {
-    window.openFunnel();
-  } else if (typeof (window as any).FunnelWidget?.open === 'function') {
-    (window as any).FunnelWidget.open();
-  } else {
-    // Fallback: Widget-Element finden und klicken
-    const widget = document.getElementById('funnel-widget-root')
-      || document.querySelector('[class*="funnel"]');
-    if (widget instanceof HTMLElement) {
-      widget.click();
-    }
-  }
-};
+```text
+VORHER (Hero):                    NACHHER (Modal):
+┌──────────────────┐              ┌────────────────────────────┐
+│  ┌────┐          │              │                            │
+│  │ ▶  │  Text... │  ──KLICK──▶  │    ┌──────────────────┐    │
+│  │    │          │              │    │                  │    │
+│  └────┘          │              │    │   VIDEO IFRAME   │    │
+│                  │              │    │   (Fullscreen)   │    │
+└──────────────────┘              │    │                  │    │
+                                  │    └──────────────────┘    │
+                                  │                        [X] │
+                                  └────────────────────────────┘
 ```
 
 ---
 
-## Technische Änderungen
+## Technische Umsetzung
 
 ### `src/components/VideoFunnel.tsx`
 
+**Änderungen:**
+- State `isOpen` für Modal-Steuerung hinzufügen
+- Klick auf Platzhalter setzt `isOpen = true`
+- Dialog-Komponente mit dem iframe einbetten
+- Iframe lädt erst wenn Modal geöffnet wird (Performance)
+
 ```typescript
-const handleClick = () => {
-  // Methode 1: Standard openFunnel Funktion
-  if (typeof window.openFunnel === 'function') {
-    window.openFunnel();
-    return;
-  }
-  
-  // Methode 2: Widget-Button finden und klicken
-  // Der Embed erstellt einen Button unten rechts - wir simulieren dessen Klick
-  const widgetRoot = document.getElementById('funnel-widget-root');
-  if (widgetRoot) {
-    const button = widgetRoot.querySelector('button') || widgetRoot;
-    if (button instanceof HTMLElement) {
-      button.click();
-      return;
-    }
-  }
-  
-  // Methode 3: Alle fixed position Elemente durchsuchen
-  const fixedElements = document.querySelectorAll('[style*="position: fixed"]');
-  fixedElements.forEach((el) => {
-    if (el.getAttribute('style')?.includes('bottom') && el instanceof HTMLElement) {
-      el.click();
-    }
-  });
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+
+export const VideoFunnel = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      {/* Kleiner Platzhalter im Hero */}
+      <motion.div onClick={() => setIsOpen(true)} className="cursor-pointer">
+        <div className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl ...">
+          {/* Play Button & Preview */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Play className="w-12 h-12" />
+            <span>Video starten</span>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Fullscreen Modal */}
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="max-w-[95vw] h-[90vh] p-0">
+          <iframe
+            src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
+            className="w-full h-full"
+            allow="camera; microphone; autoplay"
+          />
+        </DialogContent>
+      </Dialog>
+    </>
+  );
 };
 ```
+
+---
+
+## Styling des Modals
+
+- **Größe:** 95% Viewport-Breite, 90% Viewport-Höhe
+- **Hintergrund:** Dunkler Overlay (bereits in Dialog-Komponente)
+- **Schließen:** X-Button oben rechts + Klick außerhalb
+- **Animation:** Fade-in/Zoom (bereits in Dialog-Komponente)
+- **Mobile:** Responsive, passt sich an Bildschirmgröße an
 
 ---
 
@@ -92,22 +81,13 @@ const handleClick = () => {
 
 | Datei | Änderung |
 |-------|----------|
-| `src/components/VideoFunnel.tsx` | Click-Handler mit Fallback-Strategien |
+| `src/components/VideoFunnel.tsx` | Modal-State + Dialog mit iframe |
 
 ---
 
-## Alternative: autoOpen aktivieren
+## Vorteile
 
-Falls gewünscht können wir das Widget auch so konfigurieren, dass es automatisch öffnet:
-
-```typescript
-window.FUNNEL_EMBED_CONFIG = {
-  funnelId: "smart-trading-v6",
-  type: "widget",
-  position: "bottom-right",
-  autoOpen: true  // ← Öffnet automatisch beim Laden
-};
-```
-
-Aber das ist wahrscheinlich nicht gewünscht, da der User zuerst die Seite sehen sollte.
-
+1. **Kompaktes Hero-Layout** - Video nimmt nicht zu viel Platz ein
+2. **Immersive Erfahrung** - Fullscreen-Video bei Interaktion
+3. **Performance** - iframe lädt erst bei Bedarf
+4. **Bekanntes UX-Pattern** - User kennen das von YouTube/Netflix
