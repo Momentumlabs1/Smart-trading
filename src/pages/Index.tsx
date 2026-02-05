@@ -5,8 +5,8 @@ import { Features } from '@/components/sections/Features';
 import { JourneySection } from '@/components/sections/JourneySection';
 import { BotSection } from '@/components/sections/BotSection';
 import { Testimonials } from '@/components/sections/Testimonials';
-import { AboutSaif } from '@/components/sections/AboutSaif';
 import { SaifShowcase } from '@/components/sections/SaifShowcase';
+import { AboutSaif } from '@/components/sections/AboutSaif';
 import { Pricing } from '@/components/sections/Pricing';
 import { CTA } from '@/components/sections/CTA';
 import { HomepageQuizTeaser } from '@/components/sections/HomepageQuizTeaser';
@@ -18,10 +18,10 @@ const Index = () => {
       <main>
         <Hero />
         <JourneySection />
+        <AboutSaif />
         <Features />
         <HomepageQuizTeaser />
         <BotSection />
-        <AboutSaif />
         <SaifShowcase />
         <Testimonials />
         <Pricing />
