@@ -1,135 +1,126 @@
 
 
-## Ziel
+## Problem-Analyse
 
-Integration des Funnel-Embed-Scripts mit `inline`-Modus für iOS-kompatibles Video-Playback, kombiniert mit unserem eigenen Zoom-Modal.
+Das `embed.js` mit `type: "inline"` lädt den kompletten Funnel direkt in den kleinen Container - es gibt keine eingebaute "Preview mit Play-Button" Funktion.
+
+## Lösung: Eigener Preview-Layer + Verzögertes Laden
+
+Wir behalten einen statischen Preview-Screen mit Play-Button. Erst beim Klick auf den Play-Button öffnet sich das Fullscreen-Modal und lädt den Funnel.
+
+## Ablauf
+
+```text
+User Journey:
+1. User sieht Preview-Tile mit Thumbnail + Play-Button
+2. User klickt auf Play-Button
+3. Zoom-Animation startet
+4. Fullscreen-Modal öffnet sich
+5. iFrame mit Funnel wird geladen
+6. User durchläuft Funnel im Vollbild
+```
 
 ## Technische Umsetzung
 
-### Schritt 1: Embed-Script in index.html laden
-
-```html
-<!-- In index.html vor </body> -->
-<script src="https://vid-path-builder-65.lovable.app/embed.js"></script>
-```
-
-### Schritt 2: VideoFunnel.tsx umbauen
-
-**Neuer Aufbau:**
+### VideoFunnel.tsx - Komplett neu aufbauen
 
 ```text
-Preview-Tile (klein)
-├── Container mit id="funnel-preview"
-│   └── Inline-iFrame (vom embed.js erstellt)
-├── Corner Accents (Deko)
-└── Optional: Leichter Overlay für visuellen Effekt
+Preview-Tile
+├── Thumbnail-Bild (saif-trading.webp)
+├── Dunkler Gradient-Overlay
+├── Play-Button (klickbar)
+│   ├── Pulsierender Ring
+│   └── Play-Icon
+├── "Jetzt ansehen" Label
+└── Corner Accents (Deko)
 
-Modal (groß) - UNSER eigenes
+Modal (bei isOpen = true)
 ├── Fullscreen Container
-└── iFrame mit Funnel
+├── iFrame mit Funnel-URL
+└── Close-Button
 ```
 
-### Schritt 3: Event-Listener für Funnel-Events
+### Code-Änderungen
 
 ```tsx
-useEffect(() => {
-  // Inline-Embed initialisieren
-  if (window.FunnelEmbed) {
-    window.FunnelEmbed.init({
-      funnelId: "smart-trading-v6",
-      type: "inline",
-      container: "funnel-preview"
-    });
-  }
+export const VideoFunnel = () => {
+  const [isOpen, setIsOpen] = useState(false);
 
-  // Auf Funnel-Start hören
-  const handleFunnelEvent = (event: CustomEvent) => {
-    if (event.detail?.funnelId === "smart-trading-v6") {
-      setIsOpen(true); // Unser Zoom-Modal öffnen
-    }
-  };
+  // Kein embed.js mehr nötig - wir laden den iFrame nur im Modal
 
-  window.addEventListener('funnel_started', handleFunnelEvent);
-  
-  // Auch postMessage abfangen
-  const handleMessage = (event: MessageEvent) => {
-    if (event.data?.type === 'funnel_started') {
-      setIsOpen(true);
-    }
-  };
-  window.addEventListener('message', handleMessage);
+  return (
+    <>
+      {/* Preview-Tile mit Thumbnail + Play Button */}
+      <motion.div ...>
+        <div 
+          onClick={() => setIsOpen(true)}
+          className="relative ... cursor-pointer group"
+        >
+          {/* Thumbnail */}
+          <img 
+            src={saifThumb} 
+            alt="Video Preview" 
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          
+          {/* Dark Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/40" />
+          
+          {/* Play Button */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <div className="relative">
+              {/* Pulsing Ring */}
+              <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping" />
+              {/* Button */}
+              <div className="w-14 h-14 rounded-full bg-primary/90 ...">
+                <Play className="w-6 h-6 ..." />
+              </div>
+            </div>
+            <span className="mt-3 text-xs font-medium text-white/90">
+              Jetzt ansehen
+            </span>
+          </div>
+          
+          {/* Corner Accents */}
+          ...
+        </div>
+      </motion.div>
 
-  return () => {
-    window.removeEventListener('funnel_started', handleFunnelEvent);
-    window.removeEventListener('message', handleMessage);
-  };
-}, []);
+      {/* Fullscreen Modal */}
+      <AnimatePresence>
+        {isOpen && (
+          <Dialog...>
+            <iframe 
+              src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
+              ...
+            />
+          </Dialog>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
 ```
 
-### Schritt 4: TypeScript Typen
-
-```tsx
-// Type declarations für embed.js
-declare global {
-  interface Window {
-    FunnelEmbed?: {
-      init: (config: FunnelConfig) => void;
-      open: () => void;
-      close: () => void;
-    };
-    FUNNEL_EMBED_CONFIG?: FunnelConfig;
-  }
-}
-
-interface FunnelConfig {
-  funnelId: string;
-  type: 'widget' | 'modal' | 'inline' | 'fullscreen';
-  container?: string;
-  height?: string;
-  position?: string;
-  autoOpen?: boolean;
-}
-```
-
-## Ablauf nach Umsetzung
-
-```text
-User Journey (iOS + Desktop):
-1. User sieht Preview-Tile mit Live-Funnel (inline iFrame)
-2. User tippt auf "Jetzt starten" DIREKT im iFrame
-   → iOS: User-Geste erkannt ✓
-   → Video startet mit Sound ✓
-3. Funnel sendet Event (postMessage oder CustomEvent)
-4. Website empfängt Event
-5. Zoom-Modal öffnet sich mit Animation
-6. Video läuft im großen Modal weiter
-7. Nach Funnel-Ende: Weiterleitung zu Terminbuchung
-```
-
-## Dateien die geändert werden
+## Änderungen an Dateien
 
 | Datei | Änderung |
 |-------|----------|
-| `index.html` | Script-Tag für embed.js hinzufügen |
-| `src/components/VideoFunnel.tsx` | Komplett umbauen für inline-Embed + Event-Listener |
+| `src/components/VideoFunnel.tsx` | Zurück zum Preview-Bild + Play-Button; embed.js nicht mehr inline nutzen |
+| `index.html` | embed.js Script kann bleiben (schadet nicht) oder entfernt werden |
 
-## Voraussetzung im Funnel-Projekt
+## Wichtig: iOS-Kompatibilität
 
-Das andere Projekt muss bei Video-Start diesen Code ausführen:
+Da das Video erst im Modal geladen wird und der User dort nochmal auf "Play" im Funnel selbst klickt, ist das iOS-kompatibel:
 
-```tsx
-window.parent.postMessage({ type: 'funnel_started' }, '*');
-// ODER
-window.dispatchEvent(new CustomEvent('funnel_started', { 
-  detail: { funnelId: 'smart-trading-v6' } 
-}));
-```
+1. **Klick auf Preview** → Öffnet Modal (kein Video-Start)
+2. **Klick auf "Jetzt starten" im Funnel** → Startet Video mit Ton (User-Geste im iFrame = OK für iOS)
 
-## Vorteile dieser Lösung
+## Vorteile
 
-- iOS-kompatibel (erster Klick im iFrame = User-Geste)
-- Kein doppeltes Klicken nötig
-- Eigene Zoom-Animation behalten
-- Daten-Events für spätere Weiterleitung nutzbar
-- Saubere Integration ohne Hacks
+- Klarer visueller Einstiegspunkt (Play-Button)
+- Schnelleres Laden der Seite (kein iFrame im Preview)
+- iOS-kompatibel (User-Geste passiert im iFrame)
+- Saubere Zoom-Animation
+- Funnel komplett durchlaufbar im Fullscreen
 
