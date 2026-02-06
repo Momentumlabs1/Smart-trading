@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { 
-  ArrowRight, Clock, Gift, Users, TrendingUp, Shield, 
+  ArrowRight, Clock, Gift, Users, Shield, 
   Target, Brain, Compass, Play, Calendar, Monitor, 
-  MapPin, CheckCircle2, XCircle, Sparkles, Lock
+  MapPin, CheckCircle2, XCircle, Sparkles, Lock, TrendingUp, Zap
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Navbar } from '@/components/layout/Navbar';
@@ -13,6 +13,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { ChallengeRegistrationModal } from '@/components/challenge/ChallengeRegistrationModal';
 import { challengeDays } from '@/lib/challenge-data';
 import { cn } from '@/lib/utils';
+import saifTrading from '@/assets/saif-trading.webp';
 
 const features = [
   {
@@ -41,17 +42,17 @@ const faqs = [
   {
     icon: Calendar,
     title: 'Wann?',
-    content: 'Die 5-Tages-Trader-Challenge startet für dich direkt nach der Anmeldung. Du kannst dir jeden Abend das nächste Video ansehen - mit nur 10-20 Minuten pro Video ist das garantiert möglich für dich. Du kannst dir aber auch einen Abend blockieren, und die gesamte Challenge am Stück schauen!',
+    content: 'Die 5-Tages-Trader-Challenge startet für dich direkt nach der Anmeldung. Du kannst dir jeden Abend das nächste Video ansehen - mit nur 10-20 Minuten pro Video ist das garantiert möglich für dich.',
   },
   {
     icon: Monitor,
     title: 'Wie?',
-    content: 'Die Challenge ist 100 % online und besteht aus einem mehrteiligen Videokurs. Alles, was du brauchst, ist ein Laptop oder PC zum Videos schauen und die Bereitschaft, deine Trading-Skills gezielt aufzubauen.',
+    content: 'Die Challenge ist 100 % online und besteht aus einem mehrteiligen Videokurs. Alles, was du brauchst, ist ein Laptop oder PC und die Bereitschaft, deine Trading-Skills gezielt aufzubauen.',
   },
   {
     icon: MapPin,
     title: 'Wo?',
-    content: 'Nach deiner Anmeldung erhältst du Zugang zu unserer Lernplattform, wo alle Videos auf dich warten. Du kannst die Inhalte flexibel ansehen und sofort in der Praxis umsetzen.',
+    content: 'Nach deiner Anmeldung erhältst du Zugang zu unserer Lernplattform, wo alle Videos auf dich warten. Du kannst die Inhalte flexibel ansehen und sofort umsetzen.',
   },
 ];
 
@@ -94,12 +95,11 @@ export default function Challenge() {
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      {/* Hero Section */}
-      <section className="pt-24 pb-16 px-4 relative overflow-hidden">
+      {/* Hero Section - Redesigned */}
+      <section className="pt-24 pb-12 px-4 relative overflow-hidden">
         {/* Background effects */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full bg-primary/5 blur-3xl" />
-          <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full bg-primary/10 blur-3xl opacity-50" />
         </div>
 
         <div className="max-w-6xl mx-auto relative z-10">
@@ -111,20 +111,28 @@ export default function Challenge() {
             >
               <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-6">
                 <Sparkles className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium">5 Tages Trader Challenge</span>
+                <span className="text-sm font-medium">5 Tages Intensiv-Kurs</span>
               </div>
 
               <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-6 leading-tight">
-                Über 4.000 ganz normale Menschen haben es geschafft:
+                Trading ist kein Glücksspiel – <span className="text-gradient-primary">es ist erlernbar</span>
               </h1>
 
-              <p className="text-lg sm:text-xl text-muted-foreground mb-4">
-                Als Angestellter nebenbei ein <span className="text-foreground font-semibold">Vollzeit-Einkommen aufbauen</span> mit Trading - in nur 30 Minuten täglich
+              <p className="text-lg text-muted-foreground mb-4">
+                In 5 Tagen zeige ich dir <span className="text-foreground font-semibold">bewährte Strategien</span>, die du sofort anwenden kannst – und wie selbst mit kleinem Startkapital überdurchschnittliche Renditen möglich sind.
               </p>
 
-              <p className="text-muted-foreground mb-8">
-                Die kostenlose 5-Tage-Challenge <span className="text-primary">(Wert: 497€)</span> beweist dir: Auch mit nur 40% Gewinnquote ist das möglich
-              </p>
+              <div className="flex items-start gap-3 mb-6 p-4 glass rounded-xl">
+                <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
+                  <TrendingUp className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <p className="font-medium text-sm">Der Beweis:</p>
+                  <p className="text-sm text-muted-foreground">
+                    Über 4.000 Teilnehmer haben mit dieser Challenge den Grundstein für profitables Trading gelegt.
+                  </p>
+                </div>
+              </div>
 
               {/* Trust badges */}
               <div className="flex flex-wrap gap-3 mb-8">
@@ -148,50 +156,61 @@ export default function Challenge() {
                 className="gap-2 group text-base px-8"
                 onClick={handleStartChallenge}
               >
-                {isRegistered ? 'Zur Challenge' : 'Challenge starten'}
+                {isRegistered ? 'Zur Challenge' : 'Jetzt kostenlos starten'}
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </motion.div>
 
-            {/* Right: Challenge Card */}
+            {/* Right: Image + Challenge Card */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 }}
-              className="flex justify-center"
+              className="flex flex-col gap-6"
             >
-              <div className="glass rounded-3xl p-8 max-w-sm w-full text-center relative overflow-hidden border border-primary/20">
-                {/* Decorative glow */}
+              {/* Saif Image */}
+              <div className="relative rounded-2xl overflow-hidden aspect-[16/9]">
+                <img 
+                  src={saifTrading} 
+                  alt="Saif Al-Nasiri beim Trading" 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4">
+                  <p className="text-sm font-medium">Saif Al-Nasiri</p>
+                  <p className="text-xs text-muted-foreground">Professioneller Trader & Mentor</p>
+                </div>
+              </div>
+
+              {/* Challenge Card */}
+              <div className="glass rounded-2xl p-6 text-center relative overflow-hidden border border-primary/20">
                 <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-primary/30 blur-3xl" />
                 
-                {/* Badge */}
-                <div className="absolute top-4 right-4 z-10">
-                  <div className="bg-primary/20 text-primary text-xs font-semibold px-3 py-1.5 rounded-full border border-primary/30">
+                <div className="absolute top-3 right-3 z-10">
+                  <div className="bg-primary/20 text-primary text-xs font-semibold px-3 py-1 rounded-full border border-primary/30">
                     Nur für kurze Zeit
                   </div>
                 </div>
 
                 <div className="relative z-10">
-                  <div className="text-sm text-muted-foreground mb-2 font-medium">5 Tages</div>
-                  <h2 className="font-display text-4xl font-bold mb-2">
-                    Trader<br />Challenge
-                  </h2>
+                  <div className="text-xs text-muted-foreground mb-1">5 Tages</div>
+                  <h2 className="font-display text-2xl font-bold mb-3">Trader Challenge</h2>
 
-                  <div className="flex items-center justify-center gap-3 my-6">
-                    <span className="text-2xl text-muted-foreground line-through opacity-60">497€</span>
-                    <span className="text-3xl font-bold text-primary">Jetzt kostenlos</span>
+                  <div className="flex items-center justify-center gap-2 mb-4">
+                    <span className="text-lg text-muted-foreground line-through opacity-60">497€</span>
+                    <span className="text-2xl font-bold text-primary">Jetzt kostenlos</span>
                   </div>
 
                   <Button 
                     size="lg" 
-                    className="w-full gap-2 group mb-4 text-base"
+                    className="w-full gap-2 group"
                     onClick={handleStartChallenge}
                   >
                     {isRegistered ? 'Weiter zur Challenge' : 'Challenge starten'}
                     <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                   </Button>
 
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-muted-foreground mt-3">
                     4.000+ haben es geschafft
                   </p>
                 </div>
@@ -201,58 +220,8 @@ export default function Challenge() {
         </div>
       </section>
 
-      {/* Mindset Shift */}
-      <section className="py-16 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
-              Von "hoffentlich funktioniert es"<br />
-              zu <span className="text-gradient-primary">"ich weiß, was ich tue"</span>
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              5 Tage, die zwischen dir und einem planbaren Nebeneinkommen stehen
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Features */}
+      {/* Challenge Preview / Day Selector - Moved UP as 2nd section */}
       <section className="py-16 px-4 bg-card/30">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-6">
-            {features.map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <motion.div
-                  key={feature.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="glass rounded-2xl p-6 hover:border-primary/20 transition-colors"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <Icon className="w-6 h-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
-                      <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Challenge Preview / Day Selector */}
-      <section className="py-20 px-4">
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -379,8 +348,62 @@ export default function Challenge() {
         </div>
       </section>
 
-      {/* FAQ Section */}
+      {/* Value Proposition - NEW */}
+      <section className="py-16 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-6">
+              <Zap className="w-4 h-4 text-primary" />
+              <span className="text-sm font-medium">Dein Vorteil</span>
+            </div>
+            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
+              Von "ich probier's mal"<br />
+              zu <span className="text-gradient-primary">"ich handle mit System"</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Schluss mit Bauchgefühl und Hoffnung. In 5 Tagen lernst du, wie echte Trader denken, planen und handeln – mit Strategien, die auch bei kleinem Kapital funktionieren.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Features */}
       <section className="py-16 px-4 bg-card/30">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-6">
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <motion.div
+                  key={feature.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="glass rounded-2xl p-6 hover:border-primary/20 transition-colors"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <Icon className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
+                      <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-16 px-4">
         <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -418,7 +441,7 @@ export default function Challenge() {
       </section>
 
       {/* Problem/Solution Stats */}
-      <section className="py-20 px-4">
+      <section className="py-20 px-4 bg-card/30">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -484,12 +507,11 @@ export default function Challenge() {
             </div>
 
             <h2 className="font-display text-3xl sm:text-4xl font-bold mb-6">
-              Starte jetzt deine <span className="text-gradient-primary">Trading-Transformation</span>
+              Bereit für den ersten Schritt?
             </h2>
 
             <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-              Schließe dich über 4.000 erfolgreichen Teilnehmern an und lerne in nur 5 Tagen, 
-              wie du mit Trading ein planbares Nebeneinkommen aufbaust.
+              Starte jetzt und lerne in 5 Tagen, wie du mit klaren Strategien und einem funktionierenden System profitabel tradest – auch mit wenig Startkapital.
             </p>
 
             <Button 
@@ -498,7 +520,7 @@ export default function Challenge() {
               className="gap-2 group text-base px-8"
               onClick={handleStartChallenge}
             >
-              {isRegistered ? 'Zur Challenge' : 'Challenge starten - 4.000 haben es geschafft'}
+              {isRegistered ? 'Zur Challenge' : 'Kostenlos starten'}
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Button>
 
