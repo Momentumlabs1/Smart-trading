@@ -26,21 +26,23 @@ export const VideoFunnel = () => {
         transition={{ duration: 0.6, delay: 0.2 }}
         className="justify-self-center lg:justify-self-start order-2 lg:order-1 lg:row-span-2"
       >
-        <div className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 hover:border-primary/50 transition-all duration-300">
-          {/* Live-iFrame Preview - User klickt hier auf "Jetzt starten" */}
-          <iframe
-            src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
-            className="absolute inset-0 w-full h-full scale-[1.2] -translate-y-[10%]"
-            title="Video Preview"
-            loading="eager"
-            referrerPolicy="no-referrer-when-downgrade"
-          />
+        <div className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl glass border border-border/50 hover:border-primary/50 transition-all duration-300">
+          {/* Innerer Wrapper mit overflow-hidden für den skalierten iFrame */}
+          <div className="absolute inset-0 rounded-2xl overflow-hidden">
+            <iframe
+              src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
+              className="absolute inset-0 w-full h-full scale-[1.2] -translate-y-[10%]"
+              title="Video Preview"
+              loading="eager"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
 
           {/* Corner Accents */}
-          <div className="absolute top-2 left-2 w-4 h-4 border-l-2 border-t-2 border-primary/50 rounded-tl-lg pointer-events-none" />
-          <div className="absolute top-2 right-2 w-4 h-4 border-r-2 border-t-2 border-primary/50 rounded-tr-lg pointer-events-none" />
-          <div className="absolute bottom-2 left-2 w-4 h-4 border-l-2 border-b-2 border-primary/50 rounded-bl-lg pointer-events-none" />
-          <div className="absolute bottom-2 right-2 w-4 h-4 border-r-2 border-b-2 border-primary/50 rounded-br-lg pointer-events-none" />
+          <div className="absolute top-2 left-2 w-4 h-4 border-l-2 border-t-2 border-primary/50 rounded-tl-lg pointer-events-none z-10" />
+          <div className="absolute top-2 right-2 w-4 h-4 border-r-2 border-t-2 border-primary/50 rounded-tr-lg pointer-events-none z-10" />
+          <div className="absolute bottom-2 left-2 w-4 h-4 border-l-2 border-b-2 border-primary/50 rounded-bl-lg pointer-events-none z-10" />
+          <div className="absolute bottom-2 right-2 w-4 h-4 border-r-2 border-b-2 border-primary/50 rounded-br-lg pointer-events-none z-10" />
         </div>
       </motion.div>
 
