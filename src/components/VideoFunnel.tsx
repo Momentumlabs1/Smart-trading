@@ -1,98 +1,50 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-
-// Type declarations für embed.js
-interface FunnelConfig {
-  funnelId: string;
-  type: 'widget' | 'modal' | 'inline' | 'fullscreen';
-  container?: string;
-  height?: string;
-  position?: string;
-  autoOpen?: boolean;
-}
-
-declare global {
-  interface Window {
-    FunnelEmbed?: {
-      init: (config: FunnelConfig) => void;
-      open: () => void;
-      close: () => void;
-    };
-    FUNNEL_EMBED_CONFIG?: FunnelConfig;
-  }
-}
+import { Play } from 'lucide-react';
+import saifTrading from '@/assets/saif-trading.webp';
 
 export const VideoFunnel = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    // Inline-Embed initialisieren wenn Script geladen
-    const initFunnel = () => {
-      if (window.FunnelEmbed) {
-        window.FunnelEmbed.init({
-          funnelId: "smart-trading-v6",
-          type: "inline",
-          container: "funnel-preview"
-        });
-      }
-    };
-
-    // Script könnte schon geladen sein oder noch laden
-    if (window.FunnelEmbed) {
-      initFunnel();
-    } else {
-      // Warten bis Script geladen ist
-      const checkInterval = setInterval(() => {
-        if (window.FunnelEmbed) {
-          initFunnel();
-          clearInterval(checkInterval);
-        }
-      }, 100);
-
-      // Cleanup nach 10 Sekunden falls Script nie lädt
-      setTimeout(() => clearInterval(checkInterval), 10000);
-    }
-
-    // Auf Funnel-Start hören (CustomEvent)
-    const handleFunnelEvent = (event: Event) => {
-      const customEvent = event as CustomEvent;
-      if (customEvent.detail?.funnelId === "smart-trading-v6") {
-        setIsOpen(true);
-      }
-    };
-
-    // Auch postMessage abfangen (Cross-Origin)
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data?.type === 'funnel_started') {
-        setIsOpen(true);
-      }
-    };
-
-    window.addEventListener('funnel_started', handleFunnelEvent);
-    window.addEventListener('message', handleMessage);
-
-    return () => {
-      window.removeEventListener('funnel_started', handleFunnelEvent);
-      window.removeEventListener('message', handleMessage);
-    };
-  }, []);
-
   return (
     <>
-      {/* Preview-Tile mit Live-Funnel (inline iFrame) */}
+      {/* Preview-Tile mit Thumbnail + Play Button */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, delay: 0.2 }}
         className="justify-self-center lg:justify-self-start order-2 lg:order-1 lg:row-span-2"
       >
-        <div className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 hover:border-primary/50 transition-all duration-300">
-          {/* Inline-Funnel Container - hier rendert embed.js den iFrame */}
-          <div 
-            id="funnel-preview" 
-            className="absolute inset-0 w-full h-full"
+        <div 
+          onClick={() => setIsOpen(true)}
+          className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 hover:border-primary/50 transition-all duration-300 cursor-pointer group"
+        >
+          {/* Thumbnail */}
+          <img 
+            src={saifTrading} 
+            alt="Video Preview" 
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
+          
+          {/* Dark Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/50 transition-opacity duration-300 group-hover:opacity-80" />
+          
+          {/* Play Button */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <div className="relative">
+              {/* Pulsing Ring */}
+              <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping" style={{ animationDuration: '2s' }} />
+              <div className="absolute -inset-2 rounded-full bg-primary/20 animate-pulse" />
+              {/* Button */}
+              <div className="relative w-14 h-14 lg:w-16 lg:h-16 rounded-full bg-primary/90 backdrop-blur-sm flex items-center justify-center shadow-lg shadow-primary/30 transition-transform duration-300 group-hover:scale-110">
+                <Play className="w-6 h-6 lg:w-7 lg:h-7 text-primary-foreground fill-current ml-1" />
+              </div>
+            </div>
+            <span className="mt-3 text-xs lg:text-sm font-medium text-white/90 tracking-wide">
+              Jetzt ansehen
+            </span>
+          </div>
 
           {/* Corner Accents (Deko) */}
           <div className="absolute top-2 left-2 w-4 h-4 border-l-2 border-t-2 border-primary/50 rounded-tl-lg pointer-events-none z-10" />
