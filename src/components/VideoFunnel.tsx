@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import saifThumb from '@/assets/saif-phone.webp';
 
 export const VideoFunnel = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +19,7 @@ export const VideoFunnel = () => {
 
   return (
     <>
-      {/* Kleiner Platzhalter im Hero */}
+      {/* Kleiner Platzhalter im Hero - NUR Live-iFrame */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -28,23 +27,14 @@ export const VideoFunnel = () => {
         className="justify-self-center lg:justify-self-start order-2 lg:order-1 lg:row-span-2"
       >
         <div className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 hover:border-primary/50 transition-all duration-300">
-          {/* Fallback Thumbnail */}
-          <img
-            src={saifThumb}
-            alt="Video Vorschau"
-            className="absolute inset-0 w-full h-full object-cover scale-[1.03]"
+          {/* Live-iFrame Preview - User klickt hier auf "Jetzt starten" */}
+          <iframe
+            src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
+            className="absolute inset-0 w-full h-full scale-[1.2] -translate-y-[10%]"
+            title="Video Preview"
+            loading="eager"
+            referrerPolicy="no-referrer-when-downgrade"
           />
-
-          {/* Interactive Live-iframe Preview */}
-          <div className="absolute inset-0 overflow-hidden rounded-2xl">
-            <iframe
-              src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
-              className="absolute inset-0 w-full h-full scale-[1.2] -translate-y-[10%]"
-              title="Video Preview"
-              loading="eager"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          </div>
 
           {/* Corner Accents */}
           <div className="absolute top-2 left-2 w-4 h-4 border-l-2 border-t-2 border-primary/50 rounded-tl-lg pointer-events-none" />
