@@ -13,6 +13,7 @@ import QuizResults from "./pages/QuizResults";
 import Academy from "./pages/Academy";
 import Bot from "./pages/Bot";
 import Challenge from "./pages/Challenge";
+import ChallengePlayer from "./pages/ChallengePlayer";
 import NotFound from "./pages/NotFound";
 
 // Academy Pages
@@ -44,6 +45,7 @@ const App = () => (
             <Route path="/academy" element={<Academy />} />
             <Route path="/bot" element={<Bot />} />
             <Route path="/challenge" element={<Challenge />} />
+            <Route path="/challenge/player" element={<ChallengePlayer />} />
             
             {/* Academy Auth Pages (Public) */}
             <Route path="/academy/login" element={<AcademyLogin />} />

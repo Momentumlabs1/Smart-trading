@@ -153,6 +153,42 @@ export type Database = {
           },
         ]
       }
+      challenge_registrations: {
+        Row: {
+          completed_days: number[] | null
+          created_at: string
+          current_day: number | null
+          email: string
+          full_name: string
+          id: string
+          last_accessed_at: string | null
+          registered_at: string
+          updated_at: string
+        }
+        Insert: {
+          completed_days?: number[] | null
+          created_at?: string
+          current_day?: number | null
+          email: string
+          full_name: string
+          id?: string
+          last_accessed_at?: string | null
+          registered_at?: string
+          updated_at?: string
+        }
+        Update: {
+          completed_days?: number[] | null
+          created_at?: string
+          current_day?: number | null
+          email?: string
+          full_name?: string
+          id?: string
+          last_accessed_at?: string | null
+          registered_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       community_comments: {
         Row: {
           content: string
