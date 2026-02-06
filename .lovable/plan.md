@@ -1,111 +1,89 @@
 
-# VideoFunnel Mobile & Preview Fix
 
-## Probleme identifiziert
+# VideoFunnel Fix: Live (Desktop) + Thumbnail (Mobile)
 
-### 1. Schwarzer Rand in der Preview
-Das externe Embed (`vid-path-builder-65.lovable.app`) zeigt eine Navigation-Bar am oberen Rand, die in der kleinen Preview-Größe als schwarzer Balken erscheint.
+## Problem
+Die aktuelle Preview zeigt nur einen sehr schwachen animierten Gradient, der im dunklen Hero-Hintergrund praktisch unsichtbar ist (siehe Screenshot). Der Fehler entstand, weil ich den Live-iframe komplett durch einen zu dezenten Placeholder ersetzt hatte.
 
-### 2. Schwarzes Bild auf iOS
-iFrames auf iOS/Safari haben bekannte Einschränkungen:
-- `loading="lazy"` kann Probleme auf iOS verursachen
-- Cross-Origin-Cookies werden standardmäßig blockiert (iOS 13+)
-- Safari-spezifische Rendering-Probleme mit eingebetteten iFrames
+## Lösung: Hybrid-Ansatz
 
----
+### Desktop (ab 1024px / lg)
+- **Live-iframe** mit CSS-Transform, um die schwarze Nav-Bar auszublenden
+- `scale-[1.2]` vergrößert den iframe
+- `-translate-y-[10%]` verschiebt ihn nach oben
+- Container mit `overflow-hidden` schneidet die Bar ab
 
-## Lösung
+### Mobile (unter 1024px)
+- **Statisches Thumbnail** mit sichtbarem Gradient + prominentem Video-Icon
+- Höhere Kontrast-Farben: `from-primary/40` statt `/20`
+- Größeres Icon: `w-16 h-16` statt `w-10 h-10`
+- Deutlicher sichtbarer Text: "Jetzt ansehen"
 
-### Alternative A: Statisches Thumbnail + Fallback (Empfohlen)
+## Technische Umsetzung
 
-Anstatt einen Live-iframe als Preview zu verwenden, wird ein statisches Bild/Thumbnail angezeigt. Dies ist:
-- Schneller (kein iframe-Load)
-- Zuverlässiger auf allen Geräten
-- Kein schwarzer Rand-Problem
-
-**Änderungen an `src/components/VideoFunnel.tsx`:**
-
-1. **Mini-iframe durch CSS-Gradient/Placeholder ersetzen**
-   - Entfernt den problematischen Preview-iframe
-   - Zeigt stattdessen einen ansprechenden animierten Gradient-Background
-   - Optional: Screenshot/Thumbnail des Videos als Hintergrundbild
-
-2. **iOS-spezifische Optimierungen für Modal-iframe**
-   - `loading="eager"` statt `"lazy"`
-   - Zusätzliche iframe-Attribute für iOS-Kompatibilität
-   - `sandbox` mit erlaubten Permissions
+**Datei: `src/components/VideoFunnel.tsx`**
 
 ```tsx
-// VORHER (problematisch):
-<iframe
-  src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
-  className="absolute inset-0 w-full h-full pointer-events-none"
-  loading="lazy"
-/>
+import { useIsMobile } from '@/hooks/use-mobile';
 
-// NACHHER (robust):
-<div 
-  className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-primary/10"
->
-  {/* Animated video icon placeholder */}
-  <motion.div className="absolute inset-0 flex items-center justify-center">
-    <Video className="w-12 h-12 text-primary/40" />
-  </motion.div>
-</div>
+export const VideoFunnel = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const isMobile = useIsMobile();
+
+  return (
+    <>
+      <motion.div ...>
+        <motion.div onClick={() => setIsOpen(true)} ...>
+          
+          {/* DESKTOP: Live-iframe Preview (versteckte Nav-Bar) */}
+          {!isMobile && (
+            <div className="absolute inset-0 overflow-hidden">
+              <iframe
+                src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
+                className="absolute inset-0 w-full h-full pointer-events-none scale-[1.2] -translate-y-[10%]"
+                title="Video Preview"
+                loading="eager"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          )}
+
+          {/* MOBILE: Statisches Thumbnail mit prominentem Icon */}
+          {isMobile && (
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-background/80 to-primary/20">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
+                  <Video className="w-8 h-8 text-primary" />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Dark Overlay + Play Button (bleibt gleich) */}
+          ...
+        </motion.div>
+      </motion.div>
+
+      {/* Modal (bleibt gleich, bereits iOS-optimiert) */}
+      ...
+    </>
+  );
+};
 ```
 
-3. **Modal-iframe iOS-optimiert:**
-```tsx
-<iframe
-  src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
-  className="w-full h-full"
-  allow="camera; microphone; autoplay; fullscreen"
-  allowFullScreen
-  loading="eager"
-  referrerPolicy="no-referrer-when-downgrade"
-/>
-```
+## Änderungen im Detail
 
----
+| Bereich | Vorher | Nachher |
+|---------|--------|---------|
+| Desktop-Preview | Animierter Gradient (unsichtbar) | Live-iframe mit Crop |
+| Mobile-Preview | Animierter Gradient (unsichtbar) | Sichtbarer Gradient + großes Icon |
+| Gradient-Stärke | `from-primary/20` | `from-primary/40` |
+| Icon-Farbe | `text-primary/30` | `text-primary` (100%) |
+| Icon-Größe | `w-10 h-10` | `w-16 h-16` mit Hintergrund-Kreis |
 
-### Alternative B: Versteckter schwarzer Rand
+## Ergebnis
 
-Falls der Live-Preview gewünscht ist, kann der schwarze Rand durch negative Margins ausgeblendet werden:
-
-```tsx
-<iframe
-  src="..."
-  className="absolute inset-0 w-full h-full pointer-events-none scale-[1.15] -translate-y-[8%]"
-  // Vergrößert und verschiebt iframe um die schwarze Bar zu verstecken
-/>
-```
-
-**Nachteil**: Funktioniert nicht auf iOS (schwarzes Bild bleibt)
-
----
-
-## Empfehlung
-
-**Alternative A** ist die beste Lösung weil:
-- Funktioniert zuverlässig auf allen Geräten
-- Schnellere Ladezeit (kein iframe für Preview)
-- Kein schwarzer Rand mehr
-- Der "echte" iframe wird erst beim Klick geladen
-
----
-
-## Technische Details
-
-**Geänderte Datei:**
-- `src/components/VideoFunnel.tsx`
-
-**Neue Imports:**
-- `Video` Icon von lucide-react (optional, für animiertes Placeholder)
-
-**Beibehaltene Features:**
-- Play-Button mit Pulsing-Animation
-- Corner Accents
-- Hover-Glow-Effekt
-- Fullscreen Modal mit Zoom-Animation
-- Close-Button
+- **Desktop**: Echte Live-Video-Vorschau ohne schwarze Bar
+- **Mobile**: Klarer, sichtbarer Placeholder mit prominentem Play-Button
+- **Beide**: Modal öffnet sich beim Klick mit dem echten Video
 
