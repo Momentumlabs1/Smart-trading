@@ -80,23 +80,23 @@ export const FunnelPlayer = ({ onClose, webhookUrl }: FunnelPlayerProps) => {
     return false;
   }, []);
 
-  // iOS-FIX: Start funnel with user gesture (sound works!)
-  const startFunnel = useCallback(() => {
-    // User has clicked = browser allows sound (User Gesture)
-    setIsMuted(false);
-    setIsStarted(true);
+  // Auto-start: Der Funnel startet sofort (User hat bereits auf Preview geklickt = User Gesture!)
+  useEffect(() => {
+    if (!isStarted) {
+      setIsMuted(false);
+      setIsStarted(true);
 
-    const startNode = nodes.find(n => n.type === 'start');
-    const nextNode = findNextNode(startNode?.id || '');
+      const startNode = nodes.find(n => n.type === 'start');
+      const nextNode = findNextNode(startNode?.id || '');
 
-    if (nextNode) {
-      // IMMEDIATE render without 300ms delay (User Gesture preserved!)
-      setCurrentNodeId(nextNode.id);
-      setButtonsVisible(false);
-      setSelectedRating(0);
-      setTextInput('');
+      if (nextNode) {
+        setCurrentNodeId(nextNode.id);
+        setButtonsVisible(false);
+        setSelectedRating(0);
+        setTextInput('');
+      }
     }
-  }, [nodes, findNextNode]);
+  }, []);
 
   // Go to node with crossfade transition
   const goToNode = useCallback((nodeId: string) => {
@@ -241,34 +241,11 @@ export const FunnelPlayer = ({ onClose, webhookUrl }: FunnelPlayerProps) => {
     }
   };
 
-  // Render Start Screen
-  if (!isStarted) {
+  // Loading state while auto-start initializes
+  if (!isStarted || !currentNode) {
     return (
-      <div className="funnel-player w-full max-w-[400px] h-full max-h-[711px] bg-black rounded-3xl overflow-hidden relative shadow-2xl">
-        <div 
-          className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer bg-gradient-to-br from-[#1a1a2e] to-[#0a0a0a]"
-          onClick={startFunnel}
-        >
-          {firstVideoNode?.data?.videoUrl && (
-            <video 
-              src={firstVideoNode.data.videoUrl} 
-              muted 
-              loop 
-              autoPlay 
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover opacity-30"
-            />
-          )}
-          <button 
-            className="w-24 h-24 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 z-10"
-            style={{ 
-              background: buttonColor,
-              boxShadow: `0 0 40px ${buttonColor}40`
-            }}
-          >
-            <Play className="w-10 h-10 text-black ml-1" fill="currentColor" />
-          </button>
-        </div>
+      <div className="funnel-player w-full max-w-[400px] h-full max-h-[711px] bg-black rounded-3xl overflow-hidden relative shadow-2xl flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
