@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Play } from 'lucide-react';
-import saifTrading from '@/assets/saif-trading.webp';
+import funnelPreview from '@/assets/funnel-preview.webp';
 
 export const VideoFunnel = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +22,7 @@ export const VideoFunnel = () => {
         >
           {/* Thumbnail */}
           <img 
-            src={saifTrading} 
+            src={funnelPreview} 
             alt="Video Preview" 
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
