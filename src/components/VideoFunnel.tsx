@@ -1,48 +1,57 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { Play } from 'lucide-react';
+import saifThumb from '@/assets/saif-trading.webp';
 
 export const VideoFunnel = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Listen for postMessage from iframe when funnel starts
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data?.type === 'funnel_started') {
-        setIsOpen(true);
-      }
-    };
-    
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, []);
-
   return (
     <>
-      {/* Kleiner Platzhalter im Hero - NUR Live-iFrame */}
+      {/* Preview Tile mit Thumbnail + Play Button */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, delay: 0.2 }}
         className="justify-self-center lg:justify-self-start order-2 lg:order-1 lg:row-span-2"
       >
-        <div className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl glass border border-border/50 hover:border-primary/50 transition-all duration-300">
-          {/* Innerer Wrapper mit overflow-hidden für den skalierten iFrame */}
-          <div className="absolute inset-0 rounded-2xl overflow-hidden">
-            <iframe
-              src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
-              className="absolute inset-0 w-full h-full scale-[1.2] -translate-y-[10%]"
-              title="Video Preview"
-              loading="eager"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
+        <div 
+          onClick={() => setIsOpen(true)}
+          className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 hover:border-primary/50 transition-all duration-300 cursor-pointer group"
+        >
+          {/* Thumbnail */}
+          <img
+            src={saifThumb}
+            alt="Video Preview"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+
+          {/* Dark Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+
+          {/* Play Button */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-14 h-14 rounded-full bg-primary/90 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
+              <Play className="w-6 h-6 text-primary-foreground fill-current ml-1" />
+            </div>
+          </div>
+
+          {/* Pulsing Ring */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="w-14 h-14 rounded-full border-2 border-primary/50 animate-ping" />
           </div>
 
           {/* Corner Accents */}
-          <div className="absolute top-2 left-2 w-4 h-4 border-l-2 border-t-2 border-primary/50 rounded-tl-lg pointer-events-none z-10" />
-          <div className="absolute top-2 right-2 w-4 h-4 border-r-2 border-t-2 border-primary/50 rounded-tr-lg pointer-events-none z-10" />
-          <div className="absolute bottom-2 left-2 w-4 h-4 border-l-2 border-b-2 border-primary/50 rounded-bl-lg pointer-events-none z-10" />
-          <div className="absolute bottom-2 right-2 w-4 h-4 border-r-2 border-b-2 border-primary/50 rounded-br-lg pointer-events-none z-10" />
+          <div className="absolute top-2 left-2 w-4 h-4 border-l-2 border-t-2 border-primary/50 rounded-tl-lg pointer-events-none" />
+          <div className="absolute top-2 right-2 w-4 h-4 border-r-2 border-t-2 border-primary/50 rounded-tr-lg pointer-events-none" />
+          <div className="absolute bottom-2 left-2 w-4 h-4 border-l-2 border-b-2 border-primary/50 rounded-bl-lg pointer-events-none" />
+          <div className="absolute bottom-2 right-2 w-4 h-4 border-r-2 border-b-2 border-primary/50 rounded-br-lg pointer-events-none" />
+
+          {/* Text */}
+          <div className="absolute bottom-4 left-0 right-0 text-center">
+            <span className="text-xs text-white/90 font-medium">Jetzt ansehen</span>
+          </div>
         </div>
       </motion.div>
 
