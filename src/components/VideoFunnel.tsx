@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Video } from 'lucide-react';
+import { Play } from 'lucide-react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { useIsMobile } from '@/hooks/use-mobile';
+import saifThumb from '@/assets/saif-phone.webp';
 
 export const VideoFunnel = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const isMobile = useIsMobile();
 
   return (
       <>
@@ -21,29 +20,23 @@ export const VideoFunnel = () => {
           onClick={() => setIsOpen(true)}
           className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 group cursor-pointer hover:border-primary/50 transition-all duration-300"
         >
-          {/* DESKTOP: Live-iframe Preview (versteckte Nav-Bar) */}
-          {!isMobile && (
-            <div className="absolute inset-0 overflow-hidden rounded-2xl">
-              <iframe
-                src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
-                className="absolute inset-0 w-full h-full pointer-events-none scale-[1.2] -translate-y-[10%]"
-                title="Video Preview"
-                loading="eager"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
-          )}
+          {/* Fallback Thumbnail (immer da, auch als Fallback für langsamen iframe) */}
+          <img
+            src={saifThumb}
+            alt="Video Vorschau"
+            className="absolute inset-0 w-full h-full object-cover scale-[1.03]"
+          />
 
-          {/* MOBILE: Statisches Thumbnail mit prominentem Icon */}
-          {isMobile && (
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-background/80 to-primary/20">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
-                  <Video className="w-8 h-8 text-primary" />
-                </div>
-              </div>
-            </div>
-          )}
+          {/* DESKTOP: Live-iframe Preview (über dem Thumbnail) */}
+          <div className="hidden lg:block absolute inset-0 overflow-hidden rounded-2xl">
+            <iframe
+              src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
+              className="absolute inset-0 w-full h-full pointer-events-none scale-[1.2] -translate-y-[10%]"
+              title="Video Preview"
+              loading="eager"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
           
           {/* Dark Overlay für bessere Lesbarkeit des Play-Buttons */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent group-hover:from-black/40 group-hover:via-black/10 transition-all duration-300" />
