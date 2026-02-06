@@ -1,54 +1,62 @@
 
-## Ziel (Problem wirklich lösen)
-Auf der Handy-Ansicht “verschwindet” die Video-Vorschau nicht wegen eines Render-Bugs – sondern weil wir auf Mobile aktuell **absichtlich keinen Live-Embed** zeigen, sondern nur einen **Placeholder** (Gradient + Icon). Du erwartest aber eine **echte, sichtbare Vorschau** (wie auf Desktop mit Gesicht/Frame) – nicht nur einen abstrakten Platzhalter.
+## Ziel
+Wenn der User im iFrame auf "Jetzt starten" klickt, soll die Website das erkennen und automatisch das Modal (Vollbild-Ansicht) öffnen.
 
-Zusätzlich ist die aktuelle Mobile/Desktop-Umschaltung technisch unnötig komplex, weil sie über `useIsMobile()` (Breakpoint 768) läuft, während dein Layout über Tailwind `lg:` (Breakpoint 1024) umschaltet. Das kann zu verwirrendem Verhalten führen (Tablet/Editor-Ansichten).
+## Technische Umsetzung
 
-## Lösung (robust + genau wie gewünscht)
-Wir stellen um auf:
+### Datei: `src/components/VideoFunnel.tsx`
 
-1) **Desktop (lg und größer): Live-Embed**
-- Der iframe bleibt, inkl. “crop” Trick (`scale` + `translate-y`) um die schwarze Bar zu verstecken.
-- Sichtbarkeit/Logik wird über Tailwind gesteuert: `hidden lg:block` (statt JS Hook).
+### Änderung 1: postMessage Listener hinzufügen
+```tsx
+useEffect(() => {
+  const handleMessage = (event: MessageEvent) => {
+    if (event.data?.type === 'funnel_started') {
+      setIsOpen(true);
+    }
+  };
+  
+  window.addEventListener('message', handleMessage);
+  return () => window.removeEventListener('message', handleMessage);
+}, []);
+```
 
-2) **Mobile (< lg): echtes Thumbnail statt Placeholder**
-- Statt Gradient wird ein **echtes Bild** als Thumbnail angezeigt (z.B. `src/assets/saif-phone.webp`, das ist bereits im Projekt vorhanden).
-- Darüber bleibt dein Play-Overlay wie bisher (damit klar ist: antippen öffnet Video-Modal).
+### Änderung 2: iFrame interaktiv machen
+- `pointer-events-none` entfernen vom iFrame
+- Play-Button Overlay entfernen (User klickt direkt im iFrame)
+- Container-onClick entfernen
 
-3) **Optionaler Bonus (Fallback auch auf Desktop)**
-- Wir legen das Thumbnail als “Background” auch **unter** den iframe. Falls der iframe mal langsam lädt oder blockiert wird, sieht man trotzdem sofort ein Bild.
+### Änderung 3: Overlay aufräumen
+Entfernen:
+- Pulsing Ring Animation
+- Play Button
+- "Jetzt ansehen" Text
+- Dark Gradient (oder reduzieren)
 
-## Konkrete Änderungen (Dateien)
-### A) `src/components/VideoFunnel.tsx`
-- Entfernen: `useIsMobile` Import und `const isMobile = useIsMobile();`
-- Ersetzen der Conditional-Blocks:
-  - Desktop iframe Block wird: `<div className="hidden lg:block ...">...</div>`
-  - Mobile Thumbnail Block wird: `<div className="lg:hidden ..."> <img .../> ... </div>`
-- Thumbnail-Asset importieren:
-  - `import saifThumb from "@/assets/saif-phone.webp";` (oder alternativ `saif-portrait.webp`, wenn du lieber das willst)
-- Thumbnail so rendern, dass es wie eine echte Vorschau wirkt:
-  - `img` mit `className="absolute inset-0 w-full h-full object-cover scale-[1.03]"` (leichtes Zoom für “Video-Look”)
-  - Optional ein sehr leichter dunkler Overlay bleibt (du hast ihn ohnehin schon) damit der Play-Button gut lesbar ist.
+Behalten:
+- Corner Accents (dekorativ)
+- Thumbnail als Fallback
+- Modal mit Zoom-Animation
 
-### B) (Optional) `src/hooks/use-mobile.tsx`
-- Wenn wir komplett auf CSS umstellen, wird dieser Hook hier gar nicht mehr gebraucht.
-- Ich lasse ihn ansonsten unangetastet, aber die VideoFunnel-Komponente hängt dann nicht mehr davon ab.
+## Ablauf nach Umsetzung
 
-## Warum das dein Problem exakt trifft
-- In der “Handy”-Preview im Editor wird (korrekt) der Mobile-Branch aktiv. Aktuell ist das eben nur ein Gradient-Placeholder.
-- Nach der Änderung siehst du in Mobile **ein echtes Bild** (keine abstrakte Fläche), was deiner Erwartung “Vorschau” entspricht.
-- Die Umschaltung passiert deterministisch über Tailwind `lg:` (wie dein Hero-Layout), nicht über einen separaten JS-Breakpoint.
+```text
+Mobile/Desktop:
+1. User sieht kleine Preview-Kachel mit Live-iFrame
+2. User tippt auf "Jetzt starten" (Button im iFrame)
+3. Video startet sofort (iOS: Geste erkannt)
+4. iFrame sendet postMessage
+5. Website empfängt → Modal öffnet sich (Zoom-Animation)
+6. Video läuft im großen Modal weiter
+```
 
-## Abnahmekriterien (was du danach testen solltest)
-1) Editor: Handy-Icon → Video-Kachel zeigt ein echtes Thumbnail + Play-Button, darunter Buttons.
-2) Desktop → Video-Kachel zeigt den Live-Embed (ohne schwarze Bar), Klick öffnet Modal.
-3) iPhone Safari → Thumbnail ist sichtbar, Klick öffnet Modal (Video/Funnel lädt).
+## Voraussetzung
+Das andere Projekt (Funnel) muss diesen Code haben:
+```tsx
+window.parent.postMessage({ type: 'funnel_started' }, '*');
+```
+(Du hast gesagt, das wird dort hinzugefügt)
 
-## Risiken / Edge Cases
-- Der externe Funnel-Embed kann auf iOS im Modal je nach Einstellungen/Netzwerk langsam laden. Mit Thumbnail sieht es aber nie “kaputt” aus.
-- Wenn du ein ganz bestimmtes Thumbnail (echter Frame aus dem Video) willst, brauchen wir dafür entweder:
-  - ein von dir geliefertes Thumbnail-Bild, oder
-  - wir erzeugen/hosten eins im Projekt (am einfachsten: du gibst mir ein Bild, ich lege es als Asset ab).
-
-## Nächster Schritt
-Ich implementiere das wie oben (CSS-breakpoint-gesteuert + echtes Thumbnail auf Mobile + optionaler Fallback unter dem iframe).
+## Ergebnis
+- iOS: Video startet mit Ton (Klick im iFrame = User-Geste)
+- Handy: Automatisch Vollbild nach Start
+- Desktop: Automatisch größeres Modal nach Start
