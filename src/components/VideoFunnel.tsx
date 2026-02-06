@@ -27,11 +27,11 @@ export const VideoFunnel = () => {
             className="absolute inset-0 w-full h-full object-cover scale-[1.03]"
           />
 
-          {/* DESKTOP: Live-iframe Preview (über dem Thumbnail) */}
-          <div className="hidden lg:block absolute inset-0 overflow-hidden rounded-2xl">
+          {/* Live-iframe Preview (ALLE Geräte) */}
+          <div className="absolute inset-0 overflow-hidden rounded-2xl">
             <iframe
               src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
-              className="absolute inset-0 w-full h-full pointer-events-none scale-[1.2] -translate-y-[10%]"
+              className="absolute inset-0 w-full h-full pointer-events-none scale-[1.05] -translate-y-[3%] lg:scale-[1.2] lg:-translate-y-[10%]"
               title="Video Preview"
               loading="eager"
               referrerPolicy="no-referrer-when-downgrade"
