@@ -23,7 +23,7 @@ export const AboutSaif = () => {
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
 
   return (
-    <section ref={containerRef} className="py-24 relative overflow-hidden">
+    <section ref={containerRef} className="py-16 sm:py-24 relative overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
@@ -35,14 +35,15 @@ export const AboutSaif = () => {
       <div className="section-container relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Image with parallax */}
+          {/* Image - appears first on mobile */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="relative order-2 lg:order-1"
+            className="relative order-1"
           >
             <motion.div 
-              className="relative aspect-[4/5] rounded-3xl overflow-hidden"
+              className="relative aspect-[3/2] sm:aspect-[4/5] rounded-3xl overflow-hidden"
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
             >
@@ -57,9 +58,9 @@ export const AboutSaif = () => {
               </div>
             </motion.div>
 
-            {/* Floating Achievement Cards */}
+            {/* Floating Achievement Cards - hidden on mobile */}
             <motion.div
-              className="absolute -bottom-4 -right-4 md:-right-8"
+              className="hidden sm:block absolute -bottom-4 -right-4 md:-right-8"
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
@@ -80,7 +81,7 @@ export const AboutSaif = () => {
             </motion.div>
 
             <motion.div
-              className="absolute -top-4 -left-4 md:-left-8"
+              className="hidden sm:block absolute -top-4 -left-4 md:-left-8"
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
@@ -102,11 +103,12 @@ export const AboutSaif = () => {
           </motion.div>
 
           {/* Content */}
+          {/* Content - appears second */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="order-1 lg:order-2"
+            className="order-2"
           >
             <span className="inline-block text-xs font-semibold text-primary uppercase tracking-[0.2em] mb-4">
               Über den Gründer
