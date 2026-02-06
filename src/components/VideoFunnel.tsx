@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Video } from 'lucide-react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export const VideoFunnel = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   return (
       <>
@@ -19,39 +21,29 @@ export const VideoFunnel = () => {
           onClick={() => setIsOpen(true)}
           className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 group cursor-pointer hover:border-primary/50 transition-all duration-300"
         >
-          {/* Animated Gradient Background statt iframe */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-primary/10">
-            {/* Animated mesh pattern */}
-            <motion.div 
-              className="absolute inset-0 opacity-30"
-              style={{
-                backgroundImage: `radial-gradient(circle at 20% 30%, hsl(var(--primary) / 0.3) 0%, transparent 50%),
-                                  radial-gradient(circle at 80% 70%, hsl(var(--primary) / 0.2) 0%, transparent 50%)`,
-              }}
-              animate={{
-                opacity: [0.2, 0.4, 0.2],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            />
-            {/* Video icon placeholder */}
-            <motion.div 
-              className="absolute inset-0 flex items-center justify-center"
-              animate={{
-                scale: [1, 1.05, 1],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            >
-              <Video className="w-10 h-10 lg:w-12 lg:h-12 text-primary/30" />
-            </motion.div>
-          </div>
+          {/* DESKTOP: Live-iframe Preview (versteckte Nav-Bar) */}
+          {!isMobile && (
+            <div className="absolute inset-0 overflow-hidden rounded-2xl">
+              <iframe
+                src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
+                className="absolute inset-0 w-full h-full pointer-events-none scale-[1.2] -translate-y-[10%]"
+                title="Video Preview"
+                loading="eager"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          )}
+
+          {/* MOBILE: Statisches Thumbnail mit prominentem Icon */}
+          {isMobile && (
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-background/80 to-primary/20">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
+                  <Video className="w-8 h-8 text-primary" />
+                </div>
+              </div>
+            </div>
+          )}
           
           {/* Dark Overlay für bessere Lesbarkeit des Play-Buttons */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent group-hover:from-black/40 group-hover:via-black/10 transition-all duration-300" />
