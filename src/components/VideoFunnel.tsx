@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { Play } from 'lucide-react';
+import { Play, X } from 'lucide-react';
 import funnelPreview from '@/assets/funnel-preview.webp';
+import { FunnelPlayer } from '@/components/funnel/FunnelPlayer';
 
 export const VideoFunnel = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -54,7 +55,7 @@ export const VideoFunnel = () => {
         </div>
       </motion.div>
 
-      {/* Fullscreen Modal with Zoom Animation */}
+      {/* Fullscreen Modal with Native Funnel Player */}
       <AnimatePresence>
         {isOpen && (
           <DialogPrimitive.Root open={isOpen} onOpenChange={setIsOpen}>
@@ -65,7 +66,7 @@ export const VideoFunnel = () => {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                  className="fixed inset-0 z-50 bg-black/80"
+                  className="fixed inset-0 z-50 bg-black/90"
                 />
               </DialogPrimitive.Overlay>
 
@@ -77,23 +78,14 @@ export const VideoFunnel = () => {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <div className="relative w-[95vw] max-w-[1100px] h-[90vh] max-h-[90vh] border border-border/50 bg-background rounded-2xl overflow-hidden shadow-2xl">
-                    <iframe
-                      src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
-                      className="w-full h-full"
-                      allow="camera; microphone; autoplay; fullscreen"
-                      allowFullScreen
-                      loading="eager"
-                      referrerPolicy="no-referrer-when-downgrade"
-                      title="Smart Trading Video Funnel"
-                    />
-                    <DialogPrimitive.Close className="absolute right-4 top-4 rounded-full w-12 h-12 bg-background/90 backdrop-blur-md flex items-center justify-center hover:bg-background transition-all focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 z-10 border border-border/50 shadow-lg">
-                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                      <span className="sr-only">Close</span>
-                    </DialogPrimitive.Close>
-                  </div>
+                  {/* Native Funnel Player - Sound funktioniert durch User Gesture! */}
+                  <FunnelPlayer onClose={() => setIsOpen(false)} />
+                  
+                  {/* Close Button */}
+                  <DialogPrimitive.Close className="absolute right-4 top-4 rounded-full w-12 h-12 bg-background/90 backdrop-blur-md flex items-center justify-center hover:bg-background transition-all focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 z-[60] border border-border/50 shadow-lg">
+                    <X className="h-5 w-5" />
+                    <span className="sr-only">Close</span>
+                  </DialogPrimitive.Close>
                 </motion.div>
               </DialogPrimitive.Content>
             </DialogPrimitive.Portal>
