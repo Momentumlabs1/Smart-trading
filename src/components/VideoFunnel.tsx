@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play } from 'lucide-react';
+import { Play, Video } from 'lucide-react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 
 export const VideoFunnel = () => {
@@ -19,16 +19,42 @@ export const VideoFunnel = () => {
           onClick={() => setIsOpen(true)}
           className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 group cursor-pointer hover:border-primary/50 transition-all duration-300"
         >
-          {/* Mini-Iframe Preview */}
-          <iframe
-            src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
-            className="absolute inset-0 w-full h-full pointer-events-none"
-            title="Video Preview"
-            loading="lazy"
-          />
+          {/* Animated Gradient Background statt iframe */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-primary/10">
+            {/* Animated mesh pattern */}
+            <motion.div 
+              className="absolute inset-0 opacity-30"
+              style={{
+                backgroundImage: `radial-gradient(circle at 20% 30%, hsl(var(--primary) / 0.3) 0%, transparent 50%),
+                                  radial-gradient(circle at 80% 70%, hsl(var(--primary) / 0.2) 0%, transparent 50%)`,
+              }}
+              animate={{
+                opacity: [0.2, 0.4, 0.2],
+              }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+            {/* Video icon placeholder */}
+            <motion.div 
+              className="absolute inset-0 flex items-center justify-center"
+              animate={{
+                scale: [1, 1.05, 1],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              <Video className="w-10 h-10 lg:w-12 lg:h-12 text-primary/30" />
+            </motion.div>
+          </div>
           
           {/* Dark Overlay für bessere Lesbarkeit des Play-Buttons */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/20 group-hover:from-black/60 group-hover:via-black/30 group-hover:to-black/10 transition-all duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent group-hover:from-black/40 group-hover:via-black/10 transition-all duration-300" />
           
           {/* Play Button Overlay */}
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
@@ -92,7 +118,10 @@ export const VideoFunnel = () => {
                     <iframe
                       src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
                       className="w-full h-full"
-                      allow="camera; microphone; autoplay"
+                      allow="camera; microphone; autoplay; fullscreen"
+                      allowFullScreen
+                      loading="eager"
+                      referrerPolicy="no-referrer-when-downgrade"
                       title="Smart Trading Video Funnel"
                     />
                     <DialogPrimitive.Close className="absolute right-4 top-4 rounded-full w-12 h-12 bg-background/90 backdrop-blur-md flex items-center justify-center hover:bg-background transition-all focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 z-10 border border-border/50 shadow-lg">
