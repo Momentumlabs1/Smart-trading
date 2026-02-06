@@ -1,89 +1,54 @@
 
+## Ziel (Problem wirklich lösen)
+Auf der Handy-Ansicht “verschwindet” die Video-Vorschau nicht wegen eines Render-Bugs – sondern weil wir auf Mobile aktuell **absichtlich keinen Live-Embed** zeigen, sondern nur einen **Placeholder** (Gradient + Icon). Du erwartest aber eine **echte, sichtbare Vorschau** (wie auf Desktop mit Gesicht/Frame) – nicht nur einen abstrakten Platzhalter.
 
-# VideoFunnel Fix: Live (Desktop) + Thumbnail (Mobile)
+Zusätzlich ist die aktuelle Mobile/Desktop-Umschaltung technisch unnötig komplex, weil sie über `useIsMobile()` (Breakpoint 768) läuft, während dein Layout über Tailwind `lg:` (Breakpoint 1024) umschaltet. Das kann zu verwirrendem Verhalten führen (Tablet/Editor-Ansichten).
 
-## Problem
-Die aktuelle Preview zeigt nur einen sehr schwachen animierten Gradient, der im dunklen Hero-Hintergrund praktisch unsichtbar ist (siehe Screenshot). Der Fehler entstand, weil ich den Live-iframe komplett durch einen zu dezenten Placeholder ersetzt hatte.
+## Lösung (robust + genau wie gewünscht)
+Wir stellen um auf:
 
-## Lösung: Hybrid-Ansatz
+1) **Desktop (lg und größer): Live-Embed**
+- Der iframe bleibt, inkl. “crop” Trick (`scale` + `translate-y`) um die schwarze Bar zu verstecken.
+- Sichtbarkeit/Logik wird über Tailwind gesteuert: `hidden lg:block` (statt JS Hook).
 
-### Desktop (ab 1024px / lg)
-- **Live-iframe** mit CSS-Transform, um die schwarze Nav-Bar auszublenden
-- `scale-[1.2]` vergrößert den iframe
-- `-translate-y-[10%]` verschiebt ihn nach oben
-- Container mit `overflow-hidden` schneidet die Bar ab
+2) **Mobile (< lg): echtes Thumbnail statt Placeholder**
+- Statt Gradient wird ein **echtes Bild** als Thumbnail angezeigt (z.B. `src/assets/saif-phone.webp`, das ist bereits im Projekt vorhanden).
+- Darüber bleibt dein Play-Overlay wie bisher (damit klar ist: antippen öffnet Video-Modal).
 
-### Mobile (unter 1024px)
-- **Statisches Thumbnail** mit sichtbarem Gradient + prominentem Video-Icon
-- Höhere Kontrast-Farben: `from-primary/40` statt `/20`
-- Größeres Icon: `w-16 h-16` statt `w-10 h-10`
-- Deutlicher sichtbarer Text: "Jetzt ansehen"
+3) **Optionaler Bonus (Fallback auch auf Desktop)**
+- Wir legen das Thumbnail als “Background” auch **unter** den iframe. Falls der iframe mal langsam lädt oder blockiert wird, sieht man trotzdem sofort ein Bild.
 
-## Technische Umsetzung
+## Konkrete Änderungen (Dateien)
+### A) `src/components/VideoFunnel.tsx`
+- Entfernen: `useIsMobile` Import und `const isMobile = useIsMobile();`
+- Ersetzen der Conditional-Blocks:
+  - Desktop iframe Block wird: `<div className="hidden lg:block ...">...</div>`
+  - Mobile Thumbnail Block wird: `<div className="lg:hidden ..."> <img .../> ... </div>`
+- Thumbnail-Asset importieren:
+  - `import saifThumb from "@/assets/saif-phone.webp";` (oder alternativ `saif-portrait.webp`, wenn du lieber das willst)
+- Thumbnail so rendern, dass es wie eine echte Vorschau wirkt:
+  - `img` mit `className="absolute inset-0 w-full h-full object-cover scale-[1.03]"` (leichtes Zoom für “Video-Look”)
+  - Optional ein sehr leichter dunkler Overlay bleibt (du hast ihn ohnehin schon) damit der Play-Button gut lesbar ist.
 
-**Datei: `src/components/VideoFunnel.tsx`**
+### B) (Optional) `src/hooks/use-mobile.tsx`
+- Wenn wir komplett auf CSS umstellen, wird dieser Hook hier gar nicht mehr gebraucht.
+- Ich lasse ihn ansonsten unangetastet, aber die VideoFunnel-Komponente hängt dann nicht mehr davon ab.
 
-```tsx
-import { useIsMobile } from '@/hooks/use-mobile';
+## Warum das dein Problem exakt trifft
+- In der “Handy”-Preview im Editor wird (korrekt) der Mobile-Branch aktiv. Aktuell ist das eben nur ein Gradient-Placeholder.
+- Nach der Änderung siehst du in Mobile **ein echtes Bild** (keine abstrakte Fläche), was deiner Erwartung “Vorschau” entspricht.
+- Die Umschaltung passiert deterministisch über Tailwind `lg:` (wie dein Hero-Layout), nicht über einen separaten JS-Breakpoint.
 
-export const VideoFunnel = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const isMobile = useIsMobile();
+## Abnahmekriterien (was du danach testen solltest)
+1) Editor: Handy-Icon → Video-Kachel zeigt ein echtes Thumbnail + Play-Button, darunter Buttons.
+2) Desktop → Video-Kachel zeigt den Live-Embed (ohne schwarze Bar), Klick öffnet Modal.
+3) iPhone Safari → Thumbnail ist sichtbar, Klick öffnet Modal (Video/Funnel lädt).
 
-  return (
-    <>
-      <motion.div ...>
-        <motion.div onClick={() => setIsOpen(true)} ...>
-          
-          {/* DESKTOP: Live-iframe Preview (versteckte Nav-Bar) */}
-          {!isMobile && (
-            <div className="absolute inset-0 overflow-hidden">
-              <iframe
-                src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
-                className="absolute inset-0 w-full h-full pointer-events-none scale-[1.2] -translate-y-[10%]"
-                title="Video Preview"
-                loading="eager"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
-          )}
+## Risiken / Edge Cases
+- Der externe Funnel-Embed kann auf iOS im Modal je nach Einstellungen/Netzwerk langsam laden. Mit Thumbnail sieht es aber nie “kaputt” aus.
+- Wenn du ein ganz bestimmtes Thumbnail (echter Frame aus dem Video) willst, brauchen wir dafür entweder:
+  - ein von dir geliefertes Thumbnail-Bild, oder
+  - wir erzeugen/hosten eins im Projekt (am einfachsten: du gibst mir ein Bild, ich lege es als Asset ab).
 
-          {/* MOBILE: Statisches Thumbnail mit prominentem Icon */}
-          {isMobile && (
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-background/80 to-primary/20">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
-                  <Video className="w-8 h-8 text-primary" />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Dark Overlay + Play Button (bleibt gleich) */}
-          ...
-        </motion.div>
-      </motion.div>
-
-      {/* Modal (bleibt gleich, bereits iOS-optimiert) */}
-      ...
-    </>
-  );
-};
-```
-
-## Änderungen im Detail
-
-| Bereich | Vorher | Nachher |
-|---------|--------|---------|
-| Desktop-Preview | Animierter Gradient (unsichtbar) | Live-iframe mit Crop |
-| Mobile-Preview | Animierter Gradient (unsichtbar) | Sichtbarer Gradient + großes Icon |
-| Gradient-Stärke | `from-primary/20` | `from-primary/40` |
-| Icon-Farbe | `text-primary/30` | `text-primary` (100%) |
-| Icon-Größe | `w-10 h-10` | `w-16 h-16` mit Hintergrund-Kreis |
-
-## Ergebnis
-
-- **Desktop**: Echte Live-Video-Vorschau ohne schwarze Bar
-- **Mobile**: Klarer, sichtbarer Placeholder mit prominentem Play-Button
-- **Beide**: Modal öffnet sich beim Klick mit dem echten Video
-
+## Nächster Schritt
+Ich implementiere das wie oben (CSS-breakpoint-gesteuert + echtes Thumbnail auf Mobile + optionaler Fallback unter dem iframe).
