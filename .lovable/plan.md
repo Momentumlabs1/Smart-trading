@@ -1,105 +1,111 @@
 
-# AboutSaif Mobile Layout Fix
+# VideoFunnel Mobile & Preview Fix
 
-## Problem
-Auf Mobilgeräten wird Saifs Bild ganz unten angezeigt (nach dem gesamten Text), weil:
-- Das Bild `order-2` hat (erscheint als zweites)
-- Der Text `order-1` hat (erscheint als erstes)
+## Probleme identifiziert
 
-Dies unterbricht den visuellen Fluss und die persönliche Verbindung, die das Bild herstellen soll.
+### 1. Schwarzer Rand in der Preview
+Das externe Embed (`vid-path-builder-65.lovable.app`) zeigt eine Navigation-Bar am oberen Rand, die in der kleinen Preview-Größe als schwarzer Balken erscheint.
+
+### 2. Schwarzes Bild auf iOS
+iFrames auf iOS/Safari haben bekannte Einschränkungen:
+- `loading="lazy"` kann Probleme auf iOS verursachen
+- Cross-Origin-Cookies werden standardmäßig blockiert (iOS 13+)
+- Safari-spezifische Rendering-Probleme mit eingebetteten iFrames
+
+---
 
 ## Lösung
 
-### Option A: Bild oben auf Mobile (Empfohlen)
-Das Bild wird auf Mobile oben angezeigt, mit einem kompakteren Format.
+### Alternative A: Statisches Thumbnail + Fallback (Empfohlen)
 
-**Änderungen an `src/components/sections/AboutSaif.tsx`:**
+Anstatt einen Live-iframe als Preview zu verwenden, wird ein statisches Bild/Thumbnail angezeigt. Dies ist:
+- Schneller (kein iframe-Load)
+- Zuverlässiger auf allen Geräten
+- Kein schwarzer Rand-Problem
 
-1. **Order-Klassen anpassen:**
-   - Bild: `order-1 lg:order-1` (immer zuerst auf Mobile, links auf Desktop)
-   - Text: `order-2 lg:order-2` (immer danach)
+**Änderungen an `src/components/VideoFunnel.tsx`:**
 
-2. **Mobiles Bild-Format optimieren:**
-   - Kompakteres Aspect-Ratio auf Mobile: `aspect-[3/2] sm:aspect-[4/5]`
-   - Bild wird breiter und kürzer auf Mobile (weniger Scroll nötig)
-   - Floating Cards auf Mobile dezenter positionieren
+1. **Mini-iframe durch CSS-Gradient/Placeholder ersetzen**
+   - Entfernt den problematischen Preview-iframe
+   - Zeigt stattdessen einen ansprechenden animierten Gradient-Background
+   - Optional: Screenshot/Thumbnail des Videos als Hintergrundbild
 
-3. **Text-Bereich kompakter:**
-   - Headline auf Mobile etwas kleiner
-   - Achievement-Grid bleibt kompakt
-
-### Visuelle Änderung
-
-**Vorher (Mobile):**
-```text
-┌─────────────────────────┐
-│ "Über den Gründer"      │
-│ Headline                │
-│ Text...                 │
-│ Achievement Grid        │
-│ Name                    │
-│ Buttons                 │
-├─────────────────────────┤
-│                         │
-│   [Saif Bild - unten]   │
-│                         │
-└─────────────────────────┘
-```
-
-**Nachher (Mobile):**
-```text
-┌─────────────────────────┐
-│   [Saif Bild - oben]    │
-│   (kompakter 3:2)       │
-├─────────────────────────┤
-│ "Über den Gründer"      │
-│ Headline                │
-│ Text...                 │
-│ Achievement Grid        │
-│ Name + Buttons          │
-└─────────────────────────┘
-```
-
-## Technische Umsetzung
+2. **iOS-spezifische Optimierungen für Modal-iframe**
+   - `loading="eager"` statt `"lazy"`
+   - Zusätzliche iframe-Attribute für iOS-Kompatibilität
+   - `sandbox` mit erlaubten Permissions
 
 ```tsx
-{/* Image - jetzt order-1 auf Mobile */}
-<motion.div
-  className="relative order-1"  // Entfernt: order-2 lg:order-1
->
-  <motion.div 
-    className="relative aspect-[3/2] sm:aspect-[4/5] rounded-3xl overflow-hidden"
-    // Kompakteres Bild auf Mobile (3:2 statt 4:5)
-  >
-    ...
-  </motion.div>
+// VORHER (problematisch):
+<iframe
+  src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
+  className="absolute inset-0 w-full h-full pointer-events-none"
+  loading="lazy"
+/>
 
-  {/* Floating Cards nur auf Desktop */}
-  <motion.div className="hidden sm:block absolute -bottom-4 -right-4 ...">
-    ...
-  </motion.div>
-</motion.div>
-
-{/* Content - jetzt order-2 */}
-<motion.div
-  className="order-2"  // Entfernt: order-1 lg:order-2
+// NACHHER (robust):
+<div 
+  className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-primary/10"
 >
-  ...
-</motion.div>
+  {/* Animated video icon placeholder */}
+  <motion.div className="absolute inset-0 flex items-center justify-center">
+    <Video className="w-12 h-12 text-primary/40" />
+  </motion.div>
+</div>
 ```
 
-## Zusätzliche Optimierungen
+3. **Modal-iframe iOS-optimiert:**
+```tsx
+<iframe
+  src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
+  className="w-full h-full"
+  allow="camera; microphone; autoplay; fullscreen"
+  allowFullScreen
+  loading="eager"
+  referrerPolicy="no-referrer-when-downgrade"
+/>
+```
 
-1. **Floating Achievement Cards auf Mobile ausblenden** (`hidden sm:block`)
-   - Vermeidet Überlappungsprobleme
-   - Achievement-Grid im Text-Bereich zeigt dieselben Infos
+---
 
-2. **Section Padding reduzieren auf Mobile:**
-   - `py-16 sm:py-24` statt nur `py-24`
+### Alternative B: Versteckter schwarzer Rand
 
-## Ergebnis
+Falls der Live-Preview gewünscht ist, kann der schwarze Rand durch negative Margins ausgeblendet werden:
 
-- Saifs Bild ist sofort sichtbar beim Scrollen
-- Persönliche Verbindung wird früher hergestellt
-- Kompakteres Bild-Format spart vertikalen Platz
-- Konsistentes Layout mit dem Rest der Seite
+```tsx
+<iframe
+  src="..."
+  className="absolute inset-0 w-full h-full pointer-events-none scale-[1.15] -translate-y-[8%]"
+  // Vergrößert und verschiebt iframe um die schwarze Bar zu verstecken
+/>
+```
+
+**Nachteil**: Funktioniert nicht auf iOS (schwarzes Bild bleibt)
+
+---
+
+## Empfehlung
+
+**Alternative A** ist die beste Lösung weil:
+- Funktioniert zuverlässig auf allen Geräten
+- Schnellere Ladezeit (kein iframe für Preview)
+- Kein schwarzer Rand mehr
+- Der "echte" iframe wird erst beim Klick geladen
+
+---
+
+## Technische Details
+
+**Geänderte Datei:**
+- `src/components/VideoFunnel.tsx`
+
+**Neue Imports:**
+- `Video` Icon von lucide-react (optional, für animiertes Placeholder)
+
+**Beibehaltene Features:**
+- Play-Button mit Pulsing-Animation
+- Corner Accents
+- Hover-Glow-Effekt
+- Fullscreen Modal mit Zoom-Animation
+- Close-Button
+
