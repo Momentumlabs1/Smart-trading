@@ -15,6 +15,7 @@ import Bot from "./pages/Bot";
 import Challenge from "./pages/Challenge";
 import ChallengePlayer from "./pages/ChallengePlayer";
 import NotFound from "./pages/NotFound";
+import AboutPage from "./pages/About";
 
 // Academy Pages
 import AcademyLogin from "./pages/academy/Login";
@@ -95,7 +96,7 @@ const App = () => (
             } />
             
             {/* Placeholder routes - will be built out */}
-            <Route path="/about" element={<Index />} />
+            <Route path="/about" element={<AboutPage />} />
             <Route path="/elite" element={<Index />} />
             <Route path="/success" element={<Index />} />
             <Route path="/contact" element={<Index />} />
