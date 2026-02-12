@@ -28,7 +28,7 @@ export const VideoFunnel = () => {
           onClick={() => setIsOpen(true)}
           className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 hover:border-primary/50 transition-all duration-300 cursor-pointer group"
         >
-          {/* Live Video Preview – muted autoplay loop */}
+          {/* Live Video Preview – muted autoplay loop (auch Mobile) */}
           {previewVideoUrl && (
             <video
               src={previewVideoUrl}
@@ -36,6 +36,10 @@ export const VideoFunnel = () => {
               loop
               autoPlay
               playsInline
+              preload="auto"
+              webkit-playsinline="true"
+              x-webkit-airplay="deny"
+              disablePictureInPicture
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           )}
