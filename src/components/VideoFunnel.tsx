@@ -4,11 +4,12 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Play, X } from 'lucide-react';
 import { FunnelPlayer } from '@/components/funnel/FunnelPlayer';
 import { FUNNEL_DATA } from '@/lib/funnel-data';
+import funnelPreview from '@/assets/funnel-preview.webp';
 
 export const VideoFunnel = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [videoError, setVideoError] = useState(false);
 
-  // Get the first video URL from funnel data for preview
   const startNode = FUNNEL_DATA.nodes.find(n => n.type === 'start');
   const firstVideoNode = FUNNEL_DATA.nodes.find(n => {
     const edge = FUNNEL_DATA.edges.find(e => e.source === startNode?.id);
@@ -30,17 +31,19 @@ export const VideoFunnel = () => {
           className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 hover:border-primary/50 transition-all duration-300 cursor-pointer group"
         >
           {/* Video Preview (muted, looping) */}
-          {previewVideoUrl ? (
+          {!videoError && previewVideoUrl ? (
             <video
               src={previewVideoUrl}
+              poster={funnelPreview}
               muted
               loop
               autoPlay
               playsInline
+              onError={() => setVideoError(true)}
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
-            <div className="absolute inset-0 bg-gradient-to-br from-background to-muted" />
+            <img src={funnelPreview} alt="Video Vorschau" className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
           )}
           {/* Dark Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/50 transition-opacity duration-300 group-hover:opacity-80" />
