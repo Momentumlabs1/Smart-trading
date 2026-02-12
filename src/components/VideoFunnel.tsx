@@ -30,11 +30,12 @@ export const VideoFunnel = () => {
           onClick={() => setIsOpen(true)}
           className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 hover:border-primary/50 transition-all duration-300 cursor-pointer group"
         >
-          {/* Video Preview (muted, looping) */}
-          {!videoError && previewVideoUrl ? (
+          {/* Fallback-Bild immer als Basis */}
+          <img src={funnelPreview} alt="Video Vorschau" className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          {/* Video darüber – wenn es spielt, verdeckt es das Bild */}
+          {!videoError && previewVideoUrl && (
             <video
               src={previewVideoUrl}
-              poster={funnelPreview}
               muted
               loop
               autoPlay
@@ -42,8 +43,6 @@ export const VideoFunnel = () => {
               onError={() => setVideoError(true)}
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
-          ) : (
-            <img src={funnelPreview} alt="Video Vorschau" className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
           )}
           {/* Dark Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/50 transition-opacity duration-300 group-hover:opacity-80" />
