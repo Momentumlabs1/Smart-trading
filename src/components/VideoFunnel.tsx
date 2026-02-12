@@ -4,11 +4,9 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Play, X } from 'lucide-react';
 import { FunnelPlayer } from '@/components/funnel/FunnelPlayer';
 import { FUNNEL_DATA } from '@/lib/funnel-data';
-import funnelPreview from '@/assets/funnel-preview.webp';
 
 export const VideoFunnel = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [videoError, setVideoError] = useState(false);
 
   const startNode = FUNNEL_DATA.nodes.find(n => n.type === 'start');
   const firstVideoNode = FUNNEL_DATA.nodes.find(n => {
@@ -30,17 +28,14 @@ export const VideoFunnel = () => {
           onClick={() => setIsOpen(true)}
           className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 hover:border-primary/50 transition-all duration-300 cursor-pointer group"
         >
-          {/* Fallback-Bild immer als Basis */}
-          <img src={funnelPreview} alt="Video Vorschau" className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-          {/* Video darüber – wenn es spielt, verdeckt es das Bild */}
-          {!videoError && previewVideoUrl && (
+          {/* Live Video Preview – muted autoplay loop */}
+          {previewVideoUrl && (
             <video
               src={previewVideoUrl}
               muted
               loop
               autoPlay
               playsInline
-              onError={() => setVideoError(true)}
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           )}
