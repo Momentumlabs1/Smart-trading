@@ -74,12 +74,12 @@ export const FUNNEL_DATA: FunnelData = {
     {
       "id": "v1-begruessung",
       "type": "video",
-      "position": { "x": 0, "y": 0 },
+      "position": { "x": -73.82, "y": -14.76 },
       "data": {
         "name": "V1: Begrüßung",
-        "answers": ["Test gehts?", "Mustermann"],
+        "answers": ["Saif kennenlernen", "Überspringen"],
         "mcLayout": "vertical",
-        "videoUrl": "https://rqjwroreqihyqyktucvj.supabase.co/storage/v1/object/public/videos/videos/dbeeb6ed-299e-41a9-bfe5-2909dc322b95.mp4",
+        "videoUrl": "https://rqjwroreqihyqyktucvj.supabase.co/storage/v1/object/public/videos/videos/7c913196-f67a-416c-8272-8da3eba77fd2.mp4",
         "mcColor_0": "orange",
         "mcColor_1": "orange",
         "mcStyle_0": "gradient",
@@ -88,7 +88,7 @@ export const FUNNEL_DATA: FunnelData = {
         "buttonText": "Weiter",
         "description": "Hey ich bin Saif - Mehr Info? Ja/Nein",
         "overlayText": "Willst du erstmal mehr über mich wissen? Oder sollen wir direkt zum Trading-Part?",
-        "delaySeconds": 2,
+        "delaySeconds": 7,
         "mcButtonWidth": "2xl",
         "mcButtonHeight": "3xl",
         "timedVisibility": false,
@@ -98,10 +98,10 @@ export const FUNNEL_DATA: FunnelData = {
     {
       "id": "v2a-story",
       "type": "video",
-      "position": { "x": 648.84, "y": -240.80 },
+      "position": { "x": 711.56, "y": -224.84 },
       "data": {
         "name": "V2a: Saif Story",
-        "videoUrl": "https://rqjwroreqihyqyktucvj.supabase.co/storage/v1/object/public/videos/videos/ed9a67b6-bc03-44fc-a93f-99de77a0466d.mp4",
+        "videoUrl": "https://rqjwroreqihyqyktucvj.supabase.co/storage/v1/object/public/videos/videos/8fd4dfcf-fd37-4359-a9c2-828c1d557ca0.mp4",
         "answerType": "text",
         "buttonText": "Weiter",
         "inputWidth": "large",
@@ -118,10 +118,10 @@ export const FUNNEL_DATA: FunnelData = {
     {
       "id": "v2b-direkt",
       "type": "video",
-      "position": { "x": 413.26, "y": 3892 },
+      "position": { "x": 525.47, "y": 557.33 },
       "data": {
         "name": "V2b: Direkt los",
-        "videoUrl": "",
+        "videoUrl": "https://rqjwroreqihyqyktucvj.supabase.co/storage/v1/object/public/videos/videos/59d33b35-a9bd-4710-9a3e-c66d33f8a559.mp4",
         "answerType": "button",
         "buttonText": "Weiter",
         "description": "Okay okay – da hats jemand eilig!",
@@ -130,23 +130,9 @@ export const FUNNEL_DATA: FunnelData = {
       }
     },
     {
-      "id": "v3a-ueberleitung",
-      "type": "video",
-      "position": { "x": 1191.38, "y": -141.58 },
-      "data": {
-        "name": "V3a: Überleitung Story",
-        "videoUrl": "",
-        "answerType": "button",
-        "buttonText": "Weiter",
-        "description": "Jetzt weißt du wer ich bin. Jetzt bist du dran.",
-        "overlayText": "",
-        "delaySeconds": 10
-      }
-    },
-    {
       "id": "v3b-ueberleitung",
       "type": "video",
-      "position": { "x": 1228, "y": 696 },
+      "position": { "x": 1020.96, "y": 571.78 },
       "data": {
         "name": "V3b: Überleitung Direkt",
         "videoUrl": "",
@@ -670,9 +656,8 @@ export const FUNNEL_DATA: FunnelData = {
     { "id": "e-start-v1", "source": "start", "target": "v1-begruessung", "type": "custom" },
     { "id": "e-v1-v2a", "source": "v1-begruessung", "target": "v2a-story", "type": "custom" },
     { "id": "e-v1-v2b", "source": "v1-begruessung", "target": "v2b-direkt", "type": "custom" },
-    { "id": "e-v2a-v3a", "source": "v2a-story", "target": "v3a-ueberleitung", "type": "custom" },
+    { "id": "e-v2a-v4", "source": "v2a-story", "target": "v4-level-frage", "type": "custom" },
     { "id": "e-v2b-v3b", "source": "v2b-direkt", "target": "v3b-ueberleitung", "type": "custom" },
-    { "id": "e-v3a-v4", "source": "v3a-ueberleitung", "target": "v4-level-frage", "type": "custom" },
     { "id": "e-v3b-v4", "source": "v3b-ueberleitung", "target": "v4-level-frage", "type": "custom" },
     { "id": "e-v4-a1", "source": "v4-level-frage", "target": "a1-level", "type": "custom" },
     { "id": "e-a1-a2", "source": "a1-level", "target": "a2-motivation", "type": "custom" },
@@ -729,12 +714,12 @@ export const FUNNEL_DATA: FunnelData = {
 
 // Node order for sequential fallback
 export const NODE_ORDER = [
-  "v2a-story", "v3a-ueberleitung", "v1-begruessung", "v3b-ueberleitung", 
-  "v4-level-frage", "a1-level", "f1-level", "a2-motivation", "a3a-nebeneinkommen", 
-  "f2-situation", "a3b-freiheit", "a3c-verstehen", "f3a-verlust", "f3b-breakeven", 
-  "f3c-inkonsistent", "a4-blockade", "f4-problem", "a5a-angst", "a5b-ueberforderung", 
-  "a5c-zeit", "a5d-vertrauen", "f5a-strategie", "f5b-emotionen", "f5c-risk", 
-  "f5d-weissnicht", "a6-ressourcen", "f6-ziel", "a7a-klein", "a7b-mittel", 
-  "a7c-allin", "f7a-profitabel", "f7b-propfirm", "f7c-vollzeit", "a8-loesung", 
-  "f8-loesung", "a9-produkt", "f9-produkt", "abschluss", "lead-capture", "end", "v2b-direkt"
+  "v2a-story", "v1-begruessung", "v2b-direkt", "v3b-ueberleitung",
+  "v4-level-frage", "a1-level", "f1-level", "a2-motivation", "a3a-nebeneinkommen",
+  "f2-situation", "a3b-freiheit", "a3c-verstehen", "f3a-verlust", "f3b-breakeven",
+  "f3c-inkonsistent", "a4-blockade", "f4-problem", "a5a-angst", "a5b-ueberforderung",
+  "a5c-zeit", "a5d-vertrauen", "f5a-strategie", "f5b-emotionen", "f5c-risk",
+  "f5d-weissnicht", "a6-ressourcen", "f6-ziel", "a7a-klein", "a7b-mittel",
+  "a7c-allin", "f7a-profitabel", "f7b-propfirm", "f7c-vollzeit", "a8-loesung",
+  "f8-loesung", "a9-produkt", "f9-produkt", "abschluss", "lead-capture", "end"
 ];
