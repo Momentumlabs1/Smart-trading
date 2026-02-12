@@ -1,126 +1,43 @@
 
 
-## Problem-Analyse
+# Video-Vorschau Fix
 
-Das `embed.js` mit `type: "inline"` lädt den kompletten Funnel direkt in den kleinen Container - es gibt keine eingebaute "Preview mit Play-Button" Funktion.
+## Problem
+Die Video-Vorschau zeigt nichts an, weil die Video-URL (`rqjwroreqihyqyktucvj.supabase.co/...`) moeglicherweise nicht erreichbar ist (anderes Projekt, CORS, 404). Es fehlt ausserdem jegliches Error-Handling.
 
-## Lösung: Eigener Preview-Layer + Verzögertes Laden
+## Loesung
 
-Wir behalten einen statischen Preview-Screen mit Play-Button. Erst beim Klick auf den Play-Button öffnet sich das Fullscreen-Modal und lädt den Funnel.
+### 1. Robustes Video-Preview mit Fallback
+Die `VideoFunnel.tsx` bekommt:
+- **`onError` Handler**: Wenn das Video nicht laedt, wird automatisch das statische Vorschaubild (`funnel-preview.webp`) angezeigt, das bereits im Projekt liegt
+- **`poster` Attribut**: Das Vorschaubild wird als Poster gesetzt, damit sofort etwas sichtbar ist waehrend das Video laedt
+- **Ladeindikator**: Ein subtiler Shimmer-Effekt solange weder Video noch Poster geladen sind
 
-## Ablauf
+### 2. Kein GIF noetig
+Muted Autoplay (`autoPlay muted loop playsInline`) funktioniert auf allen modernen Mobile-Browsern (iOS Safari, Android Chrome). Ein GIF wuerde nur unnoetig Bandbreite verbrauchen und schlechter aussehen.
+
+## Technische Details
+
+### Datei: `src/components/VideoFunnel.tsx`
+
+Aenderungen:
+- `useState` fuer `videoError` hinzufuegen
+- `funnel-preview.webp` wieder als Fallback importieren
+- `<video>` Element bekommt `poster={funnelPreview}` und `onError={() => setVideoError(true)}`
+- Bei `videoError === true` wird statt dem Video das statische Bild angezeigt (wie vorher)
+- Falls `previewVideoUrl` leer ist, wird direkt das Bild verwendet
 
 ```text
-User Journey:
-1. User sieht Preview-Tile mit Thumbnail + Play-Button
-2. User klickt auf Play-Button
-3. Zoom-Animation startet
-4. Fullscreen-Modal öffnet sich
-5. iFrame mit Funnel wird geladen
-6. User durchläuft Funnel im Vollbild
+Logik:
+previewVideoUrl vorhanden?
+  JA  --> <video> mit poster + onError
+           |
+           Video laedt? --> Autoplay Loop (auch Mobile)
+           Video Error? --> Fallback auf <img funnel-preview.webp>
+  NEIN --> <img funnel-preview.webp>
 ```
 
-## Technische Umsetzung
-
-### VideoFunnel.tsx - Komplett neu aufbauen
-
-```text
-Preview-Tile
-├── Thumbnail-Bild (saif-trading.webp)
-├── Dunkler Gradient-Overlay
-├── Play-Button (klickbar)
-│   ├── Pulsierender Ring
-│   └── Play-Icon
-├── "Jetzt ansehen" Label
-└── Corner Accents (Deko)
-
-Modal (bei isOpen = true)
-├── Fullscreen Container
-├── iFrame mit Funnel-URL
-└── Close-Button
-```
-
-### Code-Änderungen
-
-```tsx
-export const VideoFunnel = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  // Kein embed.js mehr nötig - wir laden den iFrame nur im Modal
-
-  return (
-    <>
-      {/* Preview-Tile mit Thumbnail + Play Button */}
-      <motion.div ...>
-        <div 
-          onClick={() => setIsOpen(true)}
-          className="relative ... cursor-pointer group"
-        >
-          {/* Thumbnail */}
-          <img 
-            src={saifThumb} 
-            alt="Video Preview" 
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          
-          {/* Dark Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/40" />
-          
-          {/* Play Button */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <div className="relative">
-              {/* Pulsing Ring */}
-              <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping" />
-              {/* Button */}
-              <div className="w-14 h-14 rounded-full bg-primary/90 ...">
-                <Play className="w-6 h-6 ..." />
-              </div>
-            </div>
-            <span className="mt-3 text-xs font-medium text-white/90">
-              Jetzt ansehen
-            </span>
-          </div>
-          
-          {/* Corner Accents */}
-          ...
-        </div>
-      </motion.div>
-
-      {/* Fullscreen Modal */}
-      <AnimatePresence>
-        {isOpen && (
-          <Dialog...>
-            <iframe 
-              src="https://vid-path-builder-65.lovable.app/embed/smart-trading-v6"
-              ...
-            />
-          </Dialog>
-        )}
-      </AnimatePresence>
-    </>
-  );
-};
-```
-
-## Änderungen an Dateien
-
-| Datei | Änderung |
-|-------|----------|
-| `src/components/VideoFunnel.tsx` | Zurück zum Preview-Bild + Play-Button; embed.js nicht mehr inline nutzen |
-| `index.html` | embed.js Script kann bleiben (schadet nicht) oder entfernt werden |
-
-## Wichtig: iOS-Kompatibilität
-
-Da das Video erst im Modal geladen wird und der User dort nochmal auf "Play" im Funnel selbst klickt, ist das iOS-kompatibel:
-
-1. **Klick auf Preview** → Öffnet Modal (kein Video-Start)
-2. **Klick auf "Jetzt starten" im Funnel** → Startet Video mit Ton (User-Geste im iFrame = OK für iOS)
-
-## Vorteile
-
-- Klarer visueller Einstiegspunkt (Play-Button)
-- Schnelleres Laden der Seite (kein iFrame im Preview)
-- iOS-kompatibel (User-Geste passiert im iFrame)
-- Saubere Zoom-Animation
-- Funnel komplett durchlaufbar im Fullscreen
+| Datei | Aenderung |
+|-------|-----------|
+| `src/components/VideoFunnel.tsx` | onError-Fallback, poster-Attribut, funnel-preview.webp als Sicherheitsnetz |
 
