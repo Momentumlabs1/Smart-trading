@@ -4,7 +4,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Play, X } from 'lucide-react';
 import { FunnelPlayer } from '@/components/funnel/FunnelPlayer';
 import { FUNNEL_DATA } from '@/lib/funnel-data';
-import funnelPreview from '@/assets/funnel-preview.webp';
+
 
 export const VideoFunnel = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,13 +29,7 @@ export const VideoFunnel = () => {
           onClick={() => setIsOpen(true)}
           className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 hover:border-primary/50 transition-all duration-300 cursor-pointer group"
         >
-          {/* Static fallback image – always visible as base layer */}
-          <img
-            src={funnelPreview}
-            alt="Video Vorschau"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          {/* Live Video Preview – plays over the image on supported devices */}
+          {/* Live Video Preview – muted autoplay loop */}
           {previewVideoUrl && (
             <video
               src={previewVideoUrl}
