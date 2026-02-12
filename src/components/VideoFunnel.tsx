@@ -2,11 +2,19 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Play, X } from 'lucide-react';
-import funnelPreview from '@/assets/funnel-preview.webp';
 import { FunnelPlayer } from '@/components/funnel/FunnelPlayer';
+import { FUNNEL_DATA } from '@/lib/funnel-data';
 
 export const VideoFunnel = () => {
   const [isOpen, setIsOpen] = useState(false);
+
+  // Get the first video URL from funnel data for preview
+  const startNode = FUNNEL_DATA.nodes.find(n => n.type === 'start');
+  const firstVideoNode = FUNNEL_DATA.nodes.find(n => {
+    const edge = FUNNEL_DATA.edges.find(e => e.source === startNode?.id);
+    return edge && n.id === edge.target && n.type === 'video';
+  });
+  const previewVideoUrl = firstVideoNode?.data?.videoUrl || '';
 
   return (
     <>
@@ -21,13 +29,19 @@ export const VideoFunnel = () => {
           onClick={() => setIsOpen(true)}
           className="relative w-[180px] lg:w-[240px] aspect-[9/16] rounded-2xl overflow-hidden glass border border-border/50 hover:border-primary/50 transition-all duration-300 cursor-pointer group"
         >
-          {/* Thumbnail */}
-          <img 
-            src={funnelPreview} 
-            alt="Video Preview" 
-            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-          
+          {/* Video Preview (muted, looping) */}
+          {previewVideoUrl ? (
+            <video
+              src={previewVideoUrl}
+              muted
+              loop
+              autoPlay
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-br from-background to-muted" />
+          )}
           {/* Dark Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/50 transition-opacity duration-300 group-hover:opacity-80" />
           
