@@ -1,17 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowDown, ArrowUpRight, BookOpen, Check, ChevronDown, MousePointer2, Send } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, BookOpen, Check, ChevronDown } from 'lucide-react';
 import gsap from 'gsap';
-import portrait from '@/assets/saif-portrait.webp';
+import SaifIntro from './SaifIntro';
+import TradeJourney from './TradeJourney';
+import { SaifVideo } from '../home/SaifVideo';
+import './spatial-hero.css';
 import { ContactDialog, ExperienceFooter, ExperienceHeader, InfoGroupButton } from './ExperienceShared';
 import { useExperienceMotion } from './useExperienceMotion';
 import './trades-landing.css';
 
-const steps = [
-  {title:'Saif teilt den Trade.',text:'Du erhältst die Trades über die Telegram-Gruppe. Die Angaben zu Einstieg, Stop Loss und Ziel stehen in der Nachricht.',icon:Send},
-  {title:'Du übernimmst ihn selbst.',text:'Du prüfst die Angaben und setzt den Trade auf deiner eigenen Handelsplattform um. Du entscheidest über Positionsgröße und Risiko.',icon:MousePointer2},
-  {title:'Du lernst dabei dazu.',text:'Die Basic Academy erklärt dir, wie du Trades richtig überträgst, die Angaben verstehst und den Verlauf einordnest.',icon:BookOpen},
-];
 const modules = [
   {title:'Die Trade-Nachricht verstehen',text:'Richtung, Einstieg, Stop Loss und Ziel: Du lernst, was die einzelnen Angaben bedeuten und wie sie zusammengehören.'},
   {title:'Trades selbst übernehmen',text:'Du lernst, die Angaben mit deiner Handelsplattform abzugleichen und deine Positionsgröße bewusst festzulegen.'},
@@ -22,6 +20,8 @@ const modules = [
 export default function TradesLanding() {
   const root=useRef<HTMLDivElement>(null);
   const lastFocus=useRef<HTMLElement|null>(null);
+  const [video,setVideo]=useState(false);
+  const play=()=>{lastFocus.current=document.activeElement as HTMLElement;setVideo(true);};
   const [contact,setContact]=useState<string|null>(null);
   const request=(topic='Telegram-Gruppe & Basic Academy')=>{lastFocus.current=document.activeElement as HTMLElement;setContact(topic);};
   useExperienceMotion(root);
@@ -30,8 +30,8 @@ export default function TradesLanding() {
     const media=gsap.matchMedia();
     media.add('(prefers-reduced-motion: no-preference)',()=>{
       const ctx=gsap.context(()=>{
-        gsap.from('.tr-hero-copy > *',{y:20,opacity:0,stagger:.06,duration:.65,ease:'power2.out',clearProps:'all'});
-        gsap.fromTo('.tr-hero-photo img',{scale:1.04},{scale:1,ease:'none',scrollTrigger:{trigger:'.tr-hero',start:'top top',end:'bottom top',scrub:.5}});
+        gsap.from('.sh-copy > *',{y:20,opacity:0,stagger:.06,duration:.65,ease:'power2.out',clearProps:'all'});
+        gsap.fromTo('.tr-academy',{clipPath:'inset(8% 7% round 80px)',y:70},{clipPath:'inset(0% 0% round 24px)',y:0,ease:'none',scrollTrigger:{trigger:'.tr-academy',start:'top 100%',end:'top 35%',scrub:.5}});
       },root);
       return()=>ctx.revert();
     });
@@ -41,26 +41,23 @@ export default function TradesLanding() {
     <a className="sx-skip" href="#main">Zum Inhalt</a>
     <ExperienceHeader onContact={()=>request('Coaching')}/>
     <main id="main">
-      <section className="tr-hero sx-wrap">
-        <div className="tr-hero-copy">
-          <span className="tr-eyebrow"><i/>TRADING MIT SAIF</span>
-          <h1>Trades von Saif.<br/><em>Direkt zu dir.</em></h1>
-          <p>Saif teilt seine Trades in der Telegram-Gruppe. Du übernimmst sie selbst. Die Basic Academy zeigt dir, wie.</p>
-          <div className="tr-actions"><InfoGroupButton onContact={()=>request()}/><a href="#ablauf">So läuft’s <ArrowDown size={17}/></a></div>
-          <div className="tr-hero-included"><span><Send size={15}/>Telegram-Gruppe</span><span><BookOpen size={15}/>Basic Academy</span></div>
+      <section className="sh-hero sh-trades-hero">
+        <div className="sh-aura" aria-hidden="true"/>
+        <div className="sh-layout sx-wrap">
+          <div className="sh-copy">
+            <span className="sh-eyebrow"><i/> TELEGRAM-GRUPPE + BASIC ACADEMY</span>
+            <h1>Saifs Trades.<br/><em>Direkt zu dir.</em></h1>
+            <p>Saif teilt seine Trades. Du übernimmst sie selbst.<br className="sh-desktop-break"/> Die Basic Academy zeigt dir, wie.</p>
+            <div className="sh-actions"><InfoGroupButton onContact={()=>request()}/><a href="#ablauf">So läuft’s <ArrowDown size={17}/></a></div>
+            <div className="sh-personal"><span className="sh-personal-line"/><span>Seine Ideen. Deine Umsetzung.<br/><strong>Die Entscheidung bleibt bei dir.</strong></span></div>
+          </div>
+          <SaifIntro onPlay={play} paused={video} trades/>
         </div>
-        <div className="tr-hero-photo">
-          <img src={portrait} alt="Saif von Smart Trading" width="1920" height="1279" fetchPriority="high"/>
-          <div className="tr-photo-caption"><span>SAIF<span>SMART TRADING</span></span><span>Vom Live<br/>in die Gruppe.<ArrowUpRight size={23}/></span></div>
-        </div>
-        <a href="#ablauf" className="tr-hero-bottom"><span>ERHALTEN. SELBST UMSETZEN. DAZULERNEN.</span><ArrowDown size={17}/></a>
+        <div className="sh-bottom sx-wrap"><span>ERHALTEN. SELBST UMSETZEN. DAZULERNEN.</span><a href="#ablauf">Entdecke den Ablauf <ArrowDown size={15}/></a></div>
       </section>
-      <section id="ablauf" className="tr-process sx-wrap">
-        <div className="tr-section-top sx-reveal"><span className="tr-eyebrow">SO FUNKTIONIERT’S</span><h2>Ein klarer Ablauf.<br/><em>Du behältst die Kontrolle.</em></h2></div>
-        <div className="tr-steps">{steps.map((step,i)=><article className="tr-step sx-reveal" key={step.title}><div className="tr-step-top"><step.icon size={24}/><span>0{i+1}</span></div><h3>{step.title}</h3><p>{step.text}</p></article>)}</div>
-      </section>
+      <TradeJourney/>
       <section id="basic-academy" className="tr-academy sx-wrap">
-        <div className="tr-academy-intro sx-reveal"><span className="tr-eyebrow"><BookOpen size={17}/>DEINE BASIC ACADEMY</span><h2>Mitmachen.<br/>Und dazulernen.</h2><p>Die Grundlagen für genau das, was du hier machst: Trades übernehmen und verstehen, was dahintersteckt.</p><div className="tr-course-note"><Check size={18}/><span>Auf die Telegram-Trades abgestimmt.</span></div></div>
+        <div className="tr-academy-intro sx-reveal"><span className="tr-eyebrow"><BookOpen size={17}/>DEINE BASIC ACADEMY</span><h2>Mitmachen.<br/>Und dazulernen.</h2><p>Die Grundlagen für genau das, was du hier machst: Trades übernehmen und verstehen, was dahintersteckt.</p><div className="tr-course-note"><Check size={18}/><span>Auf die Telegram-Trades abgestimmt.</span></div><img className="tr-academy-art" src="/images/saif-academy-stilllife.png" alt="" width="1536" height="1024" loading="lazy" decoding="async"/></div>
         <div className="tr-modules sx-reveal">{modules.map((item,i)=><details key={item.title} open={i===0||undefined}><summary><span>0{i+1}</span><h3>{item.title}</h3><ChevronDown size={18}/></summary><p>{item.text}</p></details>)}</div>
       </section>
       <section className="tr-academy-distinction sx-wrap sx-reveal"><div><span className="tr-eyebrow">DU MÖCHTEST TIEFER EINSTEIGEN?</span><h2>Die große Academy<br/>geht einen Schritt weiter.</h2></div><div><p>Die Basic Academy begleitet dich beim Übernehmen der Trades. Der umfassende Academy-Lernweg beschäftigt sich mit deiner eigenen Strategie und eigenständigem Trading.</p><Link to="/#lernweg">Die vier Academy-Schritte <ArrowUpRight size={18}/></Link></div></section>
@@ -73,6 +70,7 @@ export default function TradesLanding() {
       <section className="tr-invite sx-wrap sx-reveal"><div><span className="tr-eyebrow">DEIN NÄCHSTER SCHRITT</span><h2>Wir sehen uns<br/><em>in der Gruppe.</em></h2></div><div><p>Informiere dich über den Zugang zu Saifs Telegram-Gruppe und der Basic Academy.</p><InfoGroupButton onContact={()=>request()}/></div></section>
     </main>
     <ExperienceFooter onContact={()=>request('Coaching')}/>
+    {video&&<SaifVideo open initialClip={0} onOpenChange={setVideo} returnFocus={lastFocus.current}/>}
     <ContactDialog key={contact||'closed'} topic={contact} close={()=>setContact(null)} returnFocus={lastFocus.current}/>
   </div>;
 }

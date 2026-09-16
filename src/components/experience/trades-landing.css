@@ -161,3 +161,6 @@
   .tr-academy { padding-inline:22px; }
   .tr-page .tr-modules h3 { font-size:12px; }
 }
+
+.tr-academy-art{display:block;width:100%;height:auto;max-height:290px;object-fit:contain;margin:21px auto -24px;mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent),linear-gradient(0deg,transparent,#000 7%,#000 93%,transparent);mask-composite:intersect;}
+@media(max-width:767px){.tr-academy-art{max-height:215px;margin:20px auto 0}.tr-modules{margin-top:20px}}
