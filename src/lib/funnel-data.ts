@@ -79,7 +79,7 @@ export const FUNNEL_DATA: FunnelData = {
         "name": "V1: Begrüßung",
         "answers": ["Saif kennenlernen", "Überspringen"],
         "mcLayout": "vertical",
-        "videoUrl": "https://rqjwroreqihyqyktucvj.supabase.co/storage/v1/object/public/videos/videos/7c913196-f67a-416c-8272-8da3eba77fd2.mp4",
+        "videoUrl": "/videos/saif-v1-begruessung.mp4",
         "mcColor_0": "orange",
         "mcColor_1": "orange",
         "mcStyle_0": "gradient",
@@ -101,7 +101,7 @@ export const FUNNEL_DATA: FunnelData = {
       "position": { "x": 711.56, "y": -224.84 },
       "data": {
         "name": "V2a: Saif Story",
-        "videoUrl": "https://rqjwroreqihyqyktucvj.supabase.co/storage/v1/object/public/videos/videos/8fd4dfcf-fd37-4359-a9c2-828c1d557ca0.mp4",
+        "videoUrl": "/videos/saif-v2a-story.mp4",
         "answerType": "text",
         "buttonText": "Weiter",
         "inputWidth": "large",
@@ -121,7 +121,7 @@ export const FUNNEL_DATA: FunnelData = {
       "position": { "x": 525.47, "y": 557.33 },
       "data": {
         "name": "V2b: Direkt los",
-        "videoUrl": "https://rqjwroreqihyqyktucvj.supabase.co/storage/v1/object/public/videos/videos/59d33b35-a9bd-4710-9a3e-c66d33f8a559.mp4",
+        "videoUrl": "/videos/saif-v2b-direkt.mp4",
         "answerType": "button",
         "buttonText": "Weiter",
         "description": "Okay okay – da hats jemand eilig!",
