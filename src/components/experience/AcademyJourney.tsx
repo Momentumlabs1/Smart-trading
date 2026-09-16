@@ -27,28 +27,44 @@ export default function AcademyJourney() {
   const root=useRef<HTMLElement>(null);
   const decks=useRef<(HTMLDivElement|null)[]>([]);
   const progress=useRef<ScrollTrigger|null>(null);
+  const current=useRef(0);
   const [active,setActive]=useState(0);
   const [scrollDriven,setScrollDriven]=useState(false);
   useEffect(()=>{
     const media=gsap.matchMedia();
-    media.add('(prefers-reduced-motion: no-preference) and (min-height: 701px)',()=>{
+    media.add('(prefers-reduced-motion: no-preference) and (min-width: 900px) and (min-height: 680px), (prefers-reduced-motion: no-preference) and (max-width: 899px) and (min-height: 780px)',()=>{
+      const section=root.current;
+      if(!section)return;
+      // One clipped, flat plane: opaque cards never intersect in 3D space.
+      section.classList.add('is-scroll-driven');
       setScrollDriven(true);
-      const trigger=ScrollTrigger.create({trigger:root.current,start:'top top',end:'bottom bottom',onUpdate:self=>{
-        const position=self.progress*3;
-        setActive(Math.min(3,Math.round(position)));
-        decks.current.forEach((el,i)=>{
-          const offset=i-position;
-          gsap.set(el,{x:offset*42,y:offset*26,z:-Math.abs(offset)*120,rotationY:offset*-11,rotationZ:offset*4,opacity:Math.abs(offset)<.51?1:Math.max(0,.7-Math.abs(offset)*.17),zIndex:10-Math.round(Math.abs(offset)*2)});
-        });
-      }});
-      progress.current=trigger;
-      return()=>{trigger.kill();progress.current=null;setScrollDriven(false);decks.current.forEach(el=>gsap.set(el,{clearProps:'all'}));};
+      const playhead={value:0};
+      const paint=()=>{
+        const base=Math.min(2,Math.floor(playhead.value));
+        const fraction=Math.max(0,Math.min(1,(playhead.value-base-.18)/.64));
+        const position=base+fraction*fraction*(3-2*fraction);
+        decks.current.forEach((el,i)=>gsap.set(el,{yPercent:(i-position)*108}));
+        const next=Math.min(3,Math.round(position));
+        if(next!==current.current){current.current=next;setActive(next);}
+      };
+      const timeline=gsap.timeline({scrollTrigger:{trigger:section,start:'top top',end:'bottom bottom',scrub:.3,invalidateOnRefresh:true}});
+      timeline.to(playhead,{value:3,duration:3,ease:'none',onUpdate:paint});
+      progress.current=timeline.scrollTrigger!;
+      paint();
+      // Fonts may finish after the first layout, especially on a direct anchor visit.
+      let alive=true;
+      document.fonts.ready.then(()=>{if(alive)timeline.scrollTrigger?.refresh();});
+      return()=>{
+        alive=false;timeline.scrollTrigger?.kill();timeline.kill();progress.current=null;
+        section.classList.remove('is-scroll-driven');setScrollDriven(false);
+        decks.current.forEach(el=>gsap.set(el,{clearProps:'transform'}));
+      };
     });
     return()=>media.revert();
   },[]);
   const choose=(i:number)=>{
     if(scrollDriven&&progress.current){window.scrollTo({top:progress.current.start+(progress.current.end-progress.current.start)*(i/3),behavior:'smooth'});}
-    else setActive(i);
+    else{current.current=i;setActive(i);}
   };
   const stage=stages[active];
   return <section id="lernweg" className="sx-journey-track" ref={root}>
@@ -57,8 +73,15 @@ export default function AcademyJourney() {
       <div className="sx-journey-body sx-wrap">
         <div className="sx-journey-copy" aria-live="polite"><span className="sx-chapter">KAPITEL 0{active+1} / 04</span><h3>{stage.title}<span>.</span></h3><h4>{stage.headline}</h4><p>{stage.copy}</p><div className="sx-skills">{stage.skills.map(skill=><span key={skill}>{skill}</span>)}</div><span className="sx-outcome"><ArrowUpRight size={18}/>{stage.outcome}</span></div>
         <div className="sx-deck-scene" aria-label={`Illustration: ${stage.title}`}>
-          <div className="sx-deck-halo"/>
-          {stages.map((item,i)=><div key={item.title} ref={el=>{decks.current[i]=el;}} className={`sx-journey-card ${active===i?'is-active':''}`} aria-hidden={active!==i}><div className="sx-card-meta"><span>SAIF / ACADEMY</span><span>MODUL 0{i+1}</span></div><div className="sx-card-heading"><span>{item.label}</span><strong>0{i+1}</strong></div><JourneyDiagram index={i}/><div className="sx-card-bottom"><span>{item.title.toUpperCase()}</span><span>WISSEN → ANWENDUNG</span></div></div>)}
+          <div className="sx-deck-backing" aria-hidden="true"/>
+          <div className="sx-deck-viewport">
+            {stages.map((item,i)=><div key={item.title} ref={el=>{decks.current[i]=el;}} className={`sx-journey-card ${active===i?'is-active':''}`} aria-hidden={active!==i}>
+              <div className="sx-card-meta"><span>SAIF / ACADEMY</span><span>MODUL 0{i+1}</span></div>
+              <div className="sx-card-heading"><span>{item.label}</span><strong>0{i+1}</strong></div>
+              <JourneyDiagram index={i}/>
+              <div className="sx-card-bottom"><span>{item.title.toUpperCase()}</span><span>WISSEN → ANWENDUNG</span></div>
+            </div>)}
+          </div>
         </div>
       </div>
       <div className="sx-journey-bottom sx-wrap"><div className="sx-stage-nav" aria-label="Schritte des Academy-Lernwegs">{stages.map((item,i)=><button key={item.title} onClick={()=>choose(i)} aria-pressed={active===i}><span>0{i+1}</span>{item.title}<i/></button>)}</div><span className="sx-journey-hint">{scrollDriven?'WEITERSCROLLEN':'KAPITEL AUSWÄHLEN'}<ArrowDown size={12}/></span></div>
