@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/academy/ProtectedRoute";
 
@@ -13,7 +13,7 @@ const EntryCheck = lazy(() => import("./pages/EntryCheck"));
 const Quiz = lazy(() => import("./pages/Quiz"));
 const QuizResults = lazy(() => import("./pages/QuizResults"));
 const Academy = lazy(() => import("./pages/Academy"));
-const Bot = lazy(() => import("./components/experience/BotLanding"));
+const Trades = lazy(() => import("./components/experience/TradesLanding"));
 const Challenge = lazy(() => import("./pages/Challenge"));
 const ChallengePlayer = lazy(() => import("./pages/ChallengePlayer"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -48,7 +48,8 @@ const App = () => (
             <Route path="/quiz" element={<Quiz />} />
             <Route path="/quiz/results" element={<QuizResults />} />
             <Route path="/academy" element={<Academy />} />
-            <Route path="/bot" element={<Bot />} />
+            <Route path="/signale" element={<Trades />} />
+            <Route path="/bot" element={<Navigate to="/signale" replace />} />
             <Route path="/challenge" element={<Challenge />} />
             <Route path="/challenge/player" element={<ChallengePlayer />} />
             

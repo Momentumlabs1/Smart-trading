@@ -35,8 +35,8 @@
 .sx-home .sx-hero-copy h1 > span { display: block; white-space: nowrap; }
 .sx-home .sx-hero-copy h1 > span:last-child { font-size: .73em; margin-top: 12px; }
 .sx-home .sx-hero-copy h1 em {
-  color: #d7bd80;
-  background: linear-gradient(120deg, #efe0b8, #c6a567 82%);
+  color: #ffd52d;
+  background: linear-gradient(120deg, #ffe365, #ffc72c 82%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -50,7 +50,7 @@
 .sx-home .sx-hero-art { min-width: 0; width: 100%; align-self: center; position: relative; }
 .sx-home .sx-art-caption, .sx-home .sx-art-footer { display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 8px; letter-spacing: .12em; line-height: 1.5; color: #898a80; }
 .sx-home .sx-art-caption { border-bottom: 1px solid #d9c49320; padding-bottom: 15px; }
-.sx-home .sx-art-caption > span:last-child { color: #d4bf90; }
+.sx-home .sx-art-caption > span:last-child { color: #ffdb54; }
 .sx-home .sx-art-footer { border-top: 1px solid #d9c49320; padding-top: 15px; font-size: 7px; }
 .sx-home .sx-market-scene { position: relative; width: 100%; aspect-ratio: 1.12; pointer-events: auto; }
 .sx-home .sx-market-scene canvas { display: block; }
@@ -63,39 +63,39 @@
 .sx-home .sx-journey-sticky { position: relative; padding-block: 104px 64px; display: flex; flex-direction: column; gap: 40px; background: radial-gradient(ellipse at 78% 53%, #b9955210, transparent 47%); }
 .sx-home .sx-journey-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; }
 .sx-home .sx-journey-top h2 { font: 600 clamp(42px, 4.3vw, 64px)/1.06 'Barlow Condensed', sans-serif; letter-spacing: -.025em; margin-top: 12px; }
-.sx-home .sx-journey-top > p { max-width: 310px; font-size: 12px; line-height: 1.85; color: #96978e; }
+.sx-home .sx-journey-top > p { max-width: 310px; font-size: 12px; line-height: 1.85; color: #979faa; }
 .sx-home .sx-journey-body { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); align-items: center; gap: clamp(48px, 6vw, 90px); flex: 1; min-height: 0; }
 .sx-home .sx-journey-copy { min-width: 0; }
 .sx-home .sx-journey-copy h3 { font: 600 clamp(50px, 5.6vw, 80px)/1.05 'Barlow Condensed', sans-serif; letter-spacing: -.025em; margin-top: 16px; }
 .sx-home .sx-journey-copy h3 > span { color: var(--sx-gold); }
 .sx-home .sx-journey-copy h4 { font-size: 18px; line-height: 1.4; letter-spacing: -.035em; margin-top: 15px; }
-.sx-home .sx-journey-copy > p { font-size: 13px; line-height: 1.85; color: #a0a198; max-width: 385px; margin-top: 16px; }
+.sx-home .sx-journey-copy > p { font-size: 13px; line-height: 1.85; color: #a1a8b3; max-width: 385px; margin-top: 16px; }
 .sx-home .sx-skills { display: flex; flex-wrap: wrap; gap: 13px; margin-top: 22px; }
-.sx-home .sx-skills > span { font-size: 9px; color: #b7b8ae; border-bottom: 1px solid #d3c49726; padding-bottom: 7px; }
-.sx-home .sx-outcome { display: flex; align-items: center; gap: 9px; font-size: 10px; color: #cfbb8c; margin-top: 20px; }
+.sx-home .sx-skills > span { font-size: 9px; color: #b3bac7; border-bottom: 1px solid #d3c49726; padding-bottom: 7px; }
+.sx-home .sx-outcome { display: flex; align-items: center; gap: 9px; font-size: 10px; color: #e8d46d; margin-top: 20px; }
 .sx-home .sx-deck-scene { position: relative; width: 100%; max-width: 620px; aspect-ratio: 1.5; isolation: isolate; transform: rotate(-1.5deg); }
-.sx-home .sx-deck-backing { position: absolute; inset: 0; border-radius: 15px; border: 1px solid #c3b49138; background: #161715; transform: translate(7px, 8px) rotate(1.5deg); z-index: -1; }
-.sx-home .sx-deck-backing::after { content: ''; position: absolute; inset: 0; border-radius: inherit; border: 1px solid #c3b49124; background: #111310; transform: translate(6px, 7px) rotate(1.2deg); z-index: -1; }
-.sx-home .sx-deck-viewport { position: absolute; inset: 0; overflow: hidden; isolation: isolate; border-radius: 14px; border: 1px solid #cabc984b; background: #121412; box-shadow: 0 28px 65px #0006, inset 0 1px #f5e4be18; transform: translateZ(0); }
-.sx-home .sx-journey-card { position: absolute; inset: 0; display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; gap: 0; padding: clamp(18px, 2vw, 29px); background: linear-gradient(135deg, #22231f, #121412 80%); opacity: 1; visibility: hidden; pointer-events: none; will-change: transform; }
+.sx-home .sx-deck-backing { position: absolute; inset: 0; border-radius: 15px; border: 1px solid #c3b49138; background: #181e29; transform: translate(7px, 8px) rotate(1.5deg); z-index: -1; }
+.sx-home .sx-deck-backing::after { content: ''; position: absolute; inset: 0; border-radius: inherit; border: 1px solid #c3b49124; background: #111621; transform: translate(6px, 7px) rotate(1.2deg); z-index: -1; }
+.sx-home .sx-deck-viewport { position: absolute; inset: 0; overflow: hidden; isolation: isolate; border-radius: 14px; border: 1px solid #cabc984b; background: #11151e; box-shadow: 0 28px 65px #0006, inset 0 1px #f5e4be18; transform: translateZ(0); }
+.sx-home .sx-journey-card { position: absolute; inset: 0; display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; gap: 0; padding: clamp(18px, 2vw, 29px); background: linear-gradient(135deg, #1f232c, #11151e 80%); opacity: 1; visibility: hidden; pointer-events: none; will-change: transform; }
 .sx-home .sx-journey-card.is-active { visibility: visible; }
 .sx-home .is-scroll-driven .sx-journey-card { visibility: visible; }
 .sx-home .sx-card-meta { display: flex; align-items: center; justify-content: space-between; font-size: 7px; letter-spacing: .12em; color: #9a9c90; }
-.sx-home .sx-card-meta > span:first-child { color: #d2bf95; }
+.sx-home .sx-card-meta > span:first-child { color: #ffe474; }
 .sx-home .sx-card-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 18px; }
 .sx-home .sx-card-heading > span { font: 600 clamp(22px, 2.2vw, 32px)/1.08 'Barlow Condensed', sans-serif; letter-spacing: -.01em; color: #e7e5da; }
-.sx-home .sx-card-heading > strong { font: 600 40px/1 'Barlow Condensed', sans-serif; color: #bba775; }
+.sx-home .sx-card-heading > strong { font: 600 40px/1 'Barlow Condensed', sans-serif; color: #e2c445; }
 .sx-home .sx-journey-diagram { display: block; height: 100%; width: 100%; min-height: 0; padding-block: 9px; }
 .sx-home .sx-journey-diagram text { font-family: 'DM Sans', sans-serif; font-size: 9px; fill: #b2ac97; letter-spacing: .13em; }
 .sx-home .sx-card-bottom { display: flex; justify-content: space-between; align-items: center; font-size: 6px; letter-spacing: .12em; color: #8b9184; border-top: 1px solid #d5c79e24; padding-top: 11px; }
 .sx-home .sx-card-bottom > span:first-child { color: #b7a57e; }
 .sx-home .sx-journey-bottom { display: flex; align-items: center; gap: 45px; }
 .sx-home .sx-stage-nav { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 25px; flex: 1; }
-.sx-home .sx-stage-nav > button { position: relative; text-align: left; display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 9px 0 16px; color: #95988d; font-size: 11px; transition: color .2s; }
-.sx-home .sx-stage-nav > button > span { font-size: 8px; color: #85897b; }
+.sx-home .sx-stage-nav > button { position: relative; text-align: left; display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 9px 0 16px; color: #8e9bac; font-size: 11px; transition: color .2s; }
+.sx-home .sx-stage-nav > button > span { font-size: 8px; color: #7c8999; }
 .sx-home .sx-stage-nav > button > i { position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: #d9c59626; }
-.sx-home .sx-stage-nav > button[aria-pressed=true] { color: #e2ce9e; }
-.sx-home .sx-stage-nav > button[aria-pressed=true] > i { background: #d2ba7f; }
+.sx-home .sx-stage-nav > button[aria-pressed=true] { color: #ffd94d; }
+.sx-home .sx-stage-nav > button[aria-pressed=true] > i { background: #ffd52d; }
 .sx-home .sx-journey-hint { display: flex; align-items: center; gap: 10px; font-size: 7px; letter-spacing: .12em; color: #9a9c8e; }
 .sx-home .sx-journey-track.is-scroll-driven { height: calc(100svh + 2100px); }
 .sx-home .is-scroll-driven .sx-journey-sticky { position: sticky; top: 0; height: 100svh; padding-block: 110px 28px; gap: 28px; }

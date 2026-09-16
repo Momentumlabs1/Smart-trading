@@ -20,7 +20,7 @@ function Sculpture({ progress, active }: { progress: MutableRefObject<number>; a
   return <group ref={group} position={[0, -.8, 0]} rotation={[.08, -.18, 0]}>
     {candles.map(([x,height,z,gold],i) => <group key={i} position={[x, height/2 + i*.11, z]}>
       <RoundedBox args={[.46, height, .46]} radius={.045} smoothness={3}>
-        <meshStandardMaterial color={gold ? '#c8ab70' : '#62676a'} roughness={gold ? .23 : .32} metalness={.78} />
+        <meshStandardMaterial color={gold ? '#e9c348' : '#626b7a'} roughness={gold ? .23 : .32} metalness={.78} />
       </RoundedBox>
       <mesh position={[0, 0, 0]}><cylinderGeometry args={[.025,.025,height + .9,12]} /><meshStandardMaterial color={gold ? '#f8d886' : '#a0a6a8'} metalness={.9} roughness={.2} /></mesh>
     </group>)}
@@ -33,7 +33,7 @@ function Sculpture({ progress, active }: { progress: MutableRefObject<number>; a
 
 export default function MarketSculpture({ progress, active }: { progress: MutableRefObject<number>; active: boolean }) {
   return <Canvas camera={{ position:[5,4.3,12.5], fov:42 }} onCreated={({camera})=>camera.lookAt(0,1,-.7)} dpr={[1,1.25]} frameloop={active ? 'always' : 'demand'} gl={{alpha:true,antialias:true,powerPreference:'low-power'}} aria-hidden="true">
-    <ambientLight intensity={1.15}/><directionalLight position={[-4,7,4]} intensity={3.5} color="#fff4df"/><directionalLight position={[5,3,-3]} intensity={3} color="#ffffff"/><pointLight position={[-3,-1,5]} intensity={16} color="#d6b87a"/>
+    <ambientLight intensity={1.15}/><directionalLight position={[-4,7,4]} intensity={3.5} color="#fff4df"/><directionalLight position={[5,3,-3]} intensity={3} color="#ffffff"/><pointLight position={[-3,-1,5]} intensity={16} color="#ecd267"/>
     <Sculpture progress={progress} active={active}/>
   </Canvas>;
 }
