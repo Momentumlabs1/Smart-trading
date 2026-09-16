@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,26 +9,27 @@ import { ProtectedRoute } from "@/components/academy/ProtectedRoute";
 
 // Public Pages
 import Index from "./pages/Index";
-import Quiz from "./pages/Quiz";
-import QuizResults from "./pages/QuizResults";
-import Academy from "./pages/Academy";
-import Bot from "./pages/Bot";
-import Challenge from "./pages/Challenge";
-import ChallengePlayer from "./pages/ChallengePlayer";
-import NotFound from "./pages/NotFound";
-import AboutPage from "./pages/About";
+const EntryCheck = lazy(() => import("./pages/EntryCheck"));
+const Quiz = lazy(() => import("./pages/Quiz"));
+const QuizResults = lazy(() => import("./pages/QuizResults"));
+const Academy = lazy(() => import("./pages/Academy"));
+const Bot = lazy(() => import("./pages/Bot"));
+const Challenge = lazy(() => import("./pages/Challenge"));
+const ChallengePlayer = lazy(() => import("./pages/ChallengePlayer"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const AboutPage = lazy(() => import("./pages/About"));
 
 // Academy Pages
-import AcademyLogin from "./pages/academy/Login";
-import AcademyRegister from "./pages/academy/Register";
-import AcademyDashboard from "./pages/academy/Dashboard";
-import AcademyCourseList from "./pages/academy/CourseList";
-import CoursePlayer from "./pages/academy/CoursePlayer";
-import Pricing from "./pages/academy/Pricing";
-import Settings from "./pages/academy/Settings";
-import Community from "./pages/academy/Community";
-import TelegramBot from "./pages/academy/TelegramBot";
-import BotDownload from "./pages/academy/BotDownload";
+const AcademyLogin = lazy(() => import("./pages/academy/Login"));
+const AcademyRegister = lazy(() => import("./pages/academy/Register"));
+const AcademyDashboard = lazy(() => import("./pages/academy/Dashboard"));
+const AcademyCourseList = lazy(() => import("./pages/academy/CourseList"));
+const CoursePlayer = lazy(() => import("./pages/academy/CoursePlayer"));
+const Pricing = lazy(() => import("./pages/academy/Pricing"));
+const Settings = lazy(() => import("./pages/academy/Settings"));
+const Community = lazy(() => import("./pages/academy/Community"));
+const TelegramBot = lazy(() => import("./pages/academy/TelegramBot"));
+const BotDownload = lazy(() => import("./pages/academy/BotDownload"));
 
 const queryClient = new QueryClient();
 
@@ -38,9 +40,11 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <Suspense fallback={<div role="status" style={{ minHeight: "100dvh", display: "grid", placeItems: "center", background: "#f7f7f2", color: "#46523c", fontFamily: "Manrope, sans-serif" }}>Wird geladen…</div>}>
           <Routes>
             {/* Homepage Routes */}
             <Route path="/" element={<Index />} />
+            <Route path="/einstieg" element={<EntryCheck />} />
             <Route path="/quiz" element={<Quiz />} />
             <Route path="/quiz/results" element={<QuizResults />} />
             <Route path="/academy" element={<Academy />} />
@@ -109,6 +113,7 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </Suspense>
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>
