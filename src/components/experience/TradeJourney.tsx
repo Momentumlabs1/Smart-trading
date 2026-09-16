@@ -3,6 +3,7 @@ import { ArrowDown, BookOpen, MousePointer2, Send } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './trade-journey.css';
+import JourneyPreview from './JourneyPreview';
 gsap.registerPlugin(ScrollTrigger);
 const TradeObjects=lazy(()=>import('./TradeObjects'));
 const steps=[
@@ -51,7 +52,7 @@ export default function TradeJourney(){
     <div className="tj-sticky">
       <div className="tj-top sx-wrap"><span className="tr-eyebrow">DREI SCHRITTE. DU BEHÄLTST DIE KONTROLLE.</span><span className="tj-counter">0{index+1}<span> / 03</span></span></div>
       <div className="tj-body sx-wrap">
-        <div className="tj-copy" aria-live="polite"><div className="tj-word-window"><div className="tj-word-rail" style={{transform:`translateY(-${index*100/3}%)`}} aria-hidden="true">{steps.map(step=><span key={step.word}>{step.word}</span>)}</div><h2 className="sr-only">{steps[index].word}</h2></div><div className="tj-explanation" key={index}><h3>{steps[index].label}</h3><p>{steps[index].text}</p><span className="tj-note">{steps[index].note}</span></div></div>
+        <div className="tj-copy"><div aria-live="polite"><div className="tj-word-window"><div className="tj-word-rail" style={{transform:`translateY(-${index*100/3}%)`}} aria-hidden="true">{steps.map(step=><span key={step.word}>{step.word}</span>)}</div><h2 className="sr-only">{steps[index].word}</h2></div><div className="tj-explanation" key={index}><h3>{steps[index].label}</h3><p>{steps[index].text}</p></div></div><JourneyPreview key={index} index={index}/></div>
         <div className="tj-visual"><div className="tj-orbit"/><span className="tj-ghost-number" aria-hidden="true">0{index+1}</span><div className="tj-canvas">{seen&&motion?<SceneBoundary index={index}><Suspense fallback={<ObjectFallback index={index}/>}><TradeObjects progress={progress} active={active}/></Suspense></SceneBoundary>:<ObjectFallback index={index}/>}</div><span className="tj-visual-label" aria-hidden="true">SAIF / {['TELEGRAM','DEINE UMSETZUNG','BASIC ACADEMY'][index]}</span></div>
       </div>
       <div className="tj-bottom sx-wrap"><nav aria-label="Schritte beim Übernehmen der Trades">{steps.map((step,i)=><button key={step.word} aria-pressed={i===index} onClick={()=>choose(i)}><span>0{i+1}</span>{step.word}<i/></button>)}</nav><span>{scrollDriven?'WEITERSCROLLEN':'SCHRITT AUSWÄHLEN'}<ArrowDown size={14}/></span></div>
