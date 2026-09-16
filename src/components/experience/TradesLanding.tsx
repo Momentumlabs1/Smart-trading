@@ -39,7 +39,7 @@ export default function TradesLanding() {
   },[]);
   return <div className="sx-page tr-page" ref={root}>
     <a className="sx-skip" href="#main">Zum Inhalt</a>
-    <ExperienceHeader onContact={()=>request('Coaching')}/>
+    <ExperienceHeader onContact={()=>request('Coaching')} onGroup={()=>request()}/>
     <main id="main">
       <section className="sh-hero sh-trades-hero">
         <div className="sh-aura" aria-hidden="true"/>

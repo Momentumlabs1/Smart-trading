@@ -17,7 +17,7 @@ export function SaifMark() {
   return <Link className="sx-mark" to="/" aria-label="SAIF Smart Trading – Startseite"><span className="sx-monogram" aria-hidden="true">s<span>/</span></span><span>SAIF<small>SMART TRADING</small></span></Link>;
 }
 
-export function ExperienceHeader({ onContact }: { onContact: () => void }) {
+export function ExperienceHeader({ onContact, onGroup }: { onContact: () => void; onGroup?: () => void }) {
   const [menu,setMenu] = useState(false);
   const { pathname } = useLocation();
   useEffect(() => { setMenu(false); window.scrollTo({top:0,behavior:'instant'}); }, [pathname]);
@@ -26,7 +26,7 @@ export function ExperienceHeader({ onContact }: { onContact: () => void }) {
     const close = (event: KeyboardEvent) => { if (event.key === 'Escape') { setMenu(false); document.getElementById('sx-menu')?.focus(); } };
     window.addEventListener('keydown',close); return () => window.removeEventListener('keydown',close);
   },[menu]);
-  return <header className="sx-header"><div className="sx-header-inner"><SaifMark/><nav className="sx-nav" aria-label="Hauptnavigation"><a href={pathname==='/' ? '#lernweg' : '/#lernweg'}>Dein Lernweg</a><Link to="/signale" className={pathname==='/signale' ? 'is-current' : ''}>Saifs Trades <span className="sx-nav-dot"/></Link><a href={pathname==='/' ? '#saif' : '/#saif'}>Saif</a><button onClick={onContact}>Kontakt</button></nav><div className="sx-header-right"><Link to="/academy/login" className="sx-login">Login <ArrowUpRight size={14}/></Link><Link to="/signale" className="sx-button sx-button-gold sx-button-compact">Zur Gruppe <ArrowUpRight size={16}/></Link><button id="sx-menu" className="sx-menu-button" aria-label={menu?'Menü schließen':'Menü öffnen'} aria-expanded={menu} aria-controls="sx-mobile-nav" onClick={() => setMenu(!menu)}>{menu?<X/>:<Menu/>}</button></div></div>{menu&&<nav id="sx-mobile-nav" className="sx-mobile-nav" aria-label="Mobile Navigation"><a href={pathname==='/'?'#lernweg':'/#lernweg'} onClick={()=>setMenu(false)}>Dein Lernweg</a><Link to="/signale">Saifs Trades</Link><a href={pathname==='/'?'#saif':'/#saif'} onClick={()=>setMenu(false)}>Saif kennenlernen</a><button onClick={()=>{setMenu(false);onContact();}}>Kontakt aufnehmen</button><Link to="/academy/login">Mitglieder-Login</Link></nav>}</header>;
+  return <header className="sx-header"><div className="sx-header-inner"><SaifMark/><nav className="sx-nav" aria-label="Hauptnavigation"><a href={pathname==='/' ? '#lernweg' : '/#lernweg'}>Dein Lernweg</a><Link to="/signale" className={pathname==='/signale' ? 'is-current' : ''}>Saifs Trades <span className="sx-nav-dot"/></Link><a href={pathname==='/' ? '#saif' : '/#saif'}>Saif</a><button onClick={onContact}>Kontakt</button></nav><div className="sx-header-right"><Link to="/academy/login" className="sx-login">Login <ArrowUpRight size={14}/></Link>{pathname==='/signale'&&onGroup?<InfoGroupButton onContact={onGroup} compact/>:<Link to="/signale" className="sx-button sx-button-gold sx-button-compact">Zur Gruppe <ArrowUpRight size={16}/></Link>}<button id="sx-menu" className="sx-menu-button" aria-label={menu?'Menü schließen':'Menü öffnen'} aria-expanded={menu} aria-controls="sx-mobile-nav" onClick={() => setMenu(!menu)}>{menu?<X/>:<Menu/>}</button></div></div>{menu&&<nav id="sx-mobile-nav" className="sx-mobile-nav" aria-label="Mobile Navigation"><a href={pathname==='/'?'#lernweg':'/#lernweg'} onClick={()=>setMenu(false)}>Dein Lernweg</a><Link to="/signale">Saifs Trades</Link><a href={pathname==='/'?'#saif':'/#saif'} onClick={()=>setMenu(false)}>Saif kennenlernen</a><button onClick={()=>{setMenu(false);onContact();}}>Kontakt aufnehmen</button><Link to="/academy/login">Mitglieder-Login</Link></nav>}</header>;
 }
 
 export function ExperienceFooter({onContact}: {onContact:()=>void}) {
@@ -43,8 +43,9 @@ export function ContactDialog({topic,close,returnFocus}:{topic:string|null;close
 }
 
 
-export function InfoGroupButton({onContact,children='Zur Infogruppe'}:{onContact:()=>void;children?:ReactNode}) {
-  return saifTargets.infoGroup ? <a href={saifTargets.infoGroup} target="_blank" rel="noopener noreferrer" className="sx-button sx-button-gold">{children}<Send size={17}/></a> : <button className="sx-button sx-button-gold" onClick={onContact}>Zugang anfragen <ArrowUpRight size={18}/></button>;
+export function InfoGroupButton({onContact,children='Zur Infogruppe',compact=false}:{onContact:()=>void;children?:ReactNode;compact?:boolean}) {
+  const className=`sx-button sx-button-gold${compact?' sx-button-compact':''}`;
+  return saifTargets.infoGroup ? <a href={saifTargets.infoGroup} target="_blank" rel="noopener noreferrer" className={className}>{children}<Send size={17}/></a> : <button className={className} onClick={onContact}>Zugang anfragen <ArrowUpRight size={18}/></button>;
 }
 
 export function ScrollCue({label='SCROLL, UM WEITERZUGEHEN'}:{label?:string}) {return <span className="sx-scroll-cue"><span className="sx-scroll-line"/>{label}<ArrowDown size={13}/></span>;}
