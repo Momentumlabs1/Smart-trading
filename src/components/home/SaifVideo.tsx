@@ -32,7 +32,7 @@ export function SaifVideo({ open, onOpenChange, initialClip = 0, returnFocus }: 
             <div className="st-video-chapters">
               {clips.map((item, index) => <button key={item.file} aria-pressed={clip === index} onClick={() => { setClip(index); setFailed(false); }}><Play size={15} /><span>{item.label}</span><small>{item.time}</small></button>)}
             </div>
-            <Link className="st-button st-button-yellow" to="/einstieg">Meinen Einstieg finden <ArrowRight size={18} /></Link>
+            <Link className="st-button st-button-yellow" to="/#lernweg" onClick={() => { onOpenChange(false); window.setTimeout(() => document.getElementById("lernweg")?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" }), 100); }}>Deinen Lernweg entdecken <ArrowRight size={18} /></Link>
           </div>
         </Dialog.Content>
       </Dialog.Portal>

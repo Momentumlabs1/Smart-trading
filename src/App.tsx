@@ -13,7 +13,7 @@ const EntryCheck = lazy(() => import("./pages/EntryCheck"));
 const Quiz = lazy(() => import("./pages/Quiz"));
 const QuizResults = lazy(() => import("./pages/QuizResults"));
 const Academy = lazy(() => import("./pages/Academy"));
-const Bot = lazy(() => import("./pages/Bot"));
+const Bot = lazy(() => import("./components/experience/BotLanding"));
 const Challenge = lazy(() => import("./pages/Challenge"));
 const ChallengePlayer = lazy(() => import("./pages/ChallengePlayer"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -40,7 +40,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Suspense fallback={<div role="status" style={{ minHeight: "100dvh", display: "grid", placeItems: "center", background: "#f7f7f2", color: "#46523c", fontFamily: "Manrope, sans-serif" }}>Wird geladen…</div>}>
+          <Suspense fallback={<div role="status" style={{ minHeight: "100dvh", display: "grid", placeItems: "center", background: "#090b0e", color: "#efc657", fontFamily: "Manrope, sans-serif" }}>Wird geladen…</div>}>
           <Routes>
             {/* Homepage Routes */}
             <Route path="/" element={<Index />} />
