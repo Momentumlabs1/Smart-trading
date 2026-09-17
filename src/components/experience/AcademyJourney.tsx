@@ -69,7 +69,7 @@ export default function AcademyJourney() {
   const stage=stages[active];
   return <section id="lernweg" className="sx-journey-track" ref={root}>
     <div className="sx-journey-sticky">
-      <div className="sx-journey-top sx-wrap"><div><span className="sx-kicker">DIE SMART TRADING ACADEMY</span><h2>Von null auf <em>profitabel.</em></h2></div><p>Dein Ziel. Vier Schritte auf dem Weg dorthin.<br/> Mit Wissen, Praxis und einem eigenen System.</p></div>
+      <div className="sx-journey-top sx-wrap"><div><span className="sx-kicker">ACADEMY · IM AUFBAU</span><h2>Von null auf <em>profitabel.</em></h2></div><p>Ein Ausblick auf den Lernweg, den wir aufbauen.<br/> Noch kein vollständig buchbarer Kurs.</p></div>
       <div className="sx-journey-body sx-wrap">
         <div className="sx-journey-copy" aria-live="polite"><span className="sx-chapter">KAPITEL 0{active+1} / 04</span><h3>{stage.title}<span>.</span></h3><h4>{stage.headline}</h4><p>{stage.copy}</p><div className="sx-skills">{stage.skills.map(skill=><span key={skill}>{skill}</span>)}</div><span className="sx-outcome"><ArrowUpRight size={18}/>{stage.outcome}</span></div>
         <div className="sx-deck-scene" aria-label={`Illustration: ${stage.title}`}>

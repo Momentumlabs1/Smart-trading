@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
-import { ArrowUpRight, BookOpen, Pause, Play, Send } from 'lucide-react';
+import { ArrowUpRight, MessageCircle, Pause, Play, Send } from 'lucide-react';
 import gsap from 'gsap';
 import './saif-intro.css';
 
@@ -55,8 +55,8 @@ export default function SaifIntro({ onPlay, paused = false, trades = false }: { 
         <span className="si-frame-top"><i /> SAIF. PERSÖNLICH.</span>
         <button className="si-video-open" onClick={onPlay} aria-label="Saifs Begrüßung mit Ton ansehen"><span className="si-play"><Play size={22} fill="currentColor" /></span><span>Hi, ich bin Saif.<small>TON AN · LERN MICH KENNEN</small></span><ArrowUpRight size={21} /></button>
       </div></div></div>
-      <div className="si-note" aria-hidden="true"><span className="si-note-icon"><BookOpen size={22} /></span><div><small>{trades ? 'BASIC ACADEMY' : 'DEIN LERNWEG'}</small><strong>{trades ? 'Verstehen.' : 'Schritt für Schritt.'}<br />{trades ? 'Selbst umsetzen.' : 'Mit einem Plan.'}</strong></div><span className="si-note-index">{trades ? '+' : '04'}</span></div>
-      <div className="si-pass" aria-hidden="true"><Send size={23} /><span>SAIF SMART TRADING</span><strong>{trades ? 'Die Trades.' : 'Dein Einstieg.'}<br />{trades ? 'Direkt zu dir.' : 'Beginnt hier.'}</strong><div><span>{trades ? 'TELEGRAM-GRUPPE' : 'WISSEN → ANWENDUNG'}</span><ArrowUpRight size={20} /></div></div>
+      <div className="si-note" aria-hidden="true"><span className="si-note-icon"><MessageCircle size={22} /></span><div><small>{trades ? 'BASIC ACADEMY' : 'SEINE GESCHICHTE'}</small><strong>{trades ? 'Verstehen.' : 'Erfahrungen.'}<br />{trades ? 'Selbst umsetzen.' : 'Perspektiven.'}</strong></div><span className="si-note-index">{trades ? '+' : '01'}</span></div>
+      <div className="si-pass" aria-hidden="true"><Send size={23} /><span>SAIF SMART TRADING</span><strong>{trades ? 'Die Trades.' : 'Der Mensch.'}<br />{trades ? 'Direkt zu dir.' : 'Dahinter.'}</strong><div><span>{trades ? 'TELEGRAM-GRUPPE' : 'LERN SAIF KENNEN'}</span><ArrowUpRight size={20} /></div></div>
     </div>
     <div className="si-scene-bottom"><span>ECHTER MENSCH. EIGENER WEG.</span><button onClick={() => setPreview(v => !v)} aria-label={preview ? 'Videovorschau pausieren' : 'Videovorschau abspielen'} aria-pressed={!preview}>{preview ? <Pause size={12} /> : <Play size={12} />}<span>Vorschau</span></button></div>
   </div>;
