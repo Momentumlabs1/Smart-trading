@@ -134,18 +134,18 @@ function ResultStep({ answers, onContact, onClose, onRestart }: { answers: Funne
   const beginner = answers.level !== 'Tradet schon';
   const summary = useMemo(() => summarize(answers), [answers]);
   const steps = beginner
-    ? [['Trades erhalten', 'Saif teilt seine Trades in der Telegram-Gruppe: Einstieg, Stop Loss und Ziel.'],
+    ? [['Trades erhalten', 'Die Trades kommen live in Saifs Telegram-Gruppe, jeweils mit Einstieg, Stop Loss und Ziel.'],
        ['Selbst umsetzen', 'Du übernimmst sie auf deiner eigenen Plattform, mit einem Risiko, das zu dir passt.'],
        ['Dabei verstehen', 'Die Basic Academy erklärt dir Schritt für Schritt, was im Trade passiert.']]
-    : [['Mitlesen', 'Du siehst, wo Saif einsteigt, wo er absichert und wo sein Ziel liegt.'],
-       ['Vergleichen', 'Lege seine Trades neben deine eigene Analyse und finde die Unterschiede.'],
+    : [['Mitlesen', 'Du siehst bei jedem Trade Einstieg, Absicherung und Ziel.'],
+       ['Vergleichen', 'Lege die Trades neben deine eigene Analyse und finde die Unterschiede.'],
        ['Dranbleiben', 'Die Basic Academy hilft dir, daraus feste Regeln für dich zu machen.']];
   return <div className="sf-stage sf-result">
     <div className="sf-result-hero">
       <img src={portrait} alt="Saif" />
       <div>
         <span className="sf-kicker"><i /> DEIN WEG MIT SAIF</span>
-        <Dialog.Title className="sf-title">{beginner ? <>Lerne an echten Trades.<br /><em>Mit Saif an deiner Seite.</em></> : <>Schärfe deinen Blick.<br /><em>An Saifs Trades.</em></>}</Dialog.Title>
+        <Dialog.Title className="sf-title">{beginner ? <>Lerne an echten Trades.<br /><em>Mit Saif an deiner Seite.</em></> : <>Schärfe deinen Blick.<br /><em>An echten Trades.</em></>}</Dialog.Title>
         {summary && <p className="sf-summary">{summary}</p>}
       </div>
     </div>

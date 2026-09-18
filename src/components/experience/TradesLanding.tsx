@@ -44,7 +44,7 @@ export default function TradesLanding() {
           <div className="sh-copy">
             <span className="sh-eyebrow"><i/> TELEGRAM-TRADES. MIT SAIF.</span>
             <h1>Trades erhalten.<br/><em>Selbst umsetzen.</em></h1>
-            <p>Saif teilt seine Trades. Du übernimmst sie selbst.<br className="sh-desktop-break"/> Die passenden Lernhilfen bauen wir dazu auf.</p>
+            <p>Saif teilt die Trades. Du übernimmst sie selbst.<br className="sh-desktop-break"/> Die passenden Lernhilfen bauen wir dazu auf.</p>
             <div className="sh-actions"><InfoGroupButton onContact={()=>request()}/><a href="#ablauf">So läuft’s <ArrowDown size={17}/></a></div>
             <div className="sh-personal"><span className="sh-personal-line"/><span>Seine Ideen. Deine Umsetzung.<br/><strong>Die Entscheidung bleibt bei dir.</strong></span></div>
           </div>
