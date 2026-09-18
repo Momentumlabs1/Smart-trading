@@ -10,7 +10,7 @@ import './experience.css';
 export const saifTargets = {
   contactEmail: import.meta.env.VITE_SAIF_CONTACT_EMAIL || 'office@smart-trading.at',
   contactUrl: import.meta.env.VITE_SAIF_CONTACT_URL || '',
-  infoGroup: import.meta.env.VITE_SAIF_INFO_URL || 'https://t.me/+j_wwv0FL45IyOWVk',
+  infoGroup: import.meta.env.VITE_SAIF_INFO_URL || 'https://t.me/+VvI5JkawmB45YThk', // Einladungslink „SAIF Website“: Beitritte über die Website sind so zählbar
 };
 
 export function SaifMark() {

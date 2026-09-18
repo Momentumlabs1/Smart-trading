@@ -16,9 +16,9 @@ const messages = [
 
 export function demoRpc(fn: string): unknown {
   if (fn === 'partner_stats') return {
-    bot_starts: 42, replied: 27, deposits: 6, deposits_usd: 1850, vip: 5, inquiries: 3, info_joins: 118,
-    by_source: [{ source: 'tiktok', n: 21 }, { source: 'website', n: 12 }, { source: 'info', n: 9 }],
-    per_day: Array.from({ length: 7 }, (_, i) => ({ day: new Date(now - (6 - i) * 86400000).toISOString().slice(0, 10), starts: [3, 5, 2, 8, 6, 11, 7][i] })),
+    seit: iso(7 * 1440), bot_starts: 42, leads_mit_antwort: 27, einzahlungen: 6, einzahlungen_usd: 1850, vip_freigeschaltet: 5, website_anfragen: 3, info_kanal_beitritte: null,
+    bot_starts_nach_quelle: { tiktok: 21, website: 12, direkt: 9 },
+    pro_tag: Array.from({ length: 7 }, (_, i) => ({ tag: new Date(now - (6 - i) * 86400000).toISOString().slice(0, 10), bot_starts: [3, 5, 2, 8, 6, 11, 7][i], einzahlungen: 0, website_anfragen: 0 })),
   };
   if (fn === 'partner_lead_overview') return leads;
   if (fn === 'partner_lead_messages') return messages;

@@ -19,7 +19,7 @@ type Lead = {
   id: string; first_name: string | null; telegram_username: string | null; telegram_user_id: number | string;
   source?: string | null; status: string | null; step?: string | null; experience?: string | null;
   deposit_usd: number | null; vip_granted_at: string | null; created_at: string;
-  message_count: number; reply_count: number; last_message_at: string | null; bot_paused: boolean; last_text?: string | null;
+  message_count: number; reply_count: number; last_message_at: string | null; bot_paused: boolean; last_text?: string | null; last_role?: string | null;
 };
 type Msg = { id: string; role: 'user' | 'assistant' | 'admin' | 'outbox'; content: string; created_at: string; pending?: boolean; error?: string | null };
 type Inquiry = { id: number; created_at: string; topic: string; name: string; reach: string; message: string | null; context: string | null; page: string | null; status: string };
@@ -33,15 +33,15 @@ const num = (v: unknown) => (typeof v === 'number' ? v : Number(v ?? 0) || 0);
 function normalizeStats(raw: Record<string, unknown> | null): Stats {
   const r = raw ?? {};
   const pick = (...k: string[]) => { for (const key of k) if (r[key] !== undefined && r[key] !== null) return r[key]; return undefined; };
-  const bySrc = (pick('by_source', 'bot_starts_by_source') as { source?: string; n?: number; count?: number }[] | Record<string, number> | undefined) ?? [];
-  const perDay = (pick('per_day', 'days') as { day?: string; date?: string; starts?: number; bot_starts?: number }[] | undefined) ?? [];
+  const bySrc = (pick('bot_starts_nach_quelle', 'by_source', 'bot_starts_by_source') as { source?: string; n?: number; count?: number }[] | Record<string, number> | undefined) ?? [];
+  const perDay = (pick('pro_tag', 'per_day', 'days') as { tag?: string; day?: string; date?: string; starts?: number; bot_starts?: number }[] | undefined) ?? [];
   return {
-    bot_starts: num(pick('bot_starts', 'starts')), replied: num(pick('replied', 'leads_replied', 'with_reply')),
-    deposits: num(pick('deposits', 'deposits_n', 'deposit_count')), deposits_usd: num(pick('deposits_usd', 'deposit_usd')),
-    vip: num(pick('vip', 'vip_granted')), inquiries: num(pick('inquiries', 'website_inquiries')),
-    info_joins: pick('info_joins', 'channel_joins') === undefined ? null : num(pick('info_joins', 'channel_joins')),
+    bot_starts: num(pick('bot_starts', 'starts')), replied: num(pick('leads_mit_antwort', 'replied', 'leads_replied')),
+    deposits: num(pick('einzahlungen', 'deposits', 'deposits_n')), deposits_usd: num(pick('einzahlungen_usd', 'deposits_usd', 'deposit_usd')),
+    vip: num(pick('vip_freigeschaltet', 'vip', 'vip_granted')), inquiries: num(pick('website_anfragen', 'inquiries', 'website_inquiries')),
+    info_joins: pick('info_kanal_beitritte', 'info_joins') === undefined ? null : num(pick('info_kanal_beitritte', 'info_joins')),
     by_source: Array.isArray(bySrc) ? bySrc.map(s => ({ source: String(s.source ?? 'direkt'), n: num(s.n ?? s.count) })) : Object.entries(bySrc).map(([source, n]) => ({ source, n: num(n) })),
-    per_day: perDay.map(d => ({ day: String(d.day ?? d.date), starts: num(d.starts ?? d.bot_starts) })),
+    per_day: perDay.map(d => ({ day: String(d.tag ?? d.day ?? d.date), starts: num(d.bot_starts ?? d.starts) })),
   };
 }
 
@@ -221,7 +221,7 @@ function Chats({ leads, reload }: { leads: Lead[] | null; reload: () => Promise<
       {leads === null ? <p className="sa-empty">Lädt …</p> : list.length === 0 ? <p className="sa-empty">Keine Chats gefunden.</p> :
         <ul>{list.map(l => <li key={l.id}><button className={l.id === activeId ? 'is-active' : ''} onClick={() => setActiveId(l.id)}>
           <span className="sa-avatar">{leadName(l).slice(0, 1).toUpperCase()}</span>
-          <span className="sa-list-main"><b>{leadName(l)}</b><small>{l.last_text || stepLabel(l)}</small>
+          <span className="sa-list-main"><b>{leadName(l)}</b><small>{l.last_text ? `${l.last_role === 'user' ? '' : l.last_role === 'admin' ? 'Du: ' : 'Bot: '}${l.last_text}` : stepLabel(l)}</small>
             <span className="sa-chips">{l.source && <i>{sourceLabel(l.source)}</i>}{num(l.deposit_usd) > 0 && <i className="is-good">{usd(num(l.deposit_usd))}</i>}{l.vip_granted_at && <i className="is-good">VIP</i>}{l.bot_paused && <i className="is-warn">Du schreibst</i>}</span></span>
           <time>{ago(l.last_message_at ?? l.created_at)}</time>
         </button></li>)}</ul>}
@@ -240,9 +240,8 @@ function Thread({ lead, onBack, reload }: { lead: Lead; onBack: () => void; relo
     try {
       const rows = await api<Record<string, unknown>[]>('partner_lead_messages', { p_lead_id: lead.id });
       setMsgs((rows ?? []).map(r => ({
-        id: String(r.id), role: (r.kind === 'outbox' || r.source === 'outbox' ? 'outbox' : r.role) as Msg['role'],
-        content: String(r.content ?? r.text ?? ''), created_at: String(r.created_at),
-        pending: r.sent_at === null && (r.kind === 'outbox' || r.source === 'outbox'), error: (r.error as string | null) ?? null,
+        id: String(r.id), role: r.role as Msg['role'], content: String(r.content ?? ''), created_at: String(r.created_at),
+        pending: r.pending === true, error: (r.error as string | null) ?? null,
       })).sort((a, b) => a.created_at.localeCompare(b.created_at)));
     } catch (x) { setErr(x instanceof Error ? x.message : String(x)); }
   }, [lead.id]);
@@ -259,15 +258,14 @@ function Thread({ lead, onBack, reload }: { lead: Lead; onBack: () => void; relo
     try { await api('partner_set_paused', { p_lead_id: lead.id, p_paused: !lead.bot_paused }); await reload(); }
     catch (x) { setErr(x instanceof Error ? x.message : String(x)); } finally { setBusy(false); }
   };
-  const tg = lead.telegram_username ? `https://t.me/${lead.telegram_username}` : null;
+  const tg = lead.telegram_username ? `https://t.me/${lead.telegram_username}` : `tg://user?id=${lead.telegram_user_id}`;
   return <>
     <div className="sa-thread-head">
       <button className="sa-icon sa-back" onClick={onBack} aria-label="Zurück zur Liste"><ArrowLeft size={18} /></button>
       <span className="sa-avatar">{leadName(lead).slice(0, 1).toUpperCase()}</span>
       <div><b>{leadName(lead)}</b><small>{lead.telegram_username ? `@${lead.telegram_username}` : `ID ${lead.telegram_user_id}`} · seit {dt(lead.created_at)}{lead.source ? ` · über ${sourceLabel(lead.source)}` : ''}</small></div>
       <div className="sa-thread-actions">
-        {tg ? <a className="sa-btn sa-btn-ghost" href={tg} target="_blank" rel="noopener noreferrer">In Telegram öffnen <ArrowUpRight size={15} /></a>
-          : <span className="sa-hint" title="Diese Person hat keinen Telegram-Benutzernamen. Du kannst ihr hier über den Bot schreiben.">Kein @username</span>}
+        <a className="sa-btn sa-btn-ghost" href={tg} target="_blank" rel="noopener noreferrer" title={lead.telegram_username ? undefined : 'Ohne @username öffnet das nur in der Telegram-App am Handy oder Desktop.'}>In Telegram öffnen <ArrowUpRight size={15} /></a>
         <button className={`sa-btn ${lead.bot_paused ? 'sa-btn-gold' : 'sa-btn-ghost'}`} onClick={togglePause} disabled={busy}>{lead.bot_paused ? <><Play size={14} />Bot wieder übernehmen lassen</> : <><Pause size={14} />Bot pausieren</>}</button>
       </div>
     </div>
