@@ -25,6 +25,7 @@ export function Impressum() {
     <section><h2>Betreiber und Medieninhaber</h2>
       <p><V v={L.owner} label="Name / Firma" />{!missing(L.legalForm) && <>, {L.legalForm}</>}<br /><V v={L.street} label="Straße und Hausnummer" /><br /><V v={L.city} label="PLZ und Ort" /><br />{L.country}</p>
       <p>E-Mail: {missing(L.email) ? <Gap label="E-Mail" /> : <a href={`mailto:${L.email}`}>{L.email}</a>}{!missing(L.phone) && <><br />Telefon: {L.phone}</>}</p>
+      {!missing(L.manager) && <p>Geschäftsführer: {L.manager}</p>}
       {!missing(L.uid) && <p>UID-Nummer: {L.uid}</p>}
       {!missing(L.register) && <p>Firmenbuch: {L.register}</p>}
       <p>Unternehmensgegenstand: {L.business}</p>

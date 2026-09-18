@@ -8,9 +8,9 @@ import './experience.css';
 
 // Public destinations are filled only with confirmed SAIF contact details.
 export const saifTargets = {
-  contactEmail: import.meta.env.VITE_SAIF_CONTACT_EMAIL || '',
+  contactEmail: import.meta.env.VITE_SAIF_CONTACT_EMAIL || 'office@smart-trading.at',
   contactUrl: import.meta.env.VITE_SAIF_CONTACT_URL || '',
-  infoGroup: import.meta.env.VITE_SAIF_INFO_URL || '',
+  infoGroup: import.meta.env.VITE_SAIF_INFO_URL || 'https://t.me/+j_wwv0FL45IyOWVk',
 };
 
 export function SaifMark() {

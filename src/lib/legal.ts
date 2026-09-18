@@ -2,23 +2,26 @@
 // Leere Felder erscheinen auf der Seite als deutlich markierte Lücke – vor dem Launch ausfüllen.
 export const LEGAL = {
   /** Name bzw. Firmenwortlaut des Betreibers */
-  owner: '',
+  // Quelle: Impressum smart-trading.at (Stand Juni 2024) und Firmenbuch (FN 650520 y, gegründet 31.03.2025)
+  owner: 'Smart Trading AI GmbH',
   /** Rechtsform, z. B. Einzelunternehmen, e.U., GmbH */
   legalForm: '',
-  street: '',
-  city: '',
+  street: 'Franzosenhausweg 41',
+  city: '4030 Linz',
   country: 'Österreich',
-  email: '',
-  phone: '',
-  /** UID-Nummer, falls vorhanden */
+  email: 'office@smart-trading.at',
+  phone: '+43 676 4512064',
+  /** Vertretungsbefugt */
+  manager: '',
+  /** UID-Nummer, falls vorhanden (auf smart-trading.at noch als „NEU“ geführt) */
   uid: '',
   /** Firmenbuchnummer und -gericht, falls eingetragen */
-  register: '',
+  register: 'FN 650520 y, Landesgericht Linz',
   /** Unternehmensgegenstand */
-  business: 'Trading-Bildung und Community rund um das Trading an den Finanzmärkten',
+  business: 'Schulungen im Bereich des Handels, Web-Shop und sonstiger EDV-Einsatz bei Handelsbetrieben, insbesondere mit AI; Beteiligung an Unternehmen mit gleichem oder ähnlichem Geschäftszweig; Handel mit Waren aller Art',
   /** Gewerbebehörde / Mitgliedschaft */
-  authority: '',
-  chamber: '',
+  authority: 'Bezirkshauptmannschaft Linz',
+  chamber: 'Mitglied der WKO Oberösterreich',
   /** Blattlinie nach § 25 MedienG */
   mediaLine: 'Information über Saif, seine Trading-Community und seine Lernangebote.',
   /** Stand der Datenschutzerklärung */
