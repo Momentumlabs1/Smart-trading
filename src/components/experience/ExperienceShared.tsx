@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import * as Dialog from '@radix-ui/react-dialog';
 import { ArrowDown, ArrowRight, ArrowUpRight, Check, Copy, Menu, Send, X } from 'lucide-react';
@@ -7,7 +7,7 @@ import './experience.css';
 
 
 // Public destinations are filled only with confirmed SAIF contact details.
-const saifTargets = {
+export const saifTargets = {
   contactEmail: import.meta.env.VITE_SAIF_CONTACT_EMAIL || '',
   contactUrl: import.meta.env.VITE_SAIF_CONTACT_URL || '',
   infoGroup: import.meta.env.VITE_SAIF_INFO_URL || '',
@@ -30,16 +30,44 @@ export function ExperienceHeader({ onContact, onGroup }: { onContact: () => void
 }
 
 export function ExperienceFooter({onContact}: {onContact:()=>void}) {
-  return <footer className="sx-footer sx-wrap"><div className="sx-footer-top"><SaifMark/><p>DEIN WEG. DEIN SYSTEM.</p><button onClick={onContact}>Kontakt aufnehmen <ArrowUpRight size={17}/></button></div><div className="sx-footer-links"><a href="/#lernweg">Academy-Lernweg</a><Link to="/signale">Telegram-Gruppe & Basic Academy</Link><Link to="/academy/login">Mitglieder-Login</Link></div><div className="sx-footer-bottom"><p>Trading birgt Verlustrisiken. Lerninhalte und Signale sind keine Gewinngarantie.</p><span>© {new Date().getFullYear()} SAIF SMART TRADING</span></div></footer>;
+  return <footer className="sx-footer sx-wrap"><div className="sx-footer-top"><SaifMark/><p>DEIN WEG. DEIN SYSTEM.</p><button onClick={onContact}>Kontakt aufnehmen <ArrowUpRight size={17}/></button></div><div className="sx-footer-links"><a href="/#lernweg">Academy-Lernweg</a><Link to="/signale">Telegram-Gruppe & Basic Academy</Link><Link to="/academy/login">Mitglieder-Login</Link></div><div className="sx-footer-legal"><Link to="/impressum">Impressum</Link><Link to="/datenschutz">Datenschutz</Link><Link to="/risikohinweis">Risikohinweis</Link></div><div className="sx-footer-bottom"><p>Trading birgt Verlustrisiken. Saifs Trades und Lerninhalte sind keine Anlageberatung und keine Gewinngarantie. <Link to="/risikohinweis">Risikohinweis</Link></p><span>© {new Date().getFullYear()} SAIF SMART TRADING</span></div></footer>;
 }
 
-export function ContactDialog({topic,close,returnFocus}:{topic:string|null;close:()=>void;returnFocus:HTMLElement|null}) {
-  const [message,setMessage] = useState('');
+export function ContactDialog({topic,close,returnFocus,context=''}:{topic:string|null;close:()=>void;returnFocus:HTMLElement|null;context?:string}) {
   const [name,setName] = useState('');
+  const [reach,setReach] = useState('');
+  const [message,setMessage] = useState('');
+  const [consent,setConsent] = useState(false);
+  const [trap,setTrap] = useState('');
+  const [state,setState] = useState<'idle'|'sending'|'sent'|'error'>('idle');
   const [copied,setCopied] = useState(false);
-  const text=`Hallo Saif,\n\nich interessiere mich für ${topic}.\n\n${message}\n\nViele Grüße\n${name}`;
-  const target = saifTargets.contactEmail ? `mailto:${saifTargets.contactEmail}?subject=${encodeURIComponent('SAIF – Anfrage: '+topic)}&body=${encodeURIComponent(text)}` : saifTargets.contactUrl;
-  return <Dialog.Root open={topic!==null} onOpenChange={open=>{if(!open)close();}}><Dialog.Portal><Dialog.Overlay className="sx-dialog-overlay"/><Dialog.Content className="sx-contact-dialog" onCloseAutoFocus={e=>{e.preventDefault();returnFocus?.focus();}}><Dialog.Close aria-label="Kontakt schließen" className="sx-dialog-close"><X size={21}/></Dialog.Close><span className="sx-kicker">LASS UNS SPRECHEN</span><Dialog.Title>{(topic==='Coaching'||topic==='Erstgespräch') ? 'Dein nächster Schritt. Persönlich.' : 'Dein Interesse. Direkt an Saif.'}</Dialog.Title><Dialog.Description>{(topic==='Coaching'||topic==='Erstgespräch')?'Du möchtest mit Saif sprechen? Beschreibe kurz, wo du stehst. Gemeinsam lässt sich klären, ob und wie eine Zusammenarbeit passt.':'Du interessierst dich für Saifs Telegram-Gruppe und die Basic Academy? Halte deine Fragen hier fest.'}</Dialog.Description><label>Dein Name<input value={name} onChange={e=>setName(e.target.value)} autoComplete="given-name" placeholder="Wie heißt du?"/></label><label>Worum geht es dir?<textarea value={message} onChange={e=>setMessage(e.target.value)} rows={4} placeholder="Deine Erfahrung, dein Ziel und deine Fragen …"/></label>{target?<><a href={target} className="sx-button sx-button-gold">Kontakt öffnen <ArrowUpRight size={18}/></a><small>Öffnet den Kontaktkanal. Deine Anfrage wird hier noch nicht gesendet.</small></>:<><div className="sx-contact-pending">Der direkte Kontaktkanal wird gerade eingerichtet. Du kannst deine Anfrage vorbereiten und kopieren; sie wird hier nicht versendet.</div><button className="sx-button sx-button-gold" onClick={async()=>{try{await navigator.clipboard.writeText(text);setCopied(true);}catch{setCopied(false);}}}>{copied?'Anfrage kopiert':'Anfrage kopieren'}{copied?<Check size={18}/>:<Copy size={18}/>}</button></>}</Dialog.Content></Dialog.Portal></Dialog.Root>;
+  const personal = topic==='Coaching'||topic==='Erstgespräch';
+  const text=`Hallo Saif,\n\nich interessiere mich für: ${topic}.${context?`\n\nMeine Antworten: ${context}`:''}\n\n${message}\n\nViele Grüße\n${name}\nErreichbar unter: ${reach}`;
+  const valid = name.trim().length>1 && reach.trim().length>3 && consent;
+  const send = async (e: FormEvent) => {
+    e.preventDefault(); if(!valid||state==='sending') return;
+    setState('sending');
+    try {
+      const res = await fetch('/api/anfrage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({topic,name,reach,message,context,page:window.location.pathname,website:trap})});
+      setState(res.ok?'sent':'error');
+    } catch { setState('error'); }
+  };
+  return <Dialog.Root open={topic!==null} onOpenChange={open=>{if(!open)close();}}><Dialog.Portal><Dialog.Overlay className="sx-dialog-overlay"/><Dialog.Content className="sx-contact-dialog" onCloseAutoFocus={e=>{e.preventDefault();returnFocus?.focus();}}><Dialog.Close aria-label="Kontakt schließen" className="sx-dialog-close"><X size={21}/></Dialog.Close>
+    <span className="sx-kicker">{personal?'LASS UNS SPRECHEN':'DEIN ZUGANG'}</span>
+    {state==='sent' ? <div className="sx-contact-done" role="status"><span className="sx-contact-check"><Check size={24}/></span><Dialog.Title>Danke{name?`, ${name.split(' ')[0]}`:''}. Deine Anfrage ist da.</Dialog.Title><Dialog.Description>Saif oder sein Team melden sich persönlich bei dir unter <strong>{reach}</strong>.</Dialog.Description><button className="sx-button sx-button-gold" onClick={close}>Fertig <Check size={18}/></button></div> : <form onSubmit={send}>
+      <Dialog.Title>{personal ? 'Dein nächster Schritt. Persönlich.' : 'Dein Interesse. Direkt an Saif.'}</Dialog.Title>
+      <Dialog.Description>{personal?'Erzähl Saif kurz, wo du stehst. Gemeinsam klärt ihr, ob und wie eine Zusammenarbeit passt.':'Du interessierst dich für Saifs Telegram-Gruppe und die Basic Academy? Hinterlass kurz deine Daten, Saif meldet sich bei dir.'}</Dialog.Description>
+      {context&&<p className="sx-contact-context"><span>DEINE ANTWORTEN</span>{context}</p>}
+      <label>Dein Name<input value={name} onChange={e=>setName(e.target.value)} autoComplete="name" placeholder="Wie heißt du?" required maxLength={80}/></label>
+      <label>Wo erreichen wir dich?<input value={reach} onChange={e=>setReach(e.target.value)} autoComplete="email" placeholder="Telegram @name, WhatsApp-Nummer oder E-Mail" required maxLength={120}/></label>
+      <label>Worum geht es dir? <small>(optional)</small><textarea value={message} onChange={e=>setMessage(e.target.value)} rows={3} maxLength={1500} placeholder="Deine Erfahrung, dein Ziel, deine Fragen …"/></label>
+      <input className="sx-hp" tabIndex={-1} autoComplete="off" value={trap} onChange={e=>setTrap(e.target.value)} aria-hidden="true" name="website"/>
+      <label className="sx-consent"><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)}/><span>Ich bin einverstanden, dass meine Angaben zur Bearbeitung meiner Anfrage gespeichert werden. Mehr in der <Link to="/datenschutz" onClick={close}>Datenschutzerklärung</Link>.</span></label>
+      <button type="submit" className="sx-button sx-button-gold" disabled={!valid||state==='sending'}>{state==='sending'?'Wird gesendet …':'Anfrage senden'} <ArrowUpRight size={18}/></button>
+      {state==='error'&&<div className="sx-contact-pending" role="alert">Das Senden hat gerade nicht geklappt. {saifTargets.contactEmail?<a href={`mailto:${saifTargets.contactEmail}?subject=${encodeURIComponent('SAIF – Anfrage: '+topic)}&body=${encodeURIComponent(text)}`}>Per E-Mail senden</a>:<button type="button" onClick={async()=>{try{await navigator.clipboard.writeText(text);setCopied(true);}catch{setCopied(false);}}}>{copied?'Anfrage kopiert':'Anfrage kopieren'}{copied?<Check size={14}/>:<Copy size={14}/>}</button>}</div>}
+      <small>Unverbindlich. Kein Kauf, kein Abo.</small>
+    </form>}
+  </Dialog.Content></Dialog.Portal></Dialog.Root>;
 }
 
 

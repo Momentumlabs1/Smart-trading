@@ -18,6 +18,7 @@ const Challenge = lazy(() => import("./pages/Challenge"));
 const ChallengePlayer = lazy(() => import("./pages/ChallengePlayer"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const AboutPage = lazy(() => import("./pages/About"));
+const Legal = lazy(() => import("./pages/Legal"));
 
 // Academy Pages
 const AcademyLogin = lazy(() => import("./pages/academy/Login"));
@@ -50,6 +51,9 @@ const App = () => (
             <Route path="/academy" element={<Academy />} />
             <Route path="/signale" element={<Trades />} />
             <Route path="/bot" element={<Navigate to="/signale" replace />} />
+            <Route path="/impressum" element={<Legal />} />
+            <Route path="/datenschutz" element={<Legal />} />
+            <Route path="/risikohinweis" element={<Legal />} />
             <Route path="/challenge" element={<Challenge />} />
             <Route path="/challenge/player" element={<ChallengePlayer />} />
             
@@ -107,9 +111,7 @@ const App = () => (
             <Route path="/contact" element={<Index />} />
             <Route path="/free" element={<Index />} />
             <Route path="/login" element={<Index />} />
-            <Route path="/impressum" element={<Index />} />
-            <Route path="/datenschutz" element={<Index />} />
-            <Route path="/agb" element={<Index />} />
+            <Route path="/agb" element={<Navigate to="/impressum" replace />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
