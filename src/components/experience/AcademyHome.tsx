@@ -41,13 +41,13 @@ export default function AcademyHome(){
         <div className="sh-copy">
           <span className="sh-eyebrow"><i/> SMART TRADING. MIT SAIF.</span>
           <h1>Saif.<br/><em>Smart Trading.</em></h1>
-          <p>Lerne den Menschen hinter Smart Trading kennen: seinen Weg, seine Sicht auf die Märkte und die Ideen hinter seinen Trades.</p>
+          <p>Lerne den Menschen hinter Smart Trading kennen: seinen Weg und seine Sicht auf die Märkte.</p>
           <div className="sh-actions"><button className="sx-button sx-button-gold" onClick={()=>play()}><Play size={16} fill="currentColor"/>Saif kennenlernen <ArrowUpRight size={18}/></button><button className="sh-contact" onClick={()=>request()}>Erstgespräch <ArrowUpRight size={17}/></button></div>
           <div className="sh-footnote"><span>SEIN WEG.</span><span>SEINE PERSPEKTIVE.</span><span>SMART TRADING.</span></div>
         </div>
         <SaifIntro onPlay={()=>play()} paused={video!==null}/>
       </div>
-      <div className="sh-bottom sx-wrap"><span>DER MENSCH HINTER DEN TRADES.</span><Link to="/signale">Du suchst Saifs Trades? <ArrowUpRight size={15}/></Link></div>
+      <div className="sh-bottom sx-wrap"><span>SAIF. DER MENSCH DAHINTER.</span><Link to="/signale">Du suchst Saifs Trades? <ArrowUpRight size={15}/></Link></div>
     </section>
     <section className="sh-transition" aria-label="Sein Weg. Seine Perspektive."><span aria-hidden="true">SEIN WEG.</span><span aria-hidden="true">SEINE SICHT.</span><div>LERN DEN MENSCHEN DAHINTER KENNEN.<ArrowDown size={22}/></div></section>
     <section id="saif" className="sx-saif"><div className="sx-saif-image"><img src={desk} alt="Saif an seinem Trading-Arbeitsplatz" loading="lazy" width="1920" height="1279"/><div className="sx-saif-image-shade"/><span>HINTER JEDEM CHART STEHT EINE ENTSCHEIDUNG.</span></div><div className="sx-saif-content sx-wrap"><div className="sx-saif-copy sx-reveal"><span className="sx-kicker">DER MENSCH HINTER SMART TRADING</span><h2>KEIN AVATAR.<br/><em>SAIF.</em></h2><p>Ein eigener Weg. Mit Höhen, Tiefen und der Entscheidung, dranzubleiben. Lerne Saif kennen – und die Geschichte hinter Smart Trading.</p><button className="sx-play-link" onClick={()=>play('geschichte')}><span><Play size={15} fill="currentColor"/></span>Seine Geschichte ansehen</button></div></div></section>
