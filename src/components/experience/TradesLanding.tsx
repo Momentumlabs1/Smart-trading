@@ -44,7 +44,7 @@ export default function TradesLanding() {
           <div className="sh-copy">
             <span className="sh-eyebrow"><i/> TELEGRAM-TRADES. MIT SAIF.</span>
             <h1>Trades erhalten.<br/><em>Selbst umsetzen.</em></h1>
-            <p>Saif teilt die Trades. Du übernimmst sie selbst.<br className="sh-desktop-break"/> Die passenden Lernhilfen bauen wir dazu auf.</p>
+            <p>Saif teilt die Trades. Du übernimmst sie selbst.<br className="sh-desktop-break"/> Die Basic Academy zeigt dir, wie.</p>
             <div className="sh-actions"><InfoGroupButton onContact={()=>request()}/><a href="#ablauf">So läuft’s <ArrowDown size={17}/></a></div>
             <div className="sh-personal"><span className="sh-personal-line"/><span>Seine Ideen. Deine Umsetzung.<br/><strong>Die Entscheidung bleibt bei dir.</strong></span></div>
           </div>
@@ -54,7 +54,7 @@ export default function TradesLanding() {
       </section>
       <TradeJourney/>
       <section id="basic-academy" className="tr-academy sx-wrap">
-        <div className="tr-academy-intro sx-reveal"><span className="tr-eyebrow"><BookOpen size={17}/>DEINE BASIC ACADEMY</span><h2>Mitmachen.<br/>Und dazulernen.</h2><p>Wir bauen die Grundlagen für genau das auf, was du hier machst: Trades übernehmen und verstehen, was dahintersteckt.</p><div className="tr-course-note"><Check size={18}/><span>Im Aufbau. Auf die Telegram-Trades abgestimmt.</span></div><img className="tr-academy-art" src="/images/saif-academy-stilllife.png" alt="" width="1536" height="1024" loading="lazy" decoding="async"/></div>
+        <div className="tr-academy-intro sx-reveal"><span className="tr-eyebrow"><BookOpen size={17}/>DEINE BASIC ACADEMY</span><h2>Mitmachen.<br/>Und dazulernen.</h2><p>Die Grundlagen für genau das, was du hier machst: Trades übernehmen und verstehen, was dahintersteckt. Mit Rechnern für deine Positionsgröße und einem kurzen Check nach jeder Lektion.</p><div className="tr-course-note"><Check size={18}/><span>Auf die Telegram-Trades abgestimmt. Neue Videos kommen laufend dazu.</span></div><img className="tr-academy-art" src="/images/saif-academy-stilllife.png" alt="" width="1536" height="1024" loading="lazy" decoding="async"/></div>
         <div className="tr-modules sx-reveal">{modules.map((item,i)=><details key={item.title} open={i===0||undefined}><summary><span>0{i+1}</span><h3>{item.title}</h3><ChevronDown size={18}/></summary><p>{item.text}</p></details>)}</div>
       </section>
       <section className="tr-academy-distinction sx-wrap sx-reveal"><div><span className="tr-eyebrow">DU MÖCHTEST TIEFER EINSTEIGEN?</span><h2>Die große Academy<br/>geht einen Schritt weiter.</h2></div><div><p>Die Basic Academy begleitet dich beim Übernehmen der Trades. Den weiterführenden Academy-Lernweg für deine eigene Strategie bauen wir nach und nach auf. Aktuell ist noch kein vollständiger Kurs buchbar.</p><Link to="/#lernweg">Die vier Academy-Schritte <ArrowUpRight size={18}/></Link></div></section>
