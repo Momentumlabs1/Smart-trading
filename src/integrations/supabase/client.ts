@@ -13,5 +13,7 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
     storage: localStorage,
     persistSession: true,
     autoRefreshToken: true,
+    // Anmeldelinks in der URL gehören der Basic Academy (momentum-hq). Dieser alte Client darf sie nicht abfangen.
+    detectSessionInUrl: false,
   }
 });
