@@ -1,80 +1,43 @@
-import { Navbar } from '@/components/layout/Navbar';
-import { Footer } from '@/components/layout/Footer';
+// Saifs eigene Geschichte, in seinen eigenen Worten (Wortlaut unverändert).
+// Läuft jetzt auf der SAIF-Hülle statt auf dem alten Lovable-Gerüst mit fremden Social-Links.
+import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowUpRight } from 'lucide-react';
+import { ContactDialog, ExperienceFooter, ExperienceHeader } from '@/components/experience/ExperienceShared';
 
-const About = () => {
-  return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Navbar />
-      <main className="section-container max-w-2xl mx-auto py-24 sm:py-32 px-4">
-        <div className="space-y-6 text-lg leading-relaxed text-muted-foreground">
-          <p className="text-2xl sm:text-3xl font-display font-bold text-foreground">
-            Okey dann komm mal mit!
-          </p>
+const STORY = [
+  'Mein Name kennst du ja bereits.',
+  'Ich wohne in Linz, hergekommen bin ich damals als Flüchtling und hatte dadurch einen Kaltstart ins Leben.',
+  'Durch unsere damalige Situation hab ich den Wert von Geld kennengelernt, weshalb ich mich schon früh selbständig machte weil ich dachte dass das der Ausweg ist.',
+  'Nach Jahren in der Gastro, Shisha Bar... verstand ich aber irgendwann, dass ich niemals frei sein werde wenn ich meine begrenzte Lebenszeit gegen Geld eintausche das durch die großen Player gleichzeitig immer mehr an Wert verliert.',
+  'Das Warum war nun klar, nur noch nicht das Wie, bis ich durch meinen damaligen Mentor auf Trading gestoßen bin.',
+  'Das Verständnis darüber dass ich mit genug Wissen, Zeit und dem richtigen Plan das Doppelte, Fünf- oder Zehnfache im Monat verdienen kann wie ein Arzt, hat mich nicht losgelassen.',
+  'Also startete ich meine 10-jährige Trading-Reise die mich durch viele Höhen und Tiefen geführt hat bis ich durch das richtige System und Beharrlichkeit profitabel geworden bin und nun mein Geld für mich arbeiten lasse.',
+  'Und genau diese Werte vermitteln wir hier auf Smart Trading.',
+];
 
-          <p>
-            Mein Name kennst du ja bereits.
-          </p>
+export default function About() {
+  const lastFocus = useRef<HTMLElement | null>(null);
+  const [contact, setContact] = useState<string | null>(null);
+  const request = (topic = 'Kontakt') => { lastFocus.current = document.activeElement as HTMLElement; setContact(topic); };
+  useEffect(() => { document.title = 'Saif kennenlernen — SAIF Smart Trading'; }, []);
 
-          <p>
-            Ich wohne in Linz, hergekommen bin ich damals als Flüchtling
-            und hatte dadurch einen Kaltstart ins Leben.
-          </p>
-
-          <p>
-            Durch unsere damalige Situation hab ich den Wert von Geld kennengelernt,
-            weshalb ich mich schon früh selbständig machte
-            weil ich dachte dass das der Ausweg ist.
-          </p>
-
-          <p>
-            Nach Jahren in der Gastro, Shisha Bar... verstand ich aber irgendwann,
-            dass ich niemals frei sein werde wenn ich meine begrenzte Lebenszeit
-            gegen Geld eintausche das durch die großen Player
-            gleichzeitig immer mehr an Wert verliert.
-          </p>
-
-          <p>
-            Das Warum war nun klar, nur noch nicht das Wie,
-            bis ich durch meinen damaligen Mentor auf Trading gestoßen bin.
-          </p>
-
-          <p>
-            Das Verständnis darüber dass ich mit genug Wissen, Zeit
-            und dem richtigen Plan das Doppelte, Fünf- oder Zehnfache
-            im Monat verdienen kann wie ein Arzt, hat mich nicht losgelassen.
-          </p>
-
-          <p>
-            Also startete ich meine 10-jährige Trading-Reise
-            die mich durch viele Höhen und Tiefen geführt hat
-            bis ich durch das richtige System und Beharrlichkeit
-            profitabel geworden bin und nun mein Geld für mich arbeiten lasse.
-          </p>
-
-          <p>
-            Und genau diese Werte vermitteln wir hier auf Smart Trading.
-          </p>
-
-          <p className="text-foreground font-medium">
-            Aber jetzt genug von mir.
-          </p>
-
-          <p className="text-foreground font-medium">
-            Du bist wieder an der Reihe!
-          </p>
-
-          <p className="text-foreground font-medium">
-            Als erstes würde mich interessieren:
-          </p>
-
-          <p className="text-xl font-display font-bold text-primary">
-            Fängst du gerade erst mit Trading an?
-          </p>
+  return <div className="sx-page sx-legal-page">
+    <ExperienceHeader onContact={() => request()} />
+    <main className="sx-legal sx-story sx-wrap">
+      <span className="sx-kicker"><i /> SAIF PERSÖNLICH</span>
+      <h1>Okey dann komm mal mit!</h1>
+      {STORY.map(t => <p key={t}>{t}</p>)}
+      <p className="sx-story-turn">Aber jetzt genug von mir.<br />Du bist wieder an der Reihe!</p>
+      <div className="sx-story-cta">
+        <p>Als erstes würde mich interessieren: <b>Fängst du gerade erst mit Trading an?</b></p>
+        <div>
+          <a className="sx-button sx-button-gold" href="/#saif">Sag es mir im Video <ArrowUpRight size={16} /></a>
+          <Link className="sx-button sx-button-outline" to="/signale">Saifs Trades ansehen</Link>
         </div>
-      </main>
-      <Footer />
-    </div>
-  );
-};
-
-export default About;
+      </div>
+    </main>
+    <ExperienceFooter onContact={() => request()} />
+    <ContactDialog key={contact || 'closed'} topic={contact} close={() => setContact(null)} returnFocus={lastFocus.current} />
+  </div>;
+}

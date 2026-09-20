@@ -12,8 +12,6 @@ const EntryCheck = lazy(() => import("./pages/EntryCheck"));
 const Quiz = lazy(() => import("./pages/Quiz"));
 const QuizResults = lazy(() => import("./pages/QuizResults"));
 const Trades = lazy(() => import("./components/experience/TradesLanding"));
-const Challenge = lazy(() => import("./pages/Challenge"));
-const ChallengePlayer = lazy(() => import("./pages/ChallengePlayer"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const AboutPage = lazy(() => import("./pages/About"));
 const Legal = lazy(() => import("./pages/Legal"));
@@ -44,16 +42,15 @@ const App = () => (
             <Route path="/impressum" element={<Legal />} />
             <Route path="/datenschutz" element={<Legal />} />
             <Route path="/risikohinweis" element={<Legal />} />
-            <Route path="/challenge" element={<Challenge />} />
-            <Route path="/challenge/player" element={<ChallengePlayer />} />
             
-            {/* Placeholder routes - will be built out */}
+            {/* Alte Lovable-Pfade: führen auf die echte Startseite statt auf Platzhalter */}
             <Route path="/about" element={<AboutPage />} />
-            <Route path="/elite" element={<Index />} />
-            <Route path="/success" element={<Index />} />
-            <Route path="/contact" element={<Index />} />
-            <Route path="/free" element={<Index />} />
-            <Route path="/login" element={<Index />} />
+            <Route path="/challenge" element={<Navigate to="/" replace />} />
+            <Route path="/elite" element={<Navigate to="/" replace />} />
+            <Route path="/success" element={<Navigate to="/" replace />} />
+            <Route path="/contact" element={<Navigate to="/" replace />} />
+            <Route path="/free" element={<Navigate to="/" replace />} />
+            <Route path="/login" element={<Navigate to="/" replace />} />
             <Route path="/agb" element={<Navigate to="/impressum" replace />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
