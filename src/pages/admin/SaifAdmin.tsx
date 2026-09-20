@@ -110,7 +110,9 @@ function Login() {
 type Tab = 'overview' | 'chats' | 'inquiries';
 
 function Dashboard() {
-  const [tab, setTab] = useState<Tab>('overview');
+  // Die Meldungen in der Admin-Gruppe verlinken direkt auf einen Chat: /admin?lead=<id>
+  const deepLead = new URLSearchParams(window.location.search).get('lead');
+  const [tab, setTab] = useState<Tab>(deepLead ? 'chats' : 'overview');
   const [days, setDays] = useState(7);
   const [stats, setStats] = useState<Stats | null>(null);
   const [leads, setLeads] = useState<Lead[] | null>(null);
@@ -146,7 +148,7 @@ function Dashboard() {
     {err && <p className="sa-banner" role="status">Einige Daten konnten nicht geladen werden: {err}</p>}
     <main className="sa-main">
       {tab === 'overview' && <Overview stats={stats} days={days} setDays={setDays} leads={leads} onOpenChats={() => setTab('chats')} />}
-      {tab === 'chats' && <Chats leads={leads} reload={load} />}
+      {tab === 'chats' && <Chats leads={leads} reload={load} initialLead={deepLead} />}
       {tab === 'inquiries' && <Inquiries items={inquiries} reload={load} />}
     </main>
   </div>;
@@ -202,9 +204,9 @@ function stepLabel(l: Lead) {
   return l.status ? statusLabel(l.status) : 'Bot gestartet';
 }
 
-function Chats({ leads, reload }: { leads: Lead[] | null; reload: () => Promise<void> }) {
+function Chats({ leads, reload, initialLead }: { leads: Lead[] | null; reload: () => Promise<void>; initialLead?: string | null }) {
   const [q, setQ] = useState('');
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const [activeId, setActiveId] = useState<string | null>(initialLead ?? null);
   const [filter, setFilter] = useState<'alle' | 'offen' | 'eingezahlt' | 'pausiert'>('alle');
   const list = useMemo(() => (leads ?? []).filter(l => {
     if (filter === 'eingezahlt' && !(num(l.deposit_usd) > 0)) return false;
