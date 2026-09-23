@@ -258,7 +258,8 @@ function Login() {
         {err && <p className="ac-error" role="alert">{err}</p>}
         <button className="ac-btn ac-btn-gold" disabled={busy || !cosmos}>{busy ? 'Einen Moment …' : 'Anmelden'} <ArrowRight size={16} /></button>
         <button type="button" className="ac-link" onClick={() => setMode('reset')}>Noch kein Passwort oder vergessen?</button>
-        <p className="ac-auth-hint">Noch kein Zugang? Der Bot schaltet dich nach deiner Einzahlung frei und schickt dir deinen Zugangslink. <a href={BOT_URL} target="_blank" rel="noopener noreferrer">Zum Bot</a></p></form>}
+        <p className="ac-auth-hint">Noch kein Zugang? Der Bot schaltet dich nach deiner Einzahlung frei und schickt dir deinen Zugangslink. <a href={BOT_URL} target="_blank" rel="noopener noreferrer">Zum Bot</a></p>
+        <p className="ac-auth-hint">Du warst schon in Saifs früherer Academy? Dein Zugang dort bleibt bestehen: <a href="https://academy.smart-trading.at" target="_blank" rel="noopener noreferrer">academy.smart-trading.at</a></p></form>}
   </AuthFrame>;
 }
 
